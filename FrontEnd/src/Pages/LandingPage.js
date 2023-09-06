@@ -1,7 +1,12 @@
-import React from "react";
+import React,{useRef,useEffect} from "react";
 import { Link } from "@nextui-org/react";
 
 const LandingPage = () => {
+  const videoRef = useRef();
+  useEffect(() => {
+    videoRef.current.play();
+  }, [])
+  
   const src =
     "https://static.vecteezy.com/system/resources/previews/021/019/996/mp4/lease-rental-and-selling-home-dealership-manager-smile-handshake-to-the-new-homeowner-rent-house-sales-loan-credit-financial-insurance-seller-dealer-installment-free-video.mp4";
   return (
@@ -19,6 +24,7 @@ const LandingPage = () => {
         src="https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4"
         autoPlay
         muted
+        loop
       />
       <video className="landing-video" src={src} autoPlay="autoplay" playsInLine="playsinline" loop="true" muted="true"/>
 
@@ -28,6 +34,7 @@ const LandingPage = () => {
           playsInline
           loop
           muted
+          ref={videoRef}
         >
           <source src="https://static.vecteezy.com/system/resources/previews/021/019/996/mp4/lease-rental-and-selling-home-dealership-manager-smile-handshake-to-the-new-homeowner-rent-house-sales-loan-credit-financial-insurance-seller-dealer-installment-free-video.mp4" />
         </video>
