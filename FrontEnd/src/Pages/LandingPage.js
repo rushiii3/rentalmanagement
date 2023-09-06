@@ -15,6 +15,13 @@ const LandingPage = () => {
           }}
         />
       <div className="h-screen bg-white relative">
+      <video
+        src="https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4"
+        autoPlay
+        muted
+      />
+      <video className="landing-video" src={src} autoPlay="autoplay" playsInLine="playsinline" loop="true" muted="true"/>
+
         <video
           class="w-full h-full max-w-full object-cover  object-center"
           autoPlay
