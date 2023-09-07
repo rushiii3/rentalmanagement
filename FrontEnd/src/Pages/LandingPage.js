@@ -1,7 +1,9 @@
 import React from "react";
 import Jumptron from "../Components/LandingPage/Jumptron";
-import { Fade } from "react-awesome-reveal";
+
 import KeyFeatures from "../Components/LandingPage/KeyFeatures";
+import ChatDesign from "../Components/ChatBot/ChatDesign";
+import Footer from "../Components/Headers/Footers/Footer";
 
 const LandingPage = () => {
 
@@ -10,6 +12,8 @@ const LandingPage = () => {
     <div>
       <Jumptron />
       <KeyFeatures />
+      <ChatDesign />
+      <Footer />
     </div>
   );
 };
