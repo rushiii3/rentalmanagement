@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ChatbotChatting from './ChatbotChatting';
-import { Fade, Zoom } from "react-awesome-reveal";
+import { Zoom } from "react-awesome-reveal";
 
 const ChatDesign = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);

@@ -1,15 +1,19 @@
 import React, { useRef, useEffect } from "react";
 import { Link } from "@nextui-org/react";
-import { Fade, Slide } from "react-awesome-reveal";
+import { motion } from "framer-motion";
 const Jumptron = () => {
-  const videoRef = useRef();
-  useEffect(() => {
-    videoRef.current.play();
-    console.log("pl");
-  }, []);
-
-  const src =
-    "https://static.vecteezy.com/system/resources/previews/021/019/996/mp4/lease-rental-and-selling-home-dealership-manager-smile-handshake-to-the-new-homeowner-rent-house-sales-loan-credit-financial-insurance-seller-dealer-installment-free-video.mp4";
+  // const videoRef = useRef();
+  // useEffect(() => {
+  //   videoRef.current.play();
+  // }, []);
+  const fadeInVariantsUp = {
+    hidden: { opacity: 0, y: 100 }, // Start with opacity 0 and position left
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, transition: "all", delay: 0.5 },
+    }, // Transition to opacity 1 and position 0
+  };
   return (
     <div className="h-screen bg-white relative">
       <video
@@ -17,18 +21,21 @@ const Jumptron = () => {
         playsInline
         loop
         muted
-        ref={videoRef}
+       autoPlay
       >
         <source src="https://static.vecteezy.com/system/resources/previews/021/019/996/mp4/lease-rental-and-selling-home-dealership-manager-smile-handshake-to-the-new-homeowner-rent-house-sales-loan-credit-financial-insurance-seller-dealer-installment-free-video.mp4" />
       </video>
 
-      <div className="py-8 px-4 mx-auto max-w-screen text-center lg:py-16 absolute top-36">
-        <Fade direction="up">
-          <h1 className="mb-4 text-4xl font-extrabold tracking-tight leading-none text-[#662E9B] md:text-5xl lg:text-6xl dark:text-white">
-            Streamline Your Rental Property Management
-          </h1>
+      <motion.div className="py-8 px-4 mx-auto max-w-screen text-center lg:py-16 absolute top-36"
+                initial="hidden"
+                viewport={{ once: true }}
+                whileInView="visible"
+                variants={fadeInVariantsUp}
+      >
+        {/* <Fade direction="up"> */}
+          <h1 className="mb-4 text-4xl font-extrabold tracking-tight leading-none text-[#662E9B] md:text-5xl lg:text-6xl dark:text-[#000000]"> Streamline Your Rental Property Management</h1>
 
-          <p className="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-38 dark:text-gray-400">
+          <p className="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-38 dark:text-black">
             Welcome to Dream Rentals, where we make finding your perfect rental
             property a breeze. Browse exquisite listings to unlock the door to
             your next luxurious living space.
@@ -63,8 +70,8 @@ const Jumptron = () => {
               Learn more
             </Link>
           </div>
-        </Fade>
-      </div>
+        {/* </Fade> */}
+      </motion.div>
     </div>
   );
 };
