@@ -117,7 +117,7 @@ const KeyFeatures = () => {
           />
         </motion.div>
       </div>
-      <div className="max-w-[900px] mx-auto grid grid-cols-2 gap-4 mb-8">
+      <div className="max-w-[900px] mx-auto grid grid-cols-2 gap-4 mb-8 overflow-hidden">
         <motion.div
           className="col-span-2"
           initial="hidden"

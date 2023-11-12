@@ -4,6 +4,9 @@ import KeyFeatures from "../Components/LandingPage/KeyFeatures";
 import ChatDesign from "../Components/ChatBot/ChatDesign";
 import Footer from "../Components/Layouts/Footers/Footer";
 import Navbar from "../Components/Layouts/Headers/Navbar";
+import Darkmode from "../Components/DarkMode/Darkmode";
+import Testimonals from "../Components/LandingPage/Testimonals";
+import FAQ from "../Components/LandingPage/FAQ";
 
 const LandingPage = () => {
 
@@ -14,6 +17,9 @@ const LandingPage = () => {
       <Jumptron />
       <KeyFeatures />
       <ChatDesign />
+      <Testimonals />
+      <Darkmode />
+      <FAQ />
       <Footer />
     </div>
   );

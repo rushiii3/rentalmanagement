@@ -23,7 +23,8 @@ const Navbar1 = () => {
           className="sm:hidden"
         />
         <NavbarBrand>
-         
+        <img src="../../../Assets/Logo.png" alt="" />
+
           <p className="font-bold text-inherit">RentMe</p>
         </NavbarBrand>
       </NavbarContent>

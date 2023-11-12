@@ -70,6 +70,7 @@ const Jumptron = () => {
               Learn more
             </Link>
           </div>
+          
         {/* </Fade> */}
       </motion.div>
     </div>
