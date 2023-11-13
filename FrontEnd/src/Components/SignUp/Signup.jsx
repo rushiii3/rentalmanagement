@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "@nextui-org/react";
 import { Select, SelectItem } from "@nextui-org/react";
 import { EyeFilledIcon } from "./EyeFilledIcon";
@@ -9,6 +9,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Avatar } from "@nextui-org/react";
 import Resizer from "react-image-file-resizer";
 import axios from 'axios'
+import imgLogo from '../../Assets/Logo.png';
 const resizeFile = (file) => {
   return new Promise((resolve, reject) => {
     if (!(file instanceof Blob) && !(file instanceof File)) {
@@ -43,6 +44,9 @@ const compressImage = async (file) => {
   }
 };
 const Signup = () => {
+  useEffect(() => {
+    document.title = "Register"
+ }, []);
   const resizeFile = (file) =>
     new Promise((resolve) => {
       Resizer.imageFileResizer(
@@ -160,14 +164,13 @@ const Signup = () => {
     }
     
   };
-
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center dark:bg-gray-800 dark:text-white">
       <div className="max-w-screen-xl m-0 sm:m-10 bg-white dark:bg-black shadow sm:rounded-lg flex  justify-center flex-1">
         <div className="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
           <div>
             <img
-              src="https://github.com/rushiii3/rentalmanagement/blob/main/FrontEnd/src/Assets/Logo.png?raw=true"
+              src={imgLogo}
               className="h-16 mx-auto flex items-center justify-center "
             />
           </div>
