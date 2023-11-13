@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import ChatbotChatting from './ChatbotChatting';
-import { Zoom } from "react-awesome-reveal";
-
 const ChatDesign = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const toggleMenu = () => {
@@ -14,9 +12,9 @@ const ChatDesign = () => {
         id="speed-dial-menu-click"
         className={`flex flex-col items-center ${isMenuOpen ? 'block transition-all duration-500' : 'hidden'} mb-4 space-y-2`}
       >
-        <Zoom direction='up'>
+       
         <ChatbotChatting />
-        </Zoom>
+
       </div>
 
 
