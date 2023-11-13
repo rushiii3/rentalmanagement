@@ -148,13 +148,13 @@ const Signup = () => {
   });
   const onSubmit = async (data) => {
     const data1 = { ...data, profile: imageURL };
-    console.log(data1);
+    // console.log(data1);
     try {
-        // const serverData = await axios.post('http://localhost:4000/api/v2/user/register',data1,{headers: {
-        //     "Content-Type": "multipart/form-data",
-        //   }})
-        const serverDaata = await axios.get('http://localhost:4000/api/v2/user/hehe');
-        console.log(serverDaata);
+      const person = {name:"John", age:31, city:"New York"};
+
+        const serverData = await axios.post('http://localhost:4000/api/v2/user/register',data1);
+        
+        console.log(serverData);
     } catch (error) {
         console.log(error);
     }
@@ -174,7 +174,7 @@ const Signup = () => {
           <div className="mt-10 flex flex-col items-center">
             <h1 className="text-2xl xl:text-3xl font-extrabold">Sign up</h1>
             <div className="w-full flex-1 mt-8">
-              <form onSubmit={handleSubmit(onSubmit)}>
+              <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
                 <div className="mx-auto max-w-xs">
                   <div className="flex items-center space-x-6">
                     <div className="shrink-0">

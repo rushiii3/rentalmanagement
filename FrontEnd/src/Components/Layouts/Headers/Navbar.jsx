@@ -50,7 +50,7 @@ const Navbar1 = () => {
       </NavbarContent>
       <NavbarContent justify="end">
         <NavbarItem className="hidden lg:flex">
-          <Link href="#">Login</Link>
+          <Link onClick={()=>{navigate('/login')}}>Login</Link>
         </NavbarItem>
         <NavbarItem>
           <Button as={Link} color="primary" onClick={()=>{navigate('/register')}} variant="flat">
