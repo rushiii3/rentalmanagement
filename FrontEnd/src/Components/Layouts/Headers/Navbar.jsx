@@ -1,8 +1,10 @@
 import React from 'react'
 import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button,NavbarMenuItem,NavbarMenu,NavbarMenuToggle} from "@nextui-org/react";
+import { useNavigate } from 'react-router-dom';
+
 const Navbar1 = () => {
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-
+    const navigate = useNavigate();
     const menuItems = [
       "Profile",
       "Dashboard",
@@ -23,7 +25,7 @@ const Navbar1 = () => {
           className="sm:hidden"
         />
         <NavbarBrand>
-        <img src="../../../Assets/Logo.png" alt="" />
+        <img src="https://github.com/rushiii3/rentalmanagement/blob/main/FrontEnd/src/Assets/Logo.png?raw=true" className='h-8 mr-3' alt="" />
 
           <p className="font-bold text-inherit">RentMe</p>
         </NavbarBrand>
@@ -51,7 +53,7 @@ const Navbar1 = () => {
           <Link href="#">Login</Link>
         </NavbarItem>
         <NavbarItem>
-          <Button as={Link} color="primary" href="#" variant="flat">
+          <Button as={Link} color="primary" onClick={()=>{navigate('/register')}} variant="flat">
             Sign Up
           </Button>
         </NavbarItem>

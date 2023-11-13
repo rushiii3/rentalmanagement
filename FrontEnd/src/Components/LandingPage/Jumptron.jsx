@@ -1,11 +1,8 @@
-import React, { useRef, useEffect } from "react";
+import React from "react";
 import { Link } from "@nextui-org/react";
 import { motion } from "framer-motion";
 const Jumptron = () => {
-  // const videoRef = useRef();
-  // useEffect(() => {
-  //   videoRef.current.play();
-  // }, []);
+
   const fadeInVariantsUp = {
     hidden: { opacity: 0, y: 100 }, // Start with opacity 0 and position left
     visible: {
