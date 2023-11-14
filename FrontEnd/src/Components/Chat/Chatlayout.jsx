@@ -7,7 +7,7 @@ const ChatLayout = () => {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    const newSocket = io('https://distinct-pear-bonnet.cyclic.app');
+    const newSocket = io('http://localhost:3500');
 
     newSocket.on('connect', () => {
       console.log('Connected to server');

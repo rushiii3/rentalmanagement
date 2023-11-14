@@ -1,9 +1,6 @@
 require("dotenv").config();
 const express = require('express');
-const app = express();
-const http = require('http');
-const socketIO = require('socket.io');
-const cors = require('cors');
+const app = express();const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -24,31 +21,14 @@ app.use(cors({
   credentials: true,
 }));
 
-// Socket.IO setup
-const server = http.createServer(app);
-const io = socketIO(server, {
-  cors: {
-    origin: 'https://rentalmanagement-omega.vercel.app'
-  }
-});
-io.on('connection', (socket) => {
-  console.log('A user connected');
 
-  socket.on('message', (data) => {
-    console.log('Message from client:', data);
-    io.emit('message', data);
-  });
 
-  socket.on('disconnect', () => {
-    console.log('A user disconnected');
-  });
-});
 
 // MongoDB connection
 mongoose.connect(MongoURL)
   .then(() => {
     console.log('Connected to MongoDB');
-    server.listen(port, () => {
+    app.listen(port, () => {
       console.log(`Server running on http://localhost:${port}`);
     });
   })
