@@ -20,7 +20,7 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 app.use(bodyParser.json());
 app.use(cors({
-  origin: 'https://rentalmanagement-omega.vercel.app/',
+  origin: 'https://rentalmanagement-omega.vercel.app',
   credentials: true,
 }));
 
@@ -28,7 +28,7 @@ app.use(cors({
 const server = http.createServer(app);
 const io = socketIO(server, {
   cors: {
-    origin: 'https://rentalmanagement-omega.vercel.app/'
+    origin: 'https://rentalmanagement-omega.vercel.app'
   }
 });
 io.on('connection', (socket) => {
