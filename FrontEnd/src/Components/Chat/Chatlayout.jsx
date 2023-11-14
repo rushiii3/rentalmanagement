@@ -7,7 +7,7 @@ const ChatLayout = () => {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    const newSocket = io('http://localhost:3500');
+    const newSocket = io('https://socketio-rental.onrender.com');
 
     newSocket.on('connect', () => {
       console.log('Connected to server');
