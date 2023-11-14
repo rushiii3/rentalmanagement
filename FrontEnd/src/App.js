@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import DarkMode from './Components/DarkMode/Darkmode';
 import {BrowserRouter,Routes,Route} from 'react-router-dom';
 import Navbar1 from './Components/Layouts/Headers/Navbar';
-import {LandingPage, SignUpPage,PageNotFound, LoginPage} from './Routes';
+import {LandingPage, SignUpPage,PageNotFound, LoginPage, ChatPage} from './Routes';
 import NavbarShow from "./Components/Layouts/Headers/NavBarShow";
 function App() {
   const {mode} = useSelector((state) => state.mode);
@@ -30,6 +30,8 @@ function App() {
       <Route path='*' element={<PageNotFound />} />
       <Route  path='/register'  element={<SignUpPage />} />
       <Route  path='/login'  element={<LoginPage />} />
+      <Route  path='/chat'  element={<ChatPage />} />
+      
       </Routes>
     </BrowserRouter>
       <DarkMode />

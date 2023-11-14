@@ -1,36 +1,63 @@
 require("dotenv").config();
-const express = require('express')
-const app = express()
-const port = 4000
-const cors = require("cors");
+const express = require('express');
+const app = express();
+const http = require('http');
+const socketIO = require('socket.io');
+const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const MongoURl = process.env.MONGO_URL;
-const mongoose = require("mongoose");
-app.use(cookieParser());
+const mongoose = require('mongoose');
+const errorHandler = require('./Middleware/ErrorHandler');
+const UserRouter = require('./Routes/UserRoutes');
+
+const port = process.env.PORT || 4000;
+const MongoURL = process.env.MONGO_URL;
+
+// Middleware
 app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
-app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
-const errorHandler = require("./Middleware/ErrorHandler");
-const UserRouter = require("./Routes/UserRoutes");
-app.use(
-  cors({
-    origin: ["http://localhost:3000"],
-    credentials: true,
-  })
-);
-mongoose
-  .connect(MongoURl)
+app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
+app.use(bodyParser.json());
+app.use(cors({
+  origin: 'https://rentalmanagement-omega.vercel.app/',
+  credentials: true,
+}));
+
+// Socket.IO setup
+const server = http.createServer(app);
+const io = socketIO(server, {
+  cors: {
+    origin: 'https://rentalmanagement-omega.vercel.app/'
+  }
+});
+io.on('connection', (socket) => {
+  console.log('A user connected');
+
+  socket.on('message', (data) => {
+    console.log('Message from client:', data);
+    io.emit('message', data);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('A user disconnected');
+  });
+});
+
+// MongoDB connection
+mongoose.connect(MongoURL)
   .then(() => {
-    console.log("Connected!");
-    app.listen(port, () => {
-      console.log(`http://localhost:${port}`);
+    console.log('Connected to MongoDB');
+    server.listen(port, () => {
+      console.log(`Server running on http://localhost:${port}`);
     });
   })
   .catch((error) => {
-    console.log(error);
+    console.error('MongoDB connection error:', error);
   });
-app.use('/api/v2/user',UserRouter);
+
+// Routes
+app.use('/api/v2/user', UserRouter);
 app.use(errorHandler);
+
 module.exports = app;
