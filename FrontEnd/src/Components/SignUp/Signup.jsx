@@ -8,45 +8,14 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Avatar } from "@nextui-org/react";
 import Resizer from "react-image-file-resizer";
-import axios from 'axios'
-import imgLogo from '../../Assets/Logo.png';
-const resizeFile = (file) => {
-  return new Promise((resolve, reject) => {
-    if (!(file instanceof Blob) && !(file instanceof File)) {
-      reject(
-        new Error("Invalid file type. Please provide a Blob or File object.")
-      );
-      return;
-    }
-
-    Resizer.imageFileResizer(
-      file,
-      300,
-      300,
-      "WEBP",
-      100,
-      0,
-      (uri) => {
-        resolve(uri);
-      },
-      "base64"
-    );
-  });
-};
-
-const compressImage = async (file) => {
-  try {
-    const compressedImage = await resizeFile(file[0]);
-    return compressedImage;
-  } catch (err) {
-    console.log(err);
-    return null;
-  }
-};
+import axios from "axios";
+import imgLogo from "../../Assets/Logo.png";
+import toast from "react-hot-toast";
+import { userServer } from "../../server";
 const Signup = () => {
   useEffect(() => {
-    document.title = "Register"
- }, []);
+    document.title = "Register";
+  }, []);
   const resizeFile = (file) =>
     new Promise((resolve) => {
       Resizer.imageFileResizer(
@@ -62,21 +31,23 @@ const Signup = () => {
         "base64"
       );
     });
-  const onchange = async (event) => {
-    try {
-      const file = event;
-      const image = await resizeFile(file);
-      return image;
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   const [isVisible, setIsVisible] = useState(false);
   const [isVisible1, setIsVisible1] = useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
   const toggleVisibility1 = () => setIsVisible1(!isVisible1);
   const [imageURL, setimageURL] = useState(null);
+  const onchange = async (event) => {
+    try {
+      const file = event.target.files[0];
+      const image = await resizeFile(file);
+      console.log(image);
+      setimageURL(image);
+      return image;
+    } catch (err) {
+      console.log(err);
+    }
+  };
   const schema = yup.object().shape({
     firstname: yup.string().required("Please provide your first name"),
     middlename: yup.string().required("Please provide your middle name"),
@@ -102,51 +73,13 @@ const Signup = () => {
       .required("Please provide confirm password")
       .oneOf([yup.ref("password")], "Passwords do not match"),
     role: yup.string().required("Please select your role!"),
-    profile: yup
-      .mixed()
-      .required("Required")
-      .test("fileSize", "File size is too large", async (value) => {
-        try {
-          const compressedImage = await compressImage(value);
-
-          if (!compressedImage) {
-            return false; // Validation failed due to compression error
-          }
-          setimageURL(compressedImage);
-          // Convert the base64 string to binary data
-          const binaryData = atob(compressedImage.split(",")[1]);
-
-          // Create a Blob from the binary data
-          const arrayBuffer = new ArrayBuffer(binaryData.length);
-          const uint8Array = new Uint8Array(arrayBuffer);
-
-          for (let i = 0; i < binaryData.length; i++) {
-            uint8Array[i] = binaryData.charCodeAt(i);
-          }
-
-          const blob = new Blob([arrayBuffer]);
-
-          //   Validate the compressed image size
-          if (blob.size <= 5 * 1024 * 1024) {
-            // Return the compressed image
-
-            return true;
-          } else {
-            // Validation failed due to size exceeding the limit
-
-            return false;
-          }
-        } catch (err) {
-          console.error(err);
-          return false; // Validation failed due to unexpected error
-        }
-      }),
   });
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm({
     resolver: yupResolver(schema),
   });
@@ -154,15 +87,22 @@ const Signup = () => {
     const data1 = { ...data, profile: imageURL };
     // console.log(data1);
     try {
-      const person = {name:"John", age:31, city:"New York"};
-
-        const serverData = await axios.post('http://localhost:4000/api/v2/user/register',data1);
-        
-        console.log(serverData);
+      const serverData = await axios.post(
+        `${userServer}/register`,
+        data1
+      );
+      console.log(serverData.data.success);
+      if (serverData.data.success) {
+        reset();
+        setimageURL("");
+        toast.success(serverData.data.message);
+      } else {
+        toast.error("Something went wrong");
+      }
     } catch (error) {
-        console.log(error);
+      console.log(error);
+      toast.error(error.message);
     }
-    
   };
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center dark:bg-gray-800 dark:text-white">
@@ -177,12 +117,15 @@ const Signup = () => {
           <div className="mt-10 flex flex-col items-center">
             <h1 className="text-2xl xl:text-3xl font-extrabold">Sign up</h1>
             <div className="w-full flex-1 mt-8">
-              <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
+              <form
+                onSubmit={handleSubmit(onSubmit)}
+                encType="multipart/form-data"
+              >
                 <div className="mx-auto max-w-xs">
                   <div className="flex items-center space-x-6">
                     <div className="shrink-0">
                       <Avatar
-                        src="https://i.pravatar.cc/150?u=a04258114e29026708c"
+                        src={imageURL}
                         className="w-20 h-20 text-large mx-auto"
                       />
 
@@ -193,7 +136,6 @@ const Signup = () => {
                       <input
                         type="file"
                         onChange={onchange}
-                        {...register("profile")}
                         className="block w-full text-sm text-slate-500
         file:mr-4 file:py-2 file:px-4
         file:rounded-full file:border-0

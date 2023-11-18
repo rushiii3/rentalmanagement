@@ -24,9 +24,9 @@ const Testimonals = () => {
   return (
     <div>
       <section>
-        <div class="mx-auto max-w-[1340px] px-4 py-12 sm:px-6 lg:me-0 lg:py-16 lg:pe-0 lg:ps-8 xl:py-24">
-          <div class="max-w-7xl items-end justify-between sm:flex sm:pe-6 lg:pe-8">
-            <h2 class="max-w-xl text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl dark:text-white">
+        <div className="mx-auto max-w-[1340px] px-4 py-12 sm:px-6 lg:me-0 lg:py-16 lg:pe-0 lg:ps-8 xl:py-24">
+          <div className="max-w-7xl items-end justify-between sm:flex sm:pe-6 lg:pe-8">
+            <h2 className="max-w-xl text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl dark:text-white">
               Read trusted reviews from our customers
             </h2>
           </div>
@@ -49,13 +49,13 @@ export default Testimonals;
 
 export  const Card = (props) => {
     return (
-        <div class="overflow-hidden shadow-lg w-full rounded-2xl">
-  <div class="keen-slider__slide">
-    <blockquote class="flex h-full flex-col justify-between bg-white p-6 shadow-sm sm:p-8 lg:p-12 dark:border-gray-700 dark:bg-gray-800 ">
+        <div className="overflow-hidden shadow-lg w-full rounded-2xl">
+  <div className="keen-slider__slide">
+    <blockquote className="flex h-full flex-col justify-between bg-white p-6 shadow-sm sm:p-8 lg:p-12 dark:border-gray-700 dark:bg-gray-800 ">
       <div>
-        <div class="flex gap-0.5 text-green-500">
+        <div className="flex gap-0.5 text-green-500">
           <svg
-            class="h-5 w-5"
+            className="h-5 w-5"
             fill="currentColor"
             viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg"
@@ -64,7 +64,7 @@ export  const Card = (props) => {
           </svg>
 
           <svg
-            class="h-5 w-5"
+            className="h-5 w-5"
             fill="currentColor"
             viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg"
@@ -73,7 +73,7 @@ export  const Card = (props) => {
           </svg>
 
           <svg
-            class="h-5 w-5"
+            className="h-5 w-5"
             fill="currentColor"
             viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg"
@@ -82,7 +82,7 @@ export  const Card = (props) => {
           </svg>
 
           <svg
-            class="h-5 w-5"
+            className="h-5 w-5"
             fill="currentColor"
             viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg"
@@ -91,7 +91,7 @@ export  const Card = (props) => {
           </svg>
 
           <svg
-            class="h-5 w-5"
+            className="h-5 w-5"
             fill="currentColor"
             viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg"
@@ -100,21 +100,21 @@ export  const Card = (props) => {
           </svg>
         </div>
 
-        <div class="mt-4">
-          <div class="flex items-center">
+        <div className="mt-4">
+          <div className="flex items-center">
             <img
-              class="w-10 h-10 rounded-full mr-4"
+              className="w-10 h-10 rounded-full mr-4 object-cover object-center"
               src={props.image}
               alt="Avatar of Jonathan Reinink"
             />
-            <div class="text-sm">
-              <p class="text-gray-900 leading-none dark:text-white">
+            <div className="text-sm">
+              <p className="text-gray-900 leading-none dark:text-white">
                 {props.name}
               </p>
             </div>
           </div>
 
-          <p class="mt-4 leading-relaxed text-gray-700 dark:text-white">
+          <p className="mt-4 leading-relaxed text-gray-700 dark:text-white">
             {props.review}
           </p>
         </div>

@@ -13,15 +13,20 @@ const Jumptron = () => {
   };
   return (
     <div className="h-screen bg-white relative">
-      <video
+      <link
+        rel="preload"
+        href="https://i.ibb.co/jvfy7Q2/Screenshot-2023-11-18-at-2-12-59-PM.webp"
+        as="image"
+      />
+      {/* <video
         className="w-full h-full max-w-full object-cover  object-center"
         playsInline
         loop
         muted
-       autoPlay
       >
         <source src="https://static.vecteezy.com/system/resources/previews/021/019/996/mp4/lease-rental-and-selling-home-dealership-manager-smile-handshake-to-the-new-homeowner-rent-house-sales-loan-credit-financial-insurance-seller-dealer-installment-free-video.mp4" />
-      </video>
+      </video> */}
+      <img src="https://i.ibb.co/jvfy7Q2/Screenshot-2023-11-18-at-2-12-59-PM.webp" className="w-full h-full max-w-full object-cover  object-center" alt="" />
 
       <motion.div className="py-8 px-4 mx-auto max-w-screen text-center lg:py-16 absolute top-36"
                 initial="hidden"

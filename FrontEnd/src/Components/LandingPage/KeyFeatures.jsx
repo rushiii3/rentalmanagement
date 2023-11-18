@@ -57,7 +57,7 @@ const KeyFeatures = () => {
 
   return (
     <>
-      <div class="h-screen grid grid-cols-1 items-center justify-center mx-auto md:grid-cols-2 gap-8 md:mx-16 p-1 overflow-hidden">
+      <div className="h-screen grid grid-cols-1 items-center justify-center mx-auto md:grid-cols-2 gap-8 md:mx-16 p-1 overflow-hidden">
         <motion.div
           initial="hidden"
           viewport={{ once: true }}
@@ -66,7 +66,7 @@ const KeyFeatures = () => {
         >
           <Image
             alt="NextUI hero Image with delay"
-            width={1240}
+            className="h-96 w-auto"
             src="https://framerusercontent.com/images/gZ0AVj9czW9BivrS2TyIGRPOwU.jpg?scale-down-to=512"
           />
         </motion.div>
@@ -77,7 +77,7 @@ const KeyFeatures = () => {
           variants={fadeInVariantsRight}
           className="p-2"
         >
-          <h1 class="text-[#662E9B] text-4xl font-extrabold  leading-none  md:text-4xl lg:text-5xl dark:text-white">
+          <h1 className="text-[#662E9B] text-4xl font-extrabold  leading-none  md:text-4xl lg:text-5xl dark:text-white">
             Effortless Property Listings With High-Quality Images and Details
           </h1>
           <p>
@@ -87,7 +87,7 @@ const KeyFeatures = () => {
           </p>
         </motion.div>
       </div>
-      <div class="h-screen grid grid-cols-1 items-center justify-center mx-auto md:grid-cols-2 gap-8 md:mx-16 p-1 overflow-hidden ">
+      <div className="h-screen grid grid-cols-1 items-center justify-center mx-auto md:grid-cols-2 gap-8 md:mx-16 p-1 overflow-hidden ">
         <motion.div
           initial="hidden"
           viewport={{ once: true }}
@@ -95,7 +95,7 @@ const KeyFeatures = () => {
           variants={fadeInVariantsLeft}
           className="p-2"
         >
-          <h1 class="text-[#662E9B] text-4xl font-extrabold  leading-none  md:text-4xl lg:text-5xl dark:text-white">
+          <h1 className="text-[#662E9B] text-4xl font-extrabold  leading-none  md:text-4xl lg:text-5xl dark:text-white">
             Streamlined Tenant Screening for Reliable Renters
           </h1>
           <p>
@@ -112,7 +112,7 @@ const KeyFeatures = () => {
         >
           <Image
             alt="NextUI hero Image with delay"
-            width={1240}
+            className="h-96 w-auto"
             src="https://framerusercontent.com/images/IaTbgPS2xILAHIo9qSha0OI1dwc.jpg"
           />
         </motion.div>
@@ -139,6 +139,7 @@ const KeyFeatures = () => {
             <CardBody className="overflow-hidden">
               <Image
                 alt="Relaxing app background"
+                className="h-full w-full"
                 src="https://framerusercontent.com/images/fJv5Q8vxS17BsGavyKZZONEXyU.jpg"
               />
             </CardBody>
@@ -164,6 +165,7 @@ const KeyFeatures = () => {
             <CardBody className="overflow-hidden">
               <Image
                 alt="Relaxing app background"
+                className="h-full w-full"
                 src="https://framerusercontent.com/images/RCCSS65fIQ8jhayyxuR0WsnUK4.jpg"
               />
             </CardBody>
@@ -188,6 +190,7 @@ const KeyFeatures = () => {
 
             <CardBody className="overflow-hidden">
               <Image
+              className="h-full w-full"
                 alt="Relaxing app background"
                 src="https://framerusercontent.com/images/fJv5Q8vxS17BsGavyKZZONEXyU.jpg"
               />

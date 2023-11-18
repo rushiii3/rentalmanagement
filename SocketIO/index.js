@@ -4,9 +4,11 @@ const http = require('http');
 const socketIO = require('socket.io');
 const app = express();
 const server = http.createServer(app);
+const serverLink = "https://rentalmanagement-omega.vercel.app";
+const localhostLink = "http://localhost:3000";
 const io = socketIO(server, {
   cors: {
-    origin: 'https://rentalmanagement-omega.vercel.app'
+    origin: serverLink
   }
 });
 

@@ -26,6 +26,7 @@ const ChatDesign = () => {
         aria-controls="speed-dial-menu-click"
         aria-expanded={isMenuOpen}
         onClick={toggleMenu}
+        name='ChatBotButton'
         className="flex items-center justify-center ms-auto  text-white bg-white rounded-full w-14 h-14 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:focus:ring-blue-800 ring-blue-800"
       >
         <img src="https://s3.ap-south-1.amazonaws.com/custpostimages/sb_images/loading.gif" alt=""  className='w-14 h-14'/>
