@@ -40,9 +40,8 @@ const ChangePassword = (props) => {
       console.log(serverResponse.data.success);
       if(serverResponse.data.success){
         toast.success(serverResponse.data.message);
-        reset
-        navigate('/login')
-
+        reset();
+        navigate('/login');
       }
     } catch (error) {
       toast.error(error.response.data.message);
