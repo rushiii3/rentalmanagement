@@ -6,7 +6,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
-import { Input } from "@nextui-org/react";
+import { Input, Button } from "@nextui-org/react";
 import axios from "axios";
 import { userServer } from "../../server";
 const EmailInput = () => {
@@ -15,6 +15,7 @@ const EmailInput = () => {
   }, []);
   const [OTPpage, setOTPpage] = useState(false);
   const [email, setemail] = useState(null);
+  const [loading, setloading] = useState(false);
   const schema = yup.object().shape({
     email: yup
       .string()
@@ -31,16 +32,21 @@ const EmailInput = () => {
   });
   const onSubmit = async (data) => {
     try {
-      
-      const serverResponse = await axios.post(`${userServer}/forgot-password`,data); 
+      setloading(true);
+      const serverResponse = await axios.post(
+        `${userServer}/forgot-password`,
+        data
+      );
       console.log(serverResponse.data.success);
-      if(serverResponse.data.success){
+      if (serverResponse.data.success) {
         toast.success(serverResponse.data.message);
         setOTPpage(true);
         setemail(data);
+        setloading(false);
       }
     } catch (error) {
       toast.error(error.response.data.message);
+      setloading(false);
     }
   };
   return (
@@ -65,18 +71,25 @@ const EmailInput = () => {
                 size="lg"
                 variant="bordered"
                 {...register("email")}
-                    validationState={
-                      errors.email?.message ? "invalid" : "valid"
-                    }
-                    errorMessage={errors.email?.message}
+                validationState={errors.email?.message ? "invalid" : "valid"}
+                errorMessage={errors.email?.message}
               />
-              <button
+
+              <Button
                 type="submit"
-                className="w-full py-3 font-medium text-white bg-indigo-600 hover:bg-indigo-500 rounded-lg border-indigo-500 hover:shadow inline-flex space-x-2 items-center justify-center"
+                className="mt-5  tracking-wide font-semibold bg-indigo-600 dark:bg-indigo-800 text-gray-100 dark:text-white w-full py-4 rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-900 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
+                isLoading={loading}
+                size="lg"
               >
-                <FaKey size={20} />
-                <span>Reset password</span>
-              </button>
+                {loading ? (
+                  "Sending mail!"
+                ) : (
+                  <>
+                    <FaKey size={20} />
+                    <span className="ml-3">Reset password</span>
+                  </>
+                )}
+              </Button>
               <p className="text-center">
                 Not registered yet?
                 <Link

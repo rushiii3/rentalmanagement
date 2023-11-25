@@ -4,12 +4,14 @@ import { MdOutlineVerifiedUser } from "react-icons/md";
 import { userServer } from "../../server";
 import toast from "react-hot-toast";
 import ChangePassword from './ChangePassword';
+import { Button } from "@nextui-org/react";
 const OTP = (props) => {
   const [otp, setOtp] = useState(['', '', '', '']); // State to hold OTP values
   const refs = [useRef(), useRef(), useRef(), useRef()]; // Refs for input elements
   const [error, setError] = useState(false);
   const [Passwordpage, setPasswordpage] = useState(false);
   const [email, setemail] = useState(null);
+  const [loading, setloading] = useState(false);
   const handleChange = (e, index) => {
     const { value } = e.target;
     if (value.length === 1 && /^\d+$/.test(value)) {
@@ -43,6 +45,7 @@ const OTP = (props) => {
 
   const handleSubmit = async(e) => {
     e.preventDefault();
+    
     if (otp.some((value) => value === '')) {
       setError(true);
       return;
@@ -50,6 +53,7 @@ const OTP = (props) => {
     // Reset error state if there is no error
     setError(false);
     try {
+      setloading(true);
       const data = {
         "otp" : otp.join(''),
         "email" : props.email.email,
@@ -59,12 +63,13 @@ const OTP = (props) => {
         toast.success(serverResponse.data.message);
         setPasswordpage(true);
         setemail(serverResponse.data.data);
+        setloading(false);
       }
     } catch (error) {
       console.log(error.response.data.message);
       toast.error(error.response.data.message);
+      setloading(false);
     }
-    console.log('OTP submitted:', otp.join(''));
   };
   return (
     <>
@@ -104,10 +109,22 @@ const OTP = (props) => {
 
             <div className="flex flex-col space-y-5">
               <div>
-                <button onClick={handleSubmit} type="submit" class="w-full py-3 font-medium text-white bg-indigo-600 hover:bg-indigo-500 rounded-lg border-indigo-500 hover:shadow inline-flex space-x-2 items-center justify-center">
-                  <MdOutlineVerifiedUser size={20} />
-                  <span>Verify Account</span>
-                </button>
+                <Button
+                type="submit"
+                className="mt-5  tracking-wide font-semibold bg-indigo-600 dark:bg-indigo-800 text-gray-100 dark:text-white w-full py-4 rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-900 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
+                isLoading={loading}
+                size="lg"
+                onClick={handleSubmit}
+              >
+                {loading ? (
+                  "Veifying OTP!"
+                ) : (
+                  <>
+                    <MdOutlineVerifiedUser size={20} />
+                    <span className="ml-1">Verify Account</span>
+                  </>
+                )}
+              </Button>
               </div>
 
               <div className="flex flex-row items-center justify-center text-center text-sm font-medium space-x-1 text-gray-500">

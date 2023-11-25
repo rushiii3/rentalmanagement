@@ -57,10 +57,10 @@ const Login = () => {
   return (
     <div class="min-h-screen bg-gray-100 text-gray-900 flex justify-center dark:bg-gray-800 dark:text-white">
     <div class="max-w-screen-xl m-0 sm:m-10 bg-white dark:bg-black shadow sm:rounded-lg flex justify-center flex-1">
-    <div class="flex-1 bg-indigo-100 text-center hidden lg:flex">
+    <div class="flex-1 bg-green-100 text-center hidden lg:flex">
         <div class="m-12 xl:m-16 w-full bg-contain bg-center bg-no-repeat">
           <img
-            src="https://storage.googleapis.com/devitary-image-host.appspot.com/15848031292911696601-undraw_designer_life_w96d.svg"
+            src="https://drive.google.com/uc?export=view&id=1KZ_Ub_2lZ0dHbKV0fAIhxVhiQA183RCz"
             alt=""
           />
         </div>
@@ -123,7 +123,7 @@ const Login = () => {
               </Link>
             
           </div>
-              <button type='submit' className="mt-5 tracking-wide font-semibold bg-indigo-500 dark:bg-indigo-800 text-gray-100 dark:text-white w-full py-4 rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-900 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
+              <button type='submit' name="loginbutton" className="mt-5 tracking-wide font-semibold bg-green-400 text-white-500 dark:bg-green-800  dark:text-white w-full py-4 rounded-lg hover:bg-green-700 dark:hover:bg-green-900 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
                 <svg
                   class="w-6 h-6 -ml-2"
                   fill="none"

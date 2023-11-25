@@ -1,15 +1,16 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { MdOutlineLockReset } from "react-icons/md";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { userServer } from '../../server';
 import axios from 'axios';
-import { Input } from "@nextui-org/react";
+import { Input,Button } from "@nextui-org/react";
 import toast from "react-hot-toast";
 import {useNavigate} from 'react-router-dom';
 const ChangePassword = (props) => {
   const navigate = useNavigate();
+  const [loading, setloading] = useState(false);
   const schema = yup.object().shape({
     password: yup
       .string()
@@ -34,17 +35,18 @@ const ChangePassword = (props) => {
   });
   const onSubmit = async (data) => {
     try {
+      setloading(true);
       const data1 = { ...data, email: props.email };
-      console.log(data1);
       const serverResponse = await axios.post(`${userServer}/change-forgot-password`,data1); 
-      console.log(serverResponse.data.success);
       if(serverResponse.data.success){
         toast.success(serverResponse.data.message);
         reset();
         navigate('/login');
+        setloading(false);
       }
     } catch (error) {
       toast.error(error.response.data.message);
+      setloading(false);
     }
   };
   return (
@@ -83,12 +85,23 @@ const ChangePassword = (props) => {
                     errorMessage={errors.email?.message}
               />
 
-        <button type="submit" class="w-full py-3 font-medium text-white bg-indigo-600 hover:bg-indigo-500 rounded-lg border-indigo-500 hover:shadow inline-flex space-x-2 items-center justify-center">
-        <MdOutlineLockReset size={20}/>
 
-          <span>Reset</span>
-        </button>
-        
+        <Button
+                type="submit"
+                className="mt-5  tracking-wide font-semibold bg-indigo-600 dark:bg-indigo-800 text-gray-100 dark:text-white w-full py-4 rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-900 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
+                isLoading={loading}
+                size="lg"
+                
+              >
+                {loading ? (
+                  "Chaning password!"
+                ) : (
+                  <>
+                    <MdOutlineLockReset size={20}/>
+                    <span className="ml-1">Reset</span>
+                  </>
+                )}
+              </Button>
       </div>
     </form>
   </div>

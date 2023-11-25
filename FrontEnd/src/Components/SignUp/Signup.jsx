@@ -12,6 +12,8 @@ import axios from "axios";
 import imgLogo from "../../Assets/Logo.png";
 import toast from "react-hot-toast";
 import { userServer } from "../../server";
+import { Button } from "@nextui-org/react";
+
 const Signup = () => {
   useEffect(() => {
     document.title = "Register";
@@ -23,7 +25,7 @@ const Signup = () => {
         300,
         300,
         "WEBP",
-        100,
+        80,
         0,
         (uri) => {
           resolve(uri);
@@ -37,6 +39,7 @@ const Signup = () => {
   const toggleVisibility = () => setIsVisible(!isVisible);
   const toggleVisibility1 = () => setIsVisible1(!isVisible1);
   const [imageURL, setimageURL] = useState(null);
+  const [loading, setloading] = useState(false);
   const onchange = async (event) => {
     try {
       const file = event.target.files[0];
@@ -85,23 +88,23 @@ const Signup = () => {
   });
   const onSubmit = async (data) => {
     const data1 = { ...data, profile: imageURL };
-    // console.log(data1);
+    setloading(true);
     try {
-      const serverData = await axios.post(
-        `${userServer}/register`,
-        data1
-      );
+      const serverData = await axios.post(`${userServer}/register`, data1);
       console.log(serverData.data.success);
       if (serverData.data.success) {
         reset();
         setimageURL("");
+        setloading(false);
         toast.success(serverData.data.message);
       } else {
         toast.error("Something went wrong");
+        setloading(false);
       }
     } catch (error) {
       console.log(error);
       toast.error(error.message);
+      setloading(false);
     }
   };
   return (
@@ -272,12 +275,16 @@ const Signup = () => {
                     }
                     errorMessage={errors.confirmPassword?.message}
                   />
-
-                  <button
-                    type="submit"
-                    className="mt-5 tracking-wide font-semibold bg-indigo-500 dark:bg-indigo-800 text-gray-100 dark:text-white w-full py-4 rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-900 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
+                  <Button
+                  type="submit"
+                    className="mt-5  tracking-wide font-semibold bg-indigo-500 dark:bg-indigo-800 text-gray-100 dark:text-white w-full py-4 rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-900 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
+                    isLoading={loading}
+                    size="lg"
                   >
-                    <svg
+{
+  loading ? ('Loading') : (<>
+  
+  <svg
                       className="w-6 h-6 -ml-2"
                       fill="none"
                       stroke="currentColor"
@@ -290,9 +297,11 @@ const Signup = () => {
                       <path d="M20 8v6M23 11h-6" />
                     </svg>
                     <span className="ml-3">Sign Up</span>
-                  </button>
+  </>)
+}
+                  </Button>
                   <p className="mt-6 text-xs text-gray-600 text-center">
-                    I agree to abide by templatana's
+                    I agree to abide by Rent Me
                     <a
                       href="#"
                       className="border-b border-gray-500 border-dotted"

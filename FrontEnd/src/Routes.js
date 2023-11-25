@@ -5,6 +5,7 @@ import LoginPage from './Pages/LoginPage';
 import ChatPage from './Pages/ChatPage';
 import Activation from './Pages/Activation';
 import ForgotPage from './Pages/ForgotPage';
+import PropertyPage from './Pages/PropertyPage';
 export   {
     LandingPage,
     SignUpPage,
@@ -13,5 +14,6 @@ export   {
     ChatPage,
     Activation,
     ForgotPage,
+    PropertyPage
     
 }
