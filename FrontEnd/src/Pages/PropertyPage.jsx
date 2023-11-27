@@ -1,4 +1,3 @@
-import { Fragment, useState } from "react";
 import PropertyListing from "../Components/Property/PropertyListing";
 
 const PropertyPage = () => {

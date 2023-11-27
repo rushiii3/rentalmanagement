@@ -1,12 +1,10 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const PropertyCard = () => {
   return (
     <div class="relative mx-auto w-full">
-      <a
-        href="#"
-        class="relative inline-block duration-300 ease-in-out transition-transform transform hover:-translate-y-2 w-full"
-      >
+      <Link class="relative inline-block duration-300 ease-in-out transition-transform transform hover:-translate-y-2 w-full">
         <div class="shadow p-4 rounded-lg bg-white">
           <div class="flex justify-center relative rounded-lg overflow-hidden h-52">
             <div class="transition-transform duration-500 transform ease-in-out hover:scale-110 w-full">
@@ -14,6 +12,7 @@ const PropertyCard = () => {
                 <img
                   class="fill-current mr-2"
                   src="https://images.pexels.com/photos/186077/pexels-photo-186077.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+                  alt="hehe"
                 />
               </div>
             </div>
@@ -137,7 +136,7 @@ const PropertyCard = () => {
             </div>
           </div>
         </div>
-      </a>
+        </Link>
     </div>
   );
 };

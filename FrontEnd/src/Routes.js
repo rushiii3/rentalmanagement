@@ -6,6 +6,8 @@ import ChatPage from './Pages/ChatPage';
 import Activation from './Pages/Activation';
 import ForgotPage from './Pages/ForgotPage';
 import PropertyPage from './Pages/PropertyPage';
+import ProfileUpdatePage from './Pages/ProfileUpdatePage';
+
 export   {
     LandingPage,
     SignUpPage,
@@ -14,6 +16,6 @@ export   {
     ChatPage,
     Activation,
     ForgotPage,
-    PropertyPage
-    
+    PropertyPage,
+    ProfileUpdatePage,
 }

@@ -91,7 +91,6 @@ const Signup = () => {
     setloading(true);
     try {
       const serverData = await axios.post(`${userServer}/register`, data1);
-      console.log(serverData.data.success);
       if (serverData.data.success) {
         reset();
         setimageURL("");
@@ -102,7 +101,6 @@ const Signup = () => {
         setloading(false);
       }
     } catch (error) {
-      console.log(error);
       toast.error(error.message);
       setloading(false);
     }
@@ -137,6 +135,7 @@ const Signup = () => {
                     <label className="block">
                       <span className="sr-only">Choose profile photo</span>
                       <input
+                        accept="image/png, image/jpeg, image/jpg"
                         type="file"
                         onChange={onchange}
                         className="block w-full text-sm text-slate-500
@@ -276,29 +275,30 @@ const Signup = () => {
                     errorMessage={errors.confirmPassword?.message}
                   />
                   <Button
-                  type="submit"
+                    type="submit"
                     className="mt-5  tracking-wide font-semibold bg-indigo-500 dark:bg-indigo-800 text-gray-100 dark:text-white w-full py-4 rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-900 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
                     isLoading={loading}
                     size="lg"
                   >
-{
-  loading ? ('Loading') : (<>
-  
-  <svg
-                      className="w-6 h-6 -ml-2"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth={2}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
-                      <circle cx="8.5" cy="7" r="4" />
-                      <path d="M20 8v6M23 11h-6" />
-                    </svg>
-                    <span className="ml-3">Sign Up</span>
-  </>)
-}
+                    {loading ? (
+                      "Loading"
+                    ) : (
+                      <>
+                        <svg
+                          className="w-6 h-6 -ml-2"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth={2}
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                          <circle cx="8.5" cy="7" r="4" />
+                          <path d="M20 8v6M23 11h-6" />
+                        </svg>
+                        <span className="ml-3">Sign Up</span>
+                      </>
+                    )}
                   </Button>
                   <p className="mt-6 text-xs text-gray-600 text-center">
                     I agree to abide by Rent Me

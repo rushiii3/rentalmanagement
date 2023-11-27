@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const UserModel = require("../Models/UserModel");
 const sendMail = require("../utlis/sendMail");
 const errorThrow = require("../Middleware/ErrorHandler");
-const sendOTP = require('../utlis/sendOTP');
+const sendOTP = require("../utlis/sendOTP");
 const bcrypt = require("bcryptjs");
 cloudinary.config({
   cloud_name: "dmuhioahv",
@@ -166,46 +166,63 @@ const login = asyncHandler(async (req, res, next) => {
 
     const token = UserToken;
     const options = {
-        expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
-        httpOnly: true,
-        sameSite: "none",
-        secure: true,
-      };
-      res.status(201).cookie("token", token, options).json({
-        success: true,
-        user,
-        token,
-      });
+      expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+      httpOnly: true,
+      sameSite: "none",
+      secure: true,
+    };
+    res.status(201).cookie("token", token, options).json({
+      success: true,
+      user,
+      token,
+    });
   } catch (error) {
     next(error);
   }
 });
 
-const getUser = asyncHandler(async(req,res,next) => {
+const getUser = asyncHandler(async (req, res, next) => {
   try {
-    const {email, role, firstname, lastname, avatar} = await UserModel.findById(req.user).select('email role firstname lastname avatar');
+    const {
+      email,
+      role,
+      firstname,
+      middlename,
+      lastname,
+      avatar,
+      address,
+      phoneNumber,
+    } = await UserModel.findById(req.user).select(
+      "email role firstname middlename lastname avatar address phoneNumber"
+    );
     const imgurl = avatar.url;
     const user = {
-      email, role, firstname, lastname, imgurl
-    }
-    res.status(200).json({success:true,user:user});
+      email,
+      role,
+      firstname,
+      middlename,
+      lastname,
+      address,
+      imgurl,
+      phoneNumber,
+    };
+    res.status(200).json({ success: true, user: user });
   } catch (error) {
     next(error);
   }
-  
-})
-const forgotpassword = asyncHandler(async(req,res,next) => {
+});
+const forgotpassword = asyncHandler(async (req, res, next) => {
   try {
-    const {email} = req.body;
+    const { email } = req.body;
     const user = await UserModel.findOne({ email });
-    if(!user){
+    if (!user) {
       errorThrow("User doesn't exist!", 404);
     }
     const otp = Math.floor(1000 + Math.random() * 9000);
     const maildata = {
-      "email" : user.email,
-      "firstname": user.firstname,
-      "OTP": otp,
+      email: user.email,
+      firstname: user.firstname,
+      OTP: otp,
     };
     await sendOTP(maildata);
     const updatedUser = await UserModel.findOneAndUpdate(
@@ -213,62 +230,160 @@ const forgotpassword = asyncHandler(async(req,res,next) => {
       { $set: { resetPasswordToken: otp, resetPasswordTime: new Date() } },
       { new: true }
     );
-      if(!updatedUser){
-        errorThrow("Internal Error", 500);
-      }
-    res.status(200).json({success:true,message:"Your OTP send to the email"});
+    if (!updatedUser) {
+      errorThrow("Internal Error", 500);
+    }
+    res
+      .status(200)
+      .json({ success: true, message: "Your OTP send to the email" });
   } catch (error) {
     next(error);
   }
-})
-const verifyotp = asyncHandler(async(req,res,next) => {
+});
+const verifyotp = asyncHandler(async (req, res, next) => {
   try {
-    const {otp, email} = req.body;
-    const user = await UserModel.findOne({email});
+    const { otp, email } = req.body;
+    const user = await UserModel.findOne({ email });
     if (!user) {
       errorThrow("User not found", 404);
     }
     const currentTime = new Date();
-    const timeDifferenceInMinutes = (currentTime - user.resetPasswordTime) / (1000 * 60);
+    const timeDifferenceInMinutes =
+      (currentTime - user.resetPasswordTime) / (1000 * 60);
     if (timeDifferenceInMinutes <= 5) {
       if (user.resetPasswordToken === otp) {
-        res.status(200).json({success:true,message:"OTP veified",data:email});
+        res
+          .status(200)
+          .json({ success: true, message: "OTP veified", data: email });
       } else {
         errorThrow("Invalid OTP", 401);
       }
-      
     } else {
       errorThrow("Reset token expired", 401);
     }
-
   } catch (error) {
     next(error);
   }
-})
-const changeforgotpassword = asyncHandler(async(req,res,next) => {
+});
+const changeforgotpassword = asyncHandler(async (req, res, next) => {
   try {
-    const {email,password} = req.body;
-    const user = await UserModel.findOne({ email }).select('+password');
+    const { email, password } = req.body;
+    const user = await UserModel.findOne({ email }).select("+password");
     if (!user) {
       errorThrow("User not found", 404);
     }
-    console.log('1');
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log('2');
     const updateResult = await UserModel.updateOne(
-      { email},
+      { email },
       { $set: { password: hashedPassword } }
     );
-    console.log('3');
     if (updateResult.nModified === 0) {
       errorThrow("User not found or password unchanged", 400);
     }
-    res.status(200).json({success:true,message:"Password changed successfully!"});
-
+    res
+      .status(200)
+      .json({ success: true, message: "Password changed successfully!" });
   } catch (error) {
-    
+    next(error);
   }
-})
+});
+const UserProfileImageUpdate = asyncHandler(async (req, res, next) => {
+  try {
+    const { email, image } = req.body;
+    const user = await UserModel.findOne({ email }).select("+password");
+
+    if (!user) {
+      errorThrow("User not found", 404);
+    }
+
+    await cloudinary.uploader
+      .destroy(user.avatar.public_id)
+      .then((result) => console.log(result));
+
+    const result = await cloudinary.uploader.upload(image).catch((error) => {
+      errorThrow(error.message, 500);
+    });
+
+    if (!result) {
+      errorThrow("Failed to upload the image", 500);
+      
+    }
+
+    const image_id = result.public_id;
+    const image_link = result.secure_url;
+
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      user._id,
+      {
+        $set: {
+          avatar: {
+            public_id: image_id,
+            url: image_link,
+          },
+        },
+      },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      errorThrow("Failed to update user profile", 500);
+    }
+
+    res.status(200).json({ msg: true });
+  } catch (error) {
+    next(error);
+  }
+});
+const get_user = asyncHandler(async (req, res, next) => {
+  const { email } = req.body;
+  try {
+    const user = await UserModel.findOne({ email }).select(
+      "email firstname middlename lastname  address phoneNumber"
+    );
+    res.status(200).json({ success: true, user: user });
+  } catch (error) {
+    next(error);
+  }
+});
+const update_user_info = asyncHandler(async (req, res, next) => {
+  try {
+    const {
+      firstname,
+      middlename,
+      lastname,
+      email,
+      phoneno,
+      streetname,
+      state,
+      city,
+      pincode,
+      id
+    } = req.body;
+    const updatedData = {
+      firstname: firstname,
+      middlename: middlename,
+      lastname: lastname,
+      email: email,
+      phoneNumber: phoneno,
+      'address.streetname': streetname,
+      'address.state': state,
+      'address.city': city,
+      'address.pincode': pincode,
+      // Add any other fields you want to update
+    };
+    const updatedUser = await UserModel.findOneAndUpdate(
+      { _id: id },
+      { $set: updatedData },
+      { new: true } // Return the updated document
+    );
+    if(!updatedUser){
+      errorThrow("Failed to update user profile", 500);
+    }
+    res.status(200).json({ success: true});
+  } catch (error) {
+    next(error);
+  }
+});
 module.exports = {
   hello,
   register,
@@ -277,5 +392,8 @@ module.exports = {
   getUser,
   forgotpassword,
   verifyotp,
-  changeforgotpassword
+  changeforgotpassword,
+  UserProfileImageUpdate,
+  get_user,
+  update_user_info,
 };

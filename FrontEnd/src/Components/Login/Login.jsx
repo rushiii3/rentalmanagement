@@ -44,7 +44,7 @@ const Login = () => {
         const serverData = await axios.post(`${userServer}/login`,data,{withCredentials:true});
         console.log(serverData.data.success);
         if(serverData.data.success){
-          navigate('/chat');
+          navigate('/properties');
           toast.success("Logged in successfully");
           reset();
           Store.dispatch(LoadUser());
