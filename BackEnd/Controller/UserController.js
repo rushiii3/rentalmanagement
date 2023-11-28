@@ -151,6 +151,7 @@ const activation = asyncHandler(async (req, res, next) => {
 const login = asyncHandler(async (req, res, next) => {
   try {
     const { email, password } = req.body;
+    console.log(password);
     if (!email || !password) {
       errorThrow("Email or password should not be empty", 400);
     }
@@ -192,8 +193,9 @@ const getUser = asyncHandler(async (req, res, next) => {
       avatar,
       address,
       phoneNumber,
+      _id,
     } = await UserModel.findById(req.user).select(
-      "email role firstname middlename lastname avatar address phoneNumber"
+      "email role firstname middlename lastname avatar address phoneNumber _id"
     );
     const imgurl = avatar.url;
     const user = {
@@ -205,6 +207,7 @@ const getUser = asyncHandler(async (req, res, next) => {
       address,
       imgurl,
       phoneNumber,
+      _id,
     };
     res.status(200).json({ success: true, user: user });
   } catch (error) {
@@ -306,7 +309,6 @@ const UserProfileImageUpdate = asyncHandler(async (req, res, next) => {
 
     if (!result) {
       errorThrow("Failed to upload the image", 500);
-      
     }
 
     const image_id = result.public_id;
@@ -357,7 +359,7 @@ const update_user_info = asyncHandler(async (req, res, next) => {
       state,
       city,
       pincode,
-      id
+      id,
     } = req.body;
     const updatedData = {
       firstname: firstname,
@@ -365,10 +367,10 @@ const update_user_info = asyncHandler(async (req, res, next) => {
       lastname: lastname,
       email: email,
       phoneNumber: phoneno,
-      'address.streetname': streetname,
-      'address.state': state,
-      'address.city': city,
-      'address.pincode': pincode,
+      "address.streetname": streetname,
+      "address.state": state,
+      "address.city": city,
+      "address.pincode": pincode,
       // Add any other fields you want to update
     };
     const updatedUser = await UserModel.findOneAndUpdate(
@@ -376,10 +378,29 @@ const update_user_info = asyncHandler(async (req, res, next) => {
       { $set: updatedData },
       { new: true } // Return the updated document
     );
-    if(!updatedUser){
+    if (!updatedUser) {
       errorThrow("Failed to update user profile", 500);
     }
-    res.status(200).json({ success: true});
+    res.status(200).json({ success: true });
+  } catch (error) {
+    next(error);
+  }
+});
+const update_user_password = asyncHandler(async (req, res, next) => {
+  try {
+    const { oldpassword, password, id } = req.body;
+    const user = await UserModel.findById(id).select("+password");;
+    if(!user){
+      errorThrow("User doesn't exist!", 404);
+    }
+    const isOldPasswordValid = await user.comparePassword(oldpassword);
+    console.log("4");
+    if (!isOldPasswordValid) {
+      errorThrow("Your old password doesn't match", 401);
+    }
+    user.password = password; 
+    await user.save();
+    res.status(200).json({ success: true });
   } catch (error) {
     next(error);
   }
@@ -396,4 +417,5 @@ module.exports = {
   UserProfileImageUpdate,
   get_user,
   update_user_info,
+  update_user_password,
 };
