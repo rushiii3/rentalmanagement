@@ -15,13 +15,17 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
-  Avatar,
   User,
 } from "@nextui-org/react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import axios from "axios";
+import { userServer } from "../../../server";
+import toast from "react-hot-toast";
+import store from "../../../Redux/store";
+import { LoadUser } from "../../../Redux/action/user";
 const Navbar1 = () => {
-  const { loading, isAuthenticated, user } = useSelector((state) => state.user);
+  const {isAuthenticated, user } = useSelector((state) => state.user);
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const navigate = useNavigate();
   const menuItems = [
@@ -36,9 +40,26 @@ const Navbar1 = () => {
     "Help & Feedback",
     "Log Out",
   ];
+  const closeMenu = () => {
+    setIsMenuOpen(false); // Function to close the Navbar menu
+  };
+  const Logout = async() => {
+    try {
+      const serverResponse = await axios.get(`${userServer}/logout`,{withCredentials:true});
+      console.log(serverResponse);
+      if(serverResponse.data.success){
+        toast.success("Log out successful!");
+        store.dispatch(LoadUser());
+        navigate("/login");
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  }
   return (
     <>
-      <Navbar onMenuOpenChange={setIsMenuOpen}>
+      <Navbar isMenuOpen={isMenuOpen}
+      onMenuOpenChange={setIsMenuOpen} maxWidth="full" className="sm:px-5" isBordered={true}>
         <NavbarContent>
           <NavbarMenuToggle
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
@@ -57,6 +78,21 @@ const Navbar1 = () => {
 
         <NavbarContent className="hidden sm:flex gap-4" justify="center">
           <NavbarItem>
+            <Link color="foreground" to="/properties">
+              Properties
+            </Link>
+          </NavbarItem>
+          <NavbarItem >
+            <Link href="#" aria-current="page">
+              Customers
+            </Link>
+          </NavbarItem>
+          <NavbarItem>
+            <Link color="foreground" href="#">
+              Integrations
+            </Link>
+          </NavbarItem>
+          <NavbarItem>
             <Link color="foreground" href="#">
               Features
             </Link>
@@ -72,56 +108,66 @@ const Navbar1 = () => {
             </Link>
           </NavbarItem>
         </NavbarContent>
-        <NavbarContent justify="end">
-          <NavbarItem className="hidden lg:flex">
-            <Link to="/login">Login</Link>
-          </NavbarItem>
-          <NavbarItem>
-            <Button
-              color="primary"
-              onClick={() => {
-                navigate("/register")
-              }}
-              variant="flat"
-            >
-              Sign Up
-            </Button>
-          </NavbarItem>
 
-          <Dropdown placement="bottom-start">
-            <DropdownTrigger>
-              <User
-                as="button"
-                avatarProps={{
-                  isBordered: true,
-                  src: `${user?.user?.imgurl}`,
-                }}
-                className="transition-transform"
-                description={user?.user?.email}
-                name={user?.user?.firstname + " " + user?.user?.lastname}
-              />
-            </DropdownTrigger>
-            <DropdownMenu aria-label="User Actions" variant="flat">
-              <DropdownItem key="profile" className="h-14 gap-2">
-                <Link to="/">
-                  <p className="font-bold">Signed in as</p>
-                  <p className="font-bold">{user?.user?.email}</p>
-                </Link>
-              </DropdownItem>
-              <DropdownItem key="settings">My Settings</DropdownItem>
-              <DropdownItem key="team_settings">Team Settings</DropdownItem>
-              <DropdownItem key="analytics">Analytics</DropdownItem>
-              <DropdownItem key="system">System</DropdownItem>
-              <DropdownItem key="configurations">Configurations</DropdownItem>
-              <DropdownItem key="help_and_feedback">
-                Help & Feedback
-              </DropdownItem>
-              <DropdownItem key="logout" color="danger">
-                Log Out
-              </DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
+        <NavbarContent justify="end">
+          {!isAuthenticated ? (
+            <>
+              <NavbarItem className="hidden lg:flex">
+                <Link to="/login">Login</Link>
+              </NavbarItem>
+              <NavbarItem>
+                <Button
+                  color="primary"
+                  onClick={() => {
+                    navigate("/register");
+                  }}
+                  variant="flat"
+                >
+                  Sign Up
+                </Button>
+              </NavbarItem>
+            </>
+          ) : (
+            <>
+              <Dropdown placement="bottom-start">
+                <DropdownTrigger>
+                  <User
+                    as="button"
+                    avatarProps={{
+                      isBordered: true,
+                      src: `${user?.user?.imgurl}`,
+                    }}
+                    className="transition-transform"
+                    // description={user?.user?.email}
+                    name={user?.user?.firstname + " " + user?.user?.lastname}
+                  />
+                </DropdownTrigger>
+                <DropdownMenu aria-label="User Actions" variant="flat">
+                  <DropdownItem key="profile" className="h-14 gap-2">
+                    <Link to="/">
+                      <p className="font-bold">Signed in as</p>
+                      <p className="font-bold">{user?.user?.email}</p>
+                    </Link>
+                  </DropdownItem>
+                  <DropdownItem key="settings" onClick={() =>{navigate('/profile-update')} }>My Profile</DropdownItem>
+                  <DropdownItem key="team_settings">Team Settings</DropdownItem>
+                  <DropdownItem key="analytics">Analytics</DropdownItem>
+                  <DropdownItem key="system">System</DropdownItem>
+                  <DropdownItem key="configurations">
+                    Configurations
+                  </DropdownItem>
+                  <DropdownItem key="help_and_feedback">
+                    Help & Feedback
+                  </DropdownItem>
+                  <DropdownItem key="logout" color="danger" onClick={Logout}>
+                    Log Out
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            </>
+          )}
         </NavbarContent>
+
         <NavbarMenu>
           {menuItems.map((item, index) => (
             <NavbarMenuItem key={`${item}-${index}`}>
@@ -134,8 +180,9 @@ const Navbar1 = () => {
                     : "foreground"
                 }
                 className="w-full"
-                href="#"
                 size="lg"
+                onClick={closeMenu}
+                to="/properties"
               >
                 {item}
               </Link>
@@ -143,7 +190,6 @@ const Navbar1 = () => {
           ))}
         </NavbarMenu>
       </Navbar>
-
     </>
   );
 };

@@ -405,6 +405,23 @@ const update_user_password = asyncHandler(async (req, res, next) => {
     next(error);
   }
 });
+const logout = asyncHandler(async(req,res,next) => {
+  try {
+    const {token} = req.cookies;
+    res.cookie("token", null, {
+      expires: new Date(Date.now()),
+      httpOnly: true,
+      sameSite: "none",
+      secure: true,
+    });
+    res.status(201).json({
+      success: true,
+      message: "Log out successful!",
+    });
+  } catch (error) {
+    next(error);
+  }
+})
 module.exports = {
   hello,
   register,
@@ -418,4 +435,5 @@ module.exports = {
   get_user,
   update_user_info,
   update_user_password,
+  logout
 };

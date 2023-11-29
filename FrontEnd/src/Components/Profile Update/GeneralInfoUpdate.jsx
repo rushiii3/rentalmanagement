@@ -6,6 +6,8 @@ import axios from "axios";
 import { userServer } from "../../server";
 import toast from "react-hot-toast";
 import { Button } from "@nextui-org/react";
+import Store from "../../Redux/store";
+import { LoadUser } from "../../Redux/action/user";
 const GeneralInfoUpdate = ({ userEmail }) => {
   const [userID, setuserID] = useState(null);
   const [loading, setloading] = useState(false);
@@ -91,6 +93,7 @@ const GeneralInfoUpdate = ({ userEmail }) => {
       setloading(false);
       if (serverRespnse?.data?.success) {
         toast.success("Profile information has been changes successfully!");
+        Store.dispatch(LoadUser());
       }
     } catch (error) {
       setloading(false);

@@ -10,7 +10,7 @@ const ProfileUpdate = () => {
       }, []);
       
   const { user } = useSelector((state) => state.user);
-const [Mode, setMode] = useState(false);
+const [Mode, setMode] = useState(true);
   return (
     <div class="bg-gray-100 dark:bg-black w-full flex flex-col gap-5 px-3 md:px-16 lg:px-28 md:flex-row text-[#161931]">
       <aside class=" py-4 md:w-1/3 lg:w-1/4 md:block">

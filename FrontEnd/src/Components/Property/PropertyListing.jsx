@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropertyCard from "./Card/PropertyCard";
 import { CiSearch } from "react-icons/ci";
 import { users } from "./Card/data.js";
@@ -7,24 +7,82 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
+  Checkbox,
+  Slider,
 } from "@nextui-org/react";
 import {
   Autocomplete,
   AutocompleteItem,
   Avatar,
   Button,
+  ButtonGroup,
 } from "@nextui-org/react";
 
 const PropertyListing = () => {
+  useEffect(() => {
+    document.title = "Properties";
+  }, []);
+
   const [selectedKeys, setSelectedKeys] = React.useState(new Set(["Newest"]));
 
   const selectedValue = React.useMemo(
     () => Array.from(selectedKeys).join(", ").replaceAll("_", " "),
     [selectedKeys]
   );
+  const typesOfHouses = [
+    "Haveli",
+    "Bungalow",
+    "Villa",
+    "Apartment/Flat",
+    "Penthouse",
+    "Row House",
+    "Cottage",
+    "Chawl",
+    "Mansion",
+    "Farmhouse",
+  ];
+  const indianStates =[
+    {"id": 1, "name": "Andhra Pradesh"},
+    {"id": 2, "name": "Arunachal Pradesh"},
+    {"id": 3, "name": "Assam"},
+    {"id": 4, "name": "Bihar"},
+    {"id": 5, "name": "Chhattisgarh"},
+    {"id": 6, "name": "Goa"},
+    {"id": 7, "name": "Gujarat"},
+    {"id": 8, "name": "Haryana"},
+    {"id": 9, "name": "Himachal Pradesh"},
+    {"id": 10, "name": "Jharkhand"},
+    {"id": 11, "name": "Karnataka"},
+    {"id": 12, "name": "Kerala"},
+    {"id": 13, "name": "Madhya Pradesh"},
+    {"id": 14, "name": "Maharashtra"},
+    {"id": 15, "name": "Manipur"},
+    {"id": 16, "name": "Meghalaya"},
+    {"id": 17, "name": "Mizoram"},
+    {"id": 18, "name": "Nagaland"},
+    {"id": 19, "name": "Odisha"},
+    {"id": 20, "name": "Punjab"},
+    {"id": 21, "name": "Rajasthan"},
+    {"id": 22, "name": "Sikkim"},
+    {"id": 23, "name": "Tamil Nadu"},
+    {"id": 24, "name": "Telangana"},
+    {"id": 25, "name": "Tripura"},
+    {"id": 26, "name": "Uttar Pradesh"},
+    {"id": 27, "name": "Uttarakhand"},
+    {"id": 28, "name": "West Bengal"},
+    {"id": 29, "name": "Andaman and Nicobar Islands"},
+    {"id": 30, "name": "Chandigarh"},
+    {"id": 31, "name": "Dadra and Nagar Haveli and Daman and Diu"},
+    {"id": 32, "name": "Delhi"},
+    {"id": 33, "name": "Lakshadweep"},
+    {"id": 34, "name": "Puducherry"}
+  ]
+  
+  
+
   return (
     <div>
-      <div className="relative z-40 lg:hidden hidden">
+      <div className="relative z-40 lg:hidden ">
         <div className="fixed inset-0 bg-black bg-opacity-25"></div>
 
         <div className="fixed inset-0 z-40 flex">
@@ -55,31 +113,21 @@ const PropertyListing = () => {
 
             <form className="mt-4 border-t border-gray-200">
               <h3 className="sr-only">Categories</h3>
-              <ul  className="px-2 py-3 font-medium text-gray-900">
+              <ul className="px-2 py-3 font-medium text-gray-900">
                 <li>
-                  <p className="block px-2 py-3">
-                    Totes
-                  </p>
+                  <p className="block px-2 py-3">Totes</p>
                 </li>
                 <li>
-                  <p  className="block px-2 py-3">
-                    Backpacks
-                  </p>
+                  <p className="block px-2 py-3">Backpacks</p>
                 </li>
                 <li>
-                  <p  className="block px-2 py-3">
-                    Travel Bags
-                  </p>
+                  <p className="block px-2 py-3">Travel Bags</p>
                 </li>
                 <li>
-                  <p  className="block px-2 py-3">
-                    Hip Bags
-                  </p>
+                  <p className="block px-2 py-3">Hip Bags</p>
                 </li>
                 <li>
-                  <p  className="block px-2 py-3">
-                    Laptop Sleeves
-                  </p>
+                  <p className="block px-2 py-3">Laptop Sleeves</p>
                 </li>
               </ul>
 
@@ -461,86 +509,75 @@ const PropertyListing = () => {
       </div>
 
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div>
-        <Autocomplete
-                    classNames={{
-                      base: "max-w-xs",
-                      listboxWrapper: "max-h-[320px]",
-                      selectorButton: "text-default-500",
-                    }}
-                    defaultItems={users}
-                    inputProps={{
-                      classNames: {
-                        input: "ml-1",
-                        inputWrapper: "h-[48px]",
-                      },
-                    }}
-                    listboxProps={{
-                      hideSelectedIcon: true,
-                      itemClasses: {
-                        base: [
-                          "rounded-medium",
-                          "text-default-500",
-                          "transition-opacity",
-                          "data-[hover=true]:text-foreground",
-                          "dark:data-[hover=true]:bg-default-50",
-                          "data-[pressed=true]:opacity-70",
-                          "data-[hover=true]:bg-default-200",
-                          "data-[selectable=true]:focus:bg-default-100",
-                          "data-[focus-visible=true]:ring-default-500",
-                        ],
-                      },
-                    }}
-                    aria-label="Select an employee"
-                    placeholder="Enter employee name"
-                    popoverProps={{
-                      offset: 10,
-                      classNames: {
-                        base: "rounded-large",
-                        content:
-                          "p-1 border-small border-default-100 bg-background",
-                      },
-                    }}
-                    startContent={
-                      <CiSearch size={25} />
-                    }
-                    radius="full"
-                    variant="bordered"
-                  >
-                    {(item) => (
-                      <AutocompleteItem key={item.id} textValue={item.name}>
-                        <div className="flex justify-between items-center">
-                          <div className="flex gap-2 items-center">
-                            <Avatar
-                              alt={item.name}
-                              className="flex-shrink-0"
-                              size="sm"
-                              src={item.avatar}
-                            />
-                            <div className="flex flex-col">
-                              <span className="text-small">{item.name}</span>
-                              <span className="text-tiny text-default-400">
-                                {item.team}
-                              </span>
-                            </div>
-                          </div>
-                          <Button
-                            className="border-small mr-0.5 font-medium shadow-small"
-                            radius="full"
-                            size="sm"
-                            variant="bordered"
-                          >
-                            Add
-                          </Button>
-                        </div>
-                      </AutocompleteItem>
-                    )}
-                  </Autocomplete>
+        <div className="mt-5">
+          <h1 className="text-2xl font-bold tracking-tight text-gray-900 mb-2">
+          Find your home
+          </h1>
+          <Autocomplete
+            classNames={{
+              base: "w-full",
+              listboxWrapper: "max-h-[320px]",
+              selectorButton: "text-default-500",
+            }}
+            defaultItems={indianStates}
+            inputProps={{
+              classNames: {
+                input: "ml-1",
+                inputWrapper: "h-[48px]",
+              },
+            }}
+            listboxProps={{
+              hideSelectedIcon: true,
+              itemClasses: {
+                base: [
+                  "rounded-medium",
+                  "text-default-500",
+                  "transition-opacity",
+                  "data-[hover=true]:text-foreground",
+                  "dark:data-[hover=true]:bg-default-50",
+                  "data-[pressed=true]:opacity-70",
+                  "data-[hover=true]:bg-default-200",
+                  "data-[selectable=true]:focus:bg-default-100",
+                  "data-[focus-visible=true]:ring-default-500",
+                ],
+              },
+            }}
+            aria-label="Select an employee"
+            placeholder="Enter state name"
+            popoverProps={{
+              offset: 10,
+              classNames: {
+                base: "rounded-large",
+                content: "p-1 border-small border-default-100 bg-background",
+              },
+            }}
+            startContent={<CiSearch size={25} />}
+            radius="full"
+            variant="bordered"
+          >
+            {(item) => (
+              <AutocompleteItem key={item.id} textValue={item.name}>
+                <div className="flex justify-between items-center">
+                  <div className="flex gap-2 items-center">
+                    {/* <Avatar
+                      alt={item.name}
+                      className="flex-shrink-0"
+                      size="sm"
+                      src={item.avatar}
+                    /> */}
+                    <div className="flex flex-col">
+                      <span className="text-medium">{item.name}</span>
+                      
+                    </div>
+                  </div>
+                </div>
+              </AutocompleteItem>
+            )}
+          </Autocomplete>
         </div>
-        <div className="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-24">
+        <div className="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-10">
           <h1 className="text-4xl font-bold tracking-tight text-gray-900">
             Properties
-            heyy
           </h1>
           <div className="flex items-center">
             <div className="relative text-left flex justify-center items-center">
@@ -631,11 +668,74 @@ const PropertyListing = () => {
               <div className="border-b border-gray-200 py-6">
                 <h3 className="-my-3 flow-root">
                   <span className="font-medium text-gray-900">
-                    Find your home
+                    Property Type
                   </span>
                 </h3>
-                <div className="pt-6" id="filter-section-0">
-                  
+                <div
+                  className="pt-6 flex flex-col gap-y-3"
+                  id="filter-section-0"
+                >
+                  <Checkbox defaultSelected radius="small">
+                    All
+                  </Checkbox>
+                  {typesOfHouses.map((values, key) => (
+                    <Checkbox key={key} radius="small">
+                      {values}
+                    </Checkbox>
+                  ))}
+                </div>
+              </div>
+              <div className="border-b border-gray-200 py-6">
+                <div
+                  className="pt-6 flex flex-col gap-y-3"
+                  id="filter-section-0"
+                >
+                  <Slider
+                    label="Price Range"
+                    step={2000}
+                    maxValue={500000}
+                    minValue={0}
+                    defaultValue={[0, 500000]}
+                    showSteps={true}
+                    showTooltip={true}
+                    showOutline={true}
+                    disableThumbScale={false}
+                    formatOptions={{ style: "currency", currency: "INR" }}
+                    tooltipValueFormatOptions={{
+                      style: "currency",
+                      currency: "INR",
+                      maximumFractionDigits: 10,
+                    }}
+                    classNames={{
+                      base: "max-w-md",
+                      filler:
+                        "bg-gradient-to-r from-primary-500 to-secondary-400",
+                      labelWrapper: "mb-2",
+                      label: "font-medium text-default-700 text-medium",
+                      value: "font-medium text-default-500 text-small",
+                      thumb: [
+                        "transition-size",
+                        "bg-gradient-to-r from-secondary-400 to-primary-500",
+                        "data-[dragging=true]:shadow-lg data-[dragging=true]:shadow-black/20",
+                        "data-[dragging=true]:w-7 data-[dragging=true]:h-7 data-[dragging=true]:after:h-6 data-[dragging=true]:after:w-6",
+                      ],
+                      // step: "data-[in-range=true]:bg-black/30 dark:data-[in-range=true]:bg-white/50",
+                    }}
+                    tooltipProps={{
+                      offset: 10,
+                      placement: "bottom",
+                      classNames: {
+                        base: [
+                          // arrow color
+                          "before:bg-gradient-to-r before:from-secondary-400 before:to-primary-500",
+                        ],
+                        content: [
+                          "py-2 shadow-xl",
+                          "text-white bg-gradient-to-r from-secondary-400 to-primary-500",
+                        ],
+                      },
+                    }}
+                  />
                 </div>
               </div>
 
@@ -643,11 +743,11 @@ const PropertyListing = () => {
                 <h3 className="-my-3 flow-root">
                   <button
                     type="button"
-                    className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500"
+                    className="flex w-full items-center justify-between bg-white py-3  text-gray-400 hover:text-gray-500"
                     aria-controls="filter-section-0"
                     aria-expanded="false"
                   >
-                    <span className="font-medium text-gray-900">Color</span>
+                    <span className="font-medium text-gray-900">Bedrooms</span>
                     <span className="ml-6 flex items-center">
                       <svg
                         className="h-5 w-5"
@@ -672,103 +772,51 @@ const PropertyListing = () => {
                     </span>
                   </button>
                 </h3>
+
                 <div className="pt-6" id="filter-section-0">
                   <div className="space-y-4">
-                    <div className="flex items-center">
-                      <input
-                        id="filter-color-0"
-                        name="color[]"
-                        value="white"
-                        type="checkbox"
-                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                      />
-                      <label
-                        for="filter-color-0"
-                        className="ml-3 text-sm text-gray-600"
+                    <div class="inline-flex rounded-md shadow-sm" role="group">
+                      <button
+                        type="button"
+                        class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-s-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"
                       >
-                        White
-                      </label>
-                    </div>
-                    <div className="flex items-center">
-                      <input
-                        id="filter-color-1"
-                        name="color[]"
-                        value="beige"
-                        type="checkbox"
-                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                      />
-                      <label
-                        for="filter-color-1"
-                        className="ml-3 text-sm text-gray-600"
+                        any
+                      </button>
+                      <button
+                        type="button"
+                        class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-r border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"
                       >
-                        Beige
-                      </label>
-                    </div>
-                    <div className="flex items-center">
-                      <input
-                        id="filter-color-2"
-                        name="color[]"
-                        value="blue"
-                        type="checkbox"
-                        checked
-                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                      />
-                      <label
-                        for="filter-color-2"
-                        className="ml-3 text-sm text-gray-600"
+                        1
+                      </button>
+                      <button
+                        type="button"
+                        class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-r border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"
                       >
-                        Blue
-                      </label>
-                    </div>
-                    <div className="flex items-center">
-                      <input
-                        id="filter-color-3"
-                        name="color[]"
-                        value="brown"
-                        type="checkbox"
-                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                      />
-                      <label
-                        for="filter-color-3"
-                        className="ml-3 text-sm text-gray-600"
+                        2
+                      </button>
+                      <button
+                        type="button"
+                        class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-r border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"
                       >
-                        Brown
-                      </label>
-                    </div>
-                    <div className="flex items-center">
-                      <input
-                        id="filter-color-4"
-                        name="color[]"
-                        value="green"
-                        type="checkbox"
-                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                      />
-                      <label
-                        for="filter-color-4"
-                        className="ml-3 text-sm text-gray-600"
+                        3
+                      </button>
+                      <button
+                        type="button"
+                        class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b  border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"
                       >
-                        Green
-                      </label>
-                    </div>
-                    <div className="flex items-center">
-                      <input
-                        id="filter-color-5"
-                        name="color[]"
-                        value="purple"
-                        type="checkbox"
-                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                      />
-                      <label
-                        for="filter-color-5"
-                        className="ml-3 text-sm text-gray-600"
+                        4
+                      </button>
+                      <button
+                        type="button"
+                        class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"
                       >
-                        Purple
-                      </label>
+                        5+
+                      </button>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="border-b border-gray-200 py-6">
+              {/* <div className="border-b border-gray-200 py-6">
                 <h3 className="-my-3 flow-root">
                   <button
                     type="button"
@@ -1010,7 +1058,7 @@ const PropertyListing = () => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </form>
 
             <div className="lg:col-span-3">
