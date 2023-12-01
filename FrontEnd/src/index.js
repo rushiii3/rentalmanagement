@@ -8,9 +8,10 @@ import store from './Redux/store'
 import {
   QueryClient,
   QueryClientProvider,
-} from 'react-query'
+} from '@tanstack/react-query'
 const root = ReactDOM.createRoot(document.getElementById('root'));
 const queryClient = new QueryClient()
+
 root.render(
   <QueryClientProvider client={queryClient}>
   <Provider store={store}>
