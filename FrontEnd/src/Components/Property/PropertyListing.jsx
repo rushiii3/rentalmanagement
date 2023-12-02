@@ -12,14 +12,19 @@ import { Autocomplete, AutocompleteItem, Button } from "@nextui-org/react";
 import { motion, AnimatePresence } from "framer-motion";
 import Footer from "../Layouts/Footers/Footer";
 import Listing from "./Card/Listing";
+import { useNavigate, useLocation } from 'react-router-dom';
+
 
 const PropertyListing = () => {
   useEffect(() => {
     document.title = "Properties";
   }, []);
+  const navigate = useNavigate();
+  const location = useLocation();
 
+   
   const [selectedKeys, setSelectedKeys] = React.useState(new Set(["Newest"]));
-
+  const [priceRange, setpriceRange] = React.useState([100, 300]);
   const selectedValue = React.useMemo(
     () => Array.from(selectedKeys).join(", ").replaceAll("_", " "),
     [selectedKeys]
@@ -76,6 +81,18 @@ const PropertyListing = () => {
   const OpenFilterForMobile = () => {
     setMobileFilter(true);
   };
+
+  const handlePropertyType = (e) => {
+    const queryParams = new URLSearchParams();
+    queryParams.append('param1', 'value1');
+    queryParams.append('param2', 'value2');
+
+    // Building the URL with query parameters
+    const updatedSearch = queryParams.toString();
+
+    // Navigate to the same URL with updated query parameters
+    navigate(`${location.pathname}?${updatedSearch}`);
+  }
   return (
     <div>
       <AnimatePresence>
@@ -155,6 +172,8 @@ const PropertyListing = () => {
                           step={2000}
                           maxValue={500000}
                           minValue={0}
+                          value={priceRange} 
+                          onChange={setpriceRange}
                           defaultValue={[0, 500000]}
                           showSteps={true}
                           showTooltip={true}
@@ -196,6 +215,7 @@ const PropertyListing = () => {
                             },
                           }}
                         />
+                        Selected budget: {Array.isArray(priceRange) && priceRange.map((b) => `$${b}`).join(" – ")}
                       </div>
                     </div>
 
@@ -622,11 +642,11 @@ const PropertyListing = () => {
                   className="pt-6 flex flex-col gap-y-3"
                   id="filter-section-0"
                 >
-                  <Checkbox defaultSelected radius="small">
+                  <Checkbox defaultSelected value="All" radius="small" onChange={handlePropertyType}>
                     All
                   </Checkbox>
                   {typesOfHouses.map((values, key) => (
-                    <Checkbox key={key} radius="small">
+                    <Checkbox value={values} key={key} radius="small" onChange={handlePropertyType}>
                       {values}
                     </Checkbox>
                   ))}
@@ -646,6 +666,8 @@ const PropertyListing = () => {
                     showSteps={true}
                     showTooltip={true}
                     showOutline={true}
+                    value={priceRange} 
+                          onChange={setpriceRange}
                     disableThumbScale={false}
                     formatOptions={{ style: "currency", currency: "INR" }}
                     tooltipValueFormatOptions={{

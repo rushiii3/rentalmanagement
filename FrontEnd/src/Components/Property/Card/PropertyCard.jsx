@@ -12,7 +12,7 @@ const PropertyCard = ({ property }) => {
               <div class="absolute inset-0">
                 <img
                   class="mr-2 object-cover"
-                  src="https://images.pexels.com/photos/186077/pexels-photo-186077.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+                  src={property.image}
                   alt="hehe"
                 />
               </div>

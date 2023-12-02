@@ -67,6 +67,8 @@ const get_properties = async (req, res) => {
       })
       .skip(skip) // Skip items
       .limit(limit); // Limit the number of items per page
+      // const propertiess = await Property.find({});
+      // console.log(propertiess);
       const transformedProperties = properties.map(property => (
         
         {
