@@ -12,8 +12,7 @@ import { Autocomplete, AutocompleteItem, Button } from "@nextui-org/react";
 import { motion, AnimatePresence } from "framer-motion";
 import Footer from "../Layouts/Footers/Footer";
 import Listing from "./Card/Listing";
-import { useNavigate, useLocation } from 'react-router-dom';
-
+import { useNavigate, useLocation } from "react-router-dom";
 
 const PropertyListing = () => {
   useEffect(() => {
@@ -21,15 +20,18 @@ const PropertyListing = () => {
   }, []);
   const navigate = useNavigate();
   const location = useLocation();
-
-   
   const [selectedKeys, setSelectedKeys] = React.useState(new Set(["Newest"]));
-  const [priceRange, setpriceRange] = React.useState([100, 300]);
+  const [priceRange, setpriceRange] = React.useState([0, 500000]);
   const selectedValue = React.useMemo(
     () => Array.from(selectedKeys).join(", ").replaceAll("_", " "),
     [selectedKeys]
   );
   const [MobileFilter, setMobileFilter] = useState(false);
+  const [selectedValues, setSelectedValues] = useState(["All"]);
+  const [Furnishing, setFurnishing] = useState(["All"]);
+  const [NoOfBedrooms, setNoOfBedrooms] = useState("any");
+  const [NoOfBathrooms, setNoOfBathrooms] = useState("any");
+
   const typesOfHouses = [
     "Haveli",
     "Bungalow",
@@ -81,18 +83,82 @@ const PropertyListing = () => {
   const OpenFilterForMobile = () => {
     setMobileFilter(true);
   };
-
+  const handleBedroomClick = (value) => {
+    setNoOfBedrooms(value);
+  };
+  const handleBathroomsClick = (value) => {
+    setNoOfBathrooms(value);
+  };
+  const queryParams = new URLSearchParams(location.search);
   const handlePropertyType = (e) => {
-    const queryParams = new URLSearchParams();
-    queryParams.append('param1', 'value1');
-    queryParams.append('param2', 'value2');
+    const { value, checked } = e.target;
 
-    // Building the URL with query parameters
+    if (value === "All") {
+      setSelectedValues(checked ? ["All"] : []);
+    } else {
+      setSelectedValues((prevSelectedValues) => {
+        if (checked && prevSelectedValues.includes("All")) {
+          return [value];
+        } else if (
+          !checked &&
+          prevSelectedValues.length === 1 &&
+          !prevSelectedValues.includes("All")
+        ) {
+          return ["All"];
+        } else if (checked && !prevSelectedValues.includes(value)) {
+          const updatedValues = [...prevSelectedValues, value];
+          return updatedValues.includes("All")
+            ? updatedValues.filter((val) => val !== "All")
+            : updatedValues;
+        } else {
+          return prevSelectedValues.filter((val) => val !== value);
+        }
+      });
+    }
+  };
+  const handleFurnishingType = (e) => {
+    const { value, checked } = e.target;
+
+    if (value === "All") {
+      setFurnishing(checked ? ["All"] : []);
+    } else {
+      setFurnishing((prevSelectedValues) => {
+        if (checked && prevSelectedValues.includes("All")) {
+          return [value];
+        } else if (
+          !checked &&
+          prevSelectedValues.length === 1 &&
+          !prevSelectedValues.includes("All")
+        ) {
+          return ["All"];
+        } else if (checked && !prevSelectedValues.includes(value)) {
+          const updatedValues = [...prevSelectedValues, value];
+          return updatedValues.includes("All")
+            ? updatedValues.filter((val) => val !== "All")
+            : updatedValues;
+        } else {
+          return prevSelectedValues.filter((val) => val !== value);
+        }
+      });
+    }
+  };
+  useEffect(() => {
+    queryParams.set("types", JSON.stringify(selectedValues));
+    queryParams.set("priceRange", JSON.stringify(priceRange));
+    queryParams.set("bedrooms", JSON.stringify(NoOfBedrooms));
+    queryParams.set("bathrooms", JSON.stringify(NoOfBathrooms));
+    queryParams.set("furnshing", JSON.stringify(Furnishing));
     const updatedSearch = queryParams.toString();
-
-    // Navigate to the same URL with updated query parameters
     navigate(`${location.pathname}?${updatedSearch}`);
-  }
+  }, [
+    selectedValues,
+    location.pathname,
+    navigate,
+    priceRange,
+    NoOfBedrooms,
+    NoOfBathrooms,
+    Furnishing,
+  ]);
   return (
     <div>
       <AnimatePresence>
@@ -111,14 +177,14 @@ const PropertyListing = () => {
               className="fixed inset-0 z-40 flex"
             >
               <div className="fixed inset-0 z-40 flex">
-                <div className="relative ml-auto flex h-full w-full max-w-xs flex-col overflow-y-auto bg-white py-4 pb-12 shadow-xl">
+                <div className="relative ml-auto flex h-full w-full max-w-xs flex-col overflow-y-auto bg-white py-4 pb-12 shadow-xl dark:bg-black">
                   <div className="flex items-center justify-between px-4">
-                    <h2 className="text-lg font-medium text-gray-900">
+                    <h2 className="text-lg font-medium text-gray-900 dark:text-white">
                       Filters
                     </h2>
                     <button
                       type="button"
-                      className="-mr-2 flex h-10 w-10 items-center justify-center rounded-md bg-white p-2 text-gray-400"
+                      className="-mr-2 flex h-10 w-10 items-center justify-center rounded-md bg-white p-2 text-gray-400 dark:bg-black"
                       onClick={() => {
                         setMobileFilter(false);
                       }}
@@ -142,9 +208,9 @@ const PropertyListing = () => {
                   </div>
                   <form className="mt-4 border-t border-gray-200">
                     <h3 className="sr-only">Search</h3>
-                    <div className="border-b border-gray-200 px-4  py-6">
+                    <div className="border-b border-gray-200 px-4 py-6">
                       <h3 className="-my-3 flow-root">
-                        <span className="font-medium text-gray-900">
+                        <span className="font-medium text-gray-900 dark:text-white">
                           Property Type
                         </span>
                       </h3>
@@ -152,17 +218,28 @@ const PropertyListing = () => {
                         className="pt-6 flex flex-col gap-y-3"
                         id="filter-section-0"
                       >
-                        <Checkbox defaultSelected radius="small">
+                        <Checkbox
+                          value="All"
+                          onChange={handlePropertyType}
+                          radius="small"
+                          isSelected={selectedValues.includes("All")}
+                        >
                           All
                         </Checkbox>
                         {typesOfHouses.map((values, key) => (
-                          <Checkbox key={key} radius="small">
+                          <Checkbox
+                            key={key}
+                            value={values}
+                            onChange={handlePropertyType}
+                            radius="small"
+                            isSelected={selectedValues.includes(values)}
+                          >
                             {values}
                           </Checkbox>
                         ))}
                       </div>
                     </div>
-                    <div className="border-b border-gray-200 px-4  py-6">
+                    <div className="border-b border-gray-200 py-6 px-4">
                       <div
                         className="pt-6 flex flex-col gap-y-3"
                         id="filter-section-0"
@@ -172,12 +249,12 @@ const PropertyListing = () => {
                           step={2000}
                           maxValue={500000}
                           minValue={0}
-                          value={priceRange} 
-                          onChange={setpriceRange}
                           defaultValue={[0, 500000]}
                           showSteps={true}
                           showTooltip={true}
                           showOutline={true}
+                          value={priceRange}
+                          onChange={setpriceRange}
                           disableThumbScale={false}
                           formatOptions={{ style: "currency", currency: "INR" }}
                           tooltipValueFormatOptions={{
@@ -215,44 +292,13 @@ const PropertyListing = () => {
                             },
                           }}
                         />
-                        Selected budget: {Array.isArray(priceRange) && priceRange.map((b) => `$${b}`).join(" – ")}
                       </div>
                     </div>
-
-                    <div className="border-b border-gray-200 px-4  py-6">
+                    <div className="border-b border-gray-200 py-6 px-4">
                       <h3 className="-my-3 flow-root">
-                        <button
-                          type="button"
-                          className="flex w-full items-center justify-between bg-white py-3  text-gray-400 hover:text-gray-500"
-                          aria-controls="filter-section-0"
-                          aria-expanded="false"
-                        >
-                          <span className="font-medium text-gray-900">
-                            Bedrooms
-                          </span>
-                          <span className="ml-6 flex items-center">
-                            <svg
-                              className="h-5 w-5"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                              aria-hidden="true"
-                            >
-                              <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-                            </svg>
-                            <svg
-                              className="h-5 w-5"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                              aria-hidden="true"
-                            >
-                              <path
-                                fill-rule="evenodd"
-                                d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z"
-                                clip-rule="evenodd"
-                              />
-                            </svg>
-                          </span>
-                        </button>
+                        <span className="font-medium text-gray-900 dark:text-white">
+                          Bedrooms
+                        </span>
                       </h3>
 
                       <div className="pt-6" id="filter-section-0">
@@ -262,38 +308,68 @@ const PropertyListing = () => {
                             role="group"
                           >
                             <button
+                              onClick={() => handleBedroomClick("any")}
                               type="button"
-                              class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-s-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"
+                              class={`px-4 py-2 text-sm font-medium text-gray-900 bg-white  rounded-s-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2  dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  ${
+                                NoOfBedrooms === "any"
+                                  ? "border-black border-2 dark:border-white"
+                                  : "border border-gray-200"
+                              }`}
                             >
                               any
                             </button>
                             <button
+                              onClick={() => handleBedroomClick("1")}
                               type="button"
-                              class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-r border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"
+                              class={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
+                                NoOfBedrooms === "1"
+                                  ? "border-black border-2 dark:border-white"
+                                  : "border border-t border-b border-r border-gray-200"
+                              }`}
                             >
                               1
                             </button>
                             <button
+                              onClick={() => handleBedroomClick("2")}
                               type="button"
-                              class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-r border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"
+                              class={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
+                                NoOfBedrooms === "2"
+                                  ? "border-black border-2 dark:border-white"
+                                  : "border border-t border-b border-r border-gray-200"
+                              }`}
                             >
                               2
                             </button>
                             <button
+                              onClick={() => handleBedroomClick("3")}
                               type="button"
-                              class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-r border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"
+                              class={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
+                                NoOfBedrooms === "3"
+                                  ? "border-black border-2 dark:border-white"
+                                  : "border border-t border-b border-r border-gray-200"
+                              }`}
                             >
                               3
                             </button>
                             <button
+                              onClick={() => handleBedroomClick("4")}
                               type="button"
-                              class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b  border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"
+                              class={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
+                                NoOfBedrooms === "4"
+                                  ? "border-black border-2 dark:border-white"
+                                  : "border border-t border-b border-r border-gray-200"
+                              }`}
                             >
                               4
                             </button>
                             <button
+                              onClick={() => handleBedroomClick("5+")}
                               type="button"
-                              class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"
+                              class={`px-4 py-2 text-sm font-medium text-gray-900 bg-white  rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  ${
+                                NoOfBedrooms === "5+"
+                                  ? "border-black border-2 dark:border-white"
+                                  : "border border-gray-200"
+                              }`}
                             >
                               5+
                             </button>
@@ -301,249 +377,133 @@ const PropertyListing = () => {
                         </div>
                       </div>
                     </div>
-                    {/* <div className="border-b border-gray-200 py-6">
-                <h3 className="-my-3 flow-root">
-                  <button
-                    type="button"
-                    className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500"
-                    aria-controls="filter-section-1"
-                    aria-expanded="false"
-                  >
-                    <span className="font-medium text-gray-900">Category</span>
-                    <span className="ml-6 flex items-center">
-                      <svg
-                        className="h-5 w-5"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-                      </svg>
-                      <svg
-                        className="h-5 w-5"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
-                    </span>
-                  </button>
-                </h3>
-                <div className="pt-6" id="filter-section-1">
-                  <div className="space-y-4">
-                    <div className="flex items-center">
-                      <input
-                        id="filter-category-0"
-                        name="category[]"
-                        value="new-arrivals"
-                        type="checkbox"
-                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                      />
-                      <label
-                        for="filter-category-0"
-                        className="ml-3 text-sm text-gray-600"
-                      >
-                        New Arrivals
-                      </label>
+                    <div className="border-b border-gray-200 py-6 px-4">
+                      <h3 className="-my-3 flow-root">
+                        <span className="font-medium text-gray-900 dark:text-white">
+                          Bathrooms
+                        </span>
+                      </h3>
+
+                      <div className="pt-6" id="filter-section-0">
+                        <div className="space-y-4">
+                          <div
+                            class="inline-flex rounded-md shadow-sm"
+                            role="group"
+                          >
+                            <button
+                              onClick={() => setNoOfBathrooms("any")}
+                              type="button"
+                              class={`px-4 py-2 text-sm font-medium text-gray-900 bg-white  rounded-s-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2  dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  ${
+                                NoOfBathrooms === "any"
+                                  ? "border-black border-2 dark:border-white"
+                                  : "border border-gray-200"
+                              }`}
+                            >
+                              any
+                            </button>
+                            <button
+                              onClick={() => setNoOfBathrooms("1")}
+                              type="button"
+                              class={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
+                                NoOfBathrooms === "1"
+                                  ? "border-black border-2 dark:border-white"
+                                  : "border border-t border-b border-r border-gray-200"
+                              }`}
+                            >
+                              1
+                            </button>
+                            <button
+                              onClick={() => setNoOfBathrooms("2")}
+                              type="button"
+                              class={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
+                                NoOfBathrooms === "2"
+                                  ? "border-black border-2 dark:border-white"
+                                  : "border border-t border-b border-r border-gray-200"
+                              }`}
+                            >
+                              2
+                            </button>
+                            <button
+                              onClick={() => setNoOfBathrooms("3")}
+                              type="button"
+                              class={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
+                                NoOfBathrooms === "3"
+                                  ? "border-black border-2 dark:border-white"
+                                  : "border border-t border-b border-r border-gray-200"
+                              }`}
+                            >
+                              3
+                            </button>
+                            <button
+                              onClick={() => setNoOfBathrooms("4")}
+                              type="button"
+                              class={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
+                                NoOfBathrooms === "4"
+                                  ? "border-black border-2 dark:border-white"
+                                  : "border border-t border-b border-r border-gray-200"
+                              }`}
+                            >
+                              4
+                            </button>
+                            <button
+                              onClick={() => setNoOfBathrooms("5+")}
+                              type="button"
+                              class={`px-4 py-2 text-sm font-medium text-gray-900 bg-white  rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  ${
+                                NoOfBathrooms === "5+"
+                                  ? "border-black border-2 dark:border-white"
+                                  : "border border-gray-200"
+                              }`}
+                            >
+                              5+
+                            </button>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <div className="flex items-center">
-                      <input
-                        id="filter-category-1"
-                        name="category[]"
-                        value="sale"
-                        type="checkbox"
-                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                      />
-                      <label
-                        for="filter-category-1"
-                        className="ml-3 text-sm text-gray-600"
+                    <div className="border-b border-gray-200 py-6 px-4">
+                      <h3 className="-my-3 flow-root">
+                        <span className="font-medium text-gray-900 dark:text-white">
+                          Furnishing
+                        </span>
+                      </h3>
+                      <div
+                        className="pt-6 flex flex-col gap-y-3"
+                        id="filter-section-0"
                       >
-                        Sale
-                      </label>
+                        <Checkbox
+                          value="Any"
+                          radius="small"
+                          onChange={handleFurnishingType}
+                          isSelected={Furnishing.includes("All")}
+                        >
+                          Any
+                        </Checkbox>
+                        <Checkbox
+                          value="Fully Furnished"
+                          radius="small"
+                          onChange={handleFurnishingType}
+                          isSelected={Furnishing.includes("Fully Furnished")}
+                        >
+                          Fully Furnished
+                        </Checkbox>
+                        <Checkbox
+                          value="Semi-furnished"
+                          radius="small"
+                          onChange={handleFurnishingType}
+                          isSelected={Furnishing.includes("Semi-furnished")}
+                        >
+                          Semi-furnished
+                        </Checkbox>
+                        <Checkbox
+                          value="Unfurnished"
+                          radius="small"
+                          onChange={handleFurnishingType}
+                          isSelected={Furnishing.includes("Unfurnished")}
+                        >
+                          Unfurnished
+                        </Checkbox>
+                      </div>
                     </div>
-                    <div className="flex items-center">
-                      <input
-                        id="filter-category-2"
-                        name="category[]"
-                        value="travel"
-                        type="checkbox"
-                        checked
-                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                      />
-                      <label
-                        for="filter-category-2"
-                        className="ml-3 text-sm text-gray-600"
-                      >
-                        Travel
-                      </label>
-                    </div>
-                    <div className="flex items-center">
-                      <input
-                        id="filter-category-3"
-                        name="category[]"
-                        value="organization"
-                        type="checkbox"
-                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                      />
-                      <label
-                        for="filter-category-3"
-                        className="ml-3 text-sm text-gray-600"
-                      >
-                        Organization
-                      </label>
-                    </div>
-                    <div className="flex items-center">
-                      <input
-                        id="filter-category-4"
-                        name="category[]"
-                        value="accessories"
-                        type="checkbox"
-                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                      />
-                      <label
-                        for="filter-category-4"
-                        className="ml-3 text-sm text-gray-600"
-                      >
-                        Accessories
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="border-b border-gray-200 py-6">
-                <h3 className="-my-3 flow-root">
-                  <button
-                    type="button"
-                    className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500"
-                    aria-controls="filter-section-2"
-                    aria-expanded="false"
-                  >
-                    <span className="font-medium text-gray-900">Size</span>
-                    <span className="ml-6 flex items-center">
-                      <svg
-                        className="h-5 w-5"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-                      </svg>
-                      <svg
-                        className="h-5 w-5"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
-                    </span>
-                  </button>
-                </h3>
-                <div className="pt-6" id="filter-section-2">
-                  <div className="space-y-4">
-                    <div className="flex items-center">
-                      <input
-                        id="filter-size-0"
-                        name="size[]"
-                        value="2l"
-                        type="checkbox"
-                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                      />
-                      <label
-                        for="filter-size-0"
-                        className="ml-3 text-sm text-gray-600"
-                      >
-                        2L
-                      </label>
-                    </div>
-                    <div className="flex items-center">
-                      <input
-                        id="filter-size-1"
-                        name="size[]"
-                        value="6l"
-                        type="checkbox"
-                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                      />
-                      <label
-                        for="filter-size-1"
-                        className="ml-3 text-sm text-gray-600"
-                      >
-                        6L
-                      </label>
-                    </div>
-                    <div className="flex items-center">
-                      <input
-                        id="filter-size-2"
-                        name="size[]"
-                        value="12l"
-                        type="checkbox"
-                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                      />
-                      <label
-                        for="filter-size-2"
-                        className="ml-3 text-sm text-gray-600"
-                      >
-                        12L
-                      </label>
-                    </div>
-                    <div className="flex items-center">
-                      <input
-                        id="filter-size-3"
-                        name="size[]"
-                        value="18l"
-                        type="checkbox"
-                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                      />
-                      <label
-                        for="filter-size-3"
-                        className="ml-3 text-sm text-gray-600"
-                      >
-                        18L
-                      </label>
-                    </div>
-                    <div className="flex items-center">
-                      <input
-                        id="filter-size-4"
-                        name="size[]"
-                        value="20l"
-                        type="checkbox"
-                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                      />
-                      <label
-                        for="filter-size-4"
-                        className="ml-3 text-sm text-gray-600"
-                      >
-                        20L
-                      </label>
-                    </div>
-                    <div className="flex items-center">
-                      <input
-                        id="filter-size-5"
-                        name="size[]"
-                        value="40l"
-                        type="checkbox"
-                        checked
-                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                      />
-                      <label
-                        for="filter-size-5"
-                        className="ml-3 text-sm text-gray-600"
-                      >
-                        40L
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              </div> */}
                   </form>
                 </div>
               </div>
@@ -552,7 +512,7 @@ const PropertyListing = () => {
         )}
       </AnimatePresence>
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      {/* <div className="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-10">
+        {/* <div className="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-10">
           <h1 className="md:text-4xl font-bold tracking-tight text-gray-900 text-3xl">
             Properties
           </h1>
@@ -622,19 +582,18 @@ const PropertyListing = () => {
             )}
           </Autocomplete>
         </div>
-        
+
         <section className="pb-24 pt-6 ">
           <h2 id="products-heading" className="sr-only">
             Products
           </h2>
 
           <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
-
             <form className="hidden lg:block ">
               <h3 className="sr-only">Search</h3>
               <div className="border-b border-gray-200 py-6">
                 <h3 className="-my-3 flow-root">
-                  <span className="font-medium text-gray-900">
+                  <span className="font-medium text-gray-900 dark:text-white">
                     Property Type
                   </span>
                 </h3>
@@ -642,11 +601,22 @@ const PropertyListing = () => {
                   className="pt-6 flex flex-col gap-y-3"
                   id="filter-section-0"
                 >
-                  <Checkbox defaultSelected value="All" radius="small" onChange={handlePropertyType}>
+                  <Checkbox
+                    value="All"
+                    onChange={handlePropertyType}
+                    radius="small"
+                    isSelected={selectedValues.includes("All")}
+                  >
                     All
                   </Checkbox>
                   {typesOfHouses.map((values, key) => (
-                    <Checkbox value={values} key={key} radius="small" onChange={handlePropertyType}>
+                    <Checkbox
+                      key={key}
+                      value={values}
+                      onChange={handlePropertyType}
+                      radius="small"
+                      isSelected={selectedValues.includes(values)}
+                    >
                       {values}
                     </Checkbox>
                   ))}
@@ -666,8 +636,8 @@ const PropertyListing = () => {
                     showSteps={true}
                     showTooltip={true}
                     showOutline={true}
-                    value={priceRange} 
-                          onChange={setpriceRange}
+                    value={priceRange}
+                    onChange={setpriceRange}
                     disableThumbScale={false}
                     formatOptions={{ style: "currency", currency: "INR" }}
                     tooltipValueFormatOptions={{
@@ -707,384 +677,208 @@ const PropertyListing = () => {
                   />
                 </div>
               </div>
-
               <div className="border-b border-gray-200 py-6">
                 <h3 className="-my-3 flow-root">
-                  <button
-                    type="button"
-                    className="flex w-full items-center justify-between bg-white py-3  text-gray-400 hover:text-gray-500"
-                    aria-controls="filter-section-0"
-                    aria-expanded="false"
-                  >
-                    <span className="font-medium text-gray-900">Bedrooms</span>
-                    
-                  </button>
-                </h3>
-
-                <div className="pt-6" id="filter-section-0">
-                  <div className="space-y-4">
-                    <div class="inline-flex rounded-md shadow-sm" role="group">
-                      <button
-                        type="button"
-                        class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-s-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"
-                      >
-                        any
-                      </button>
-                      <button
-                        type="button"
-                        class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-r border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"
-                      >
-                        1
-                      </button>
-                      <button
-                        type="button"
-                        class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-r border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"
-                      >
-                        2
-                      </button>
-                      <button
-                        type="button"
-                        class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-r border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"
-                      >
-                        3
-                      </button>
-                      <button
-                        type="button"
-                        class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b  border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"
-                      >
-                        4
-                      </button>
-                      <button
-                        type="button"
-                        class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"
-                      >
-                        5+
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="border-b border-gray-200 py-6">
-                <h3 className="-my-3 flow-root">
-                  <button
-                    type="button"
-                    className="flex w-full items-center justify-between bg-white py-3  text-gray-400 hover:text-gray-500"
-                    aria-controls="filter-section-0"
-                    aria-expanded="false"
-                  >
-                    <span className="font-medium text-gray-900">Bathrooms</span>
-                    
-                  </button>
-                </h3>
-
-                <div className="pt-6" id="filter-section-0">
-                  <div className="space-y-4">
-                    <div class="inline-flex rounded-md shadow-sm" role="group">
-                      <button
-                        type="button"
-                        class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-s-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"
-                      >
-                        any
-                      </button>
-                      <button
-                        type="button"
-                        class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-r border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"
-                      >
-                        1
-                      </button>
-                      <button
-                        type="button"
-                        class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-r border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"
-                      >
-                        2
-                      </button>
-                      <button
-                        type="button"
-                        class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-r border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"
-                      >
-                        3
-                      </button>
-                      <button
-                        type="button"
-                        class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b  border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"
-                      >
-                        4
-                      </button>
-                      <button
-                        type="button"
-                        class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"
-                      >
-                        5+
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="border-b border-gray-200 py-6">
-                <h3 className="-my-3 flow-root">
-                  <span className="font-medium text-gray-900">
-                  Furnishing
+                  <span className="font-medium text-gray-900 dark:text-white">
+                    Bedrooms
                   </span>
+                </h3>
+
+                <div className="pt-6" id="filter-section-0">
+                  <div className="space-y-4">
+                    <div class="inline-flex rounded-md shadow-sm" role="group">
+                      <button
+                        onClick={() => handleBedroomClick("any")}
+                        type="button"
+                        class={`px-4 py-2 text-sm font-medium text-gray-900 bg-white  rounded-s-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2  dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  ${
+                          NoOfBedrooms === "any"
+                            ? "border-black border-2 dark:border-white"
+                            : "border border-gray-200"
+                        }`}
+                      >
+                        any
+                      </button>
+                      <button
+                        onClick={() => handleBedroomClick("1")}
+                        type="button"
+                        class={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
+                          NoOfBedrooms === "1"
+                            ? "border-black border-2 dark:border-white"
+                            : "border border-t border-b border-r border-gray-200"
+                        }`}
+                      >
+                        1
+                      </button>
+                      <button
+                        onClick={() => handleBedroomClick("2")}
+                        type="button"
+                        class={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
+                          NoOfBedrooms === "2"
+                            ? "border-black border-2 dark:border-white"
+                            : "border border-t border-b border-r border-gray-200"
+                        }`}
+                      >
+                        2
+                      </button>
+                      <button
+                        onClick={() => handleBedroomClick("3")}
+                        type="button"
+                        class={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
+                          NoOfBedrooms === "3"
+                            ? "border-black border-2 dark:border-white"
+                            : "border border-t border-b border-r border-gray-200"
+                        }`}
+                      >
+                        3
+                      </button>
+                      <button
+                        onClick={() => handleBedroomClick("4")}
+                        type="button"
+                        class={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
+                          NoOfBedrooms === "4"
+                            ? "border-black border-2 dark:border-white"
+                            : "border border-t border-b border-r border-gray-200"
+                        }`}
+                      >
+                        4
+                      </button>
+                      <button
+                        onClick={() => handleBedroomClick("5+")}
+                        type="button"
+                        class={`px-4 py-2 text-sm font-medium text-gray-900 bg-white  rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  ${
+                          NoOfBedrooms === "5+"
+                            ? "border-black border-2 dark:border-white"
+                            : "border border-gray-200"
+                        }`}
+                      >
+                        5+
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="border-b border-gray-200 py-6">
+                <h3 className="-my-3 flow-root">
+                  <span className="font-medium text-gray-900 dark:text-white">
+                    Bathrooms
+                  </span>
+                </h3>
+
+                <div className="pt-6" id="filter-section-0">
+                  <div className="space-y-4">
+                    <div class="inline-flex rounded-md shadow-sm" role="group">
+                      <button
+                        onClick={() => setNoOfBathrooms("any")}
+                        type="button"
+                        class={`px-4 py-2 text-sm font-medium text-gray-900 bg-white  rounded-s-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2  dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  ${
+                          NoOfBathrooms === "any"
+                            ? "border-black border-2 dark:border-white"
+                            : "border border-gray-200"
+                        }`}
+                      >
+                        any
+                      </button>
+                      <button
+                        onClick={() => setNoOfBathrooms("1")}
+                        type="button"
+                        class={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
+                          NoOfBathrooms === "1"
+                            ? "border-black border-2 dark:border-white"
+                            : "border border-t border-b border-r border-gray-200"
+                        }`}
+                      >
+                        1
+                      </button>
+                      <button
+                        onClick={() => setNoOfBathrooms("2")}
+                        type="button"
+                        class={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
+                          NoOfBathrooms === "2"
+                            ? "border-black border-2 dark:border-white"
+                            : "border border-t border-b border-r border-gray-200"
+                        }`}
+                      >
+                        2
+                      </button>
+                      <button
+                        onClick={() => setNoOfBathrooms("3")}
+                        type="button"
+                        class={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
+                          NoOfBathrooms === "3"
+                            ? "border-black border-2 dark:border-white"
+                            : "border border-t border-b border-r border-gray-200"
+                        }`}
+                      >
+                        3
+                      </button>
+                      <button
+                        onClick={() => setNoOfBathrooms("4")}
+                        type="button"
+                        class={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
+                          NoOfBathrooms === "4"
+                            ? "border-black border-2 dark:border-white"
+                            : "border border-t border-b border-r border-gray-200"
+                        }`}
+                      >
+                        4
+                      </button>
+                      <button
+                        onClick={() => setNoOfBathrooms("5+")}
+                        type="button"
+                        class={`px-4 py-2 text-sm font-medium text-gray-900 bg-white  rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  ${
+                          NoOfBathrooms === "5+"
+                            ? "border-black border-2 dark:border-white"
+                            : "border border-gray-200"
+                        }`}
+                      >
+                        5+
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="border-b border-gray-200 py-6">
+                <h3 className="-my-3 flow-root">
+                  <span className="font-medium text-gray-900 dark:text-white">Furnishing</span>
                 </h3>
                 <div
                   className="pt-6 flex flex-col gap-y-3"
                   id="filter-section-0"
                 >
-                  <Checkbox  radius="small">
-                    Full
+                  <Checkbox
+                    value="Any"
+                    radius="small"
+                    onChange={handleFurnishingType}
+                    isSelected={Furnishing.includes("All")}
+                  >
+                    Any
                   </Checkbox>
-                  <Checkbox  radius="small">
-                    Semi
+                  <Checkbox
+                    value="Fully Furnished"
+                    radius="small"
+                    onChange={handleFurnishingType}
+                    isSelected={Furnishing.includes("Fully Furnished")}
+                  >
+                    Fully Furnished
                   </Checkbox>
-                  <Checkbox  radius="small">
-                    None
+                  <Checkbox
+                    value="Semi-furnished"
+                    radius="small"
+                    onChange={handleFurnishingType}
+                    isSelected={Furnishing.includes("Semi-furnished")}
+                  >
+                    Semi-furnished
                   </Checkbox>
-                  
+                  <Checkbox
+                    value="Unfurnished"
+                    radius="small"
+                    onChange={handleFurnishingType}
+                    isSelected={Furnishing.includes("Unfurnished")}
+                  >
+                    Unfurnished
+                  </Checkbox>
                 </div>
               </div>
-              {/* <div className="border-b border-gray-200 py-6">
-                <h3 className="-my-3 flow-root">
-                  <button
-                    type="button"
-                    className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500"
-                    aria-controls="filter-section-1"
-                    aria-expanded="false"
-                  >
-                    <span className="font-medium text-gray-900">Category</span>
-                    <span className="ml-6 flex items-center">
-                      <svg
-                        className="h-5 w-5"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-                      </svg>
-                      <svg
-                        className="h-5 w-5"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
-                    </span>
-                  </button>
-                </h3>
-                <div className="pt-6" id="filter-section-1">
-                  <div className="space-y-4">
-                    <div className="flex items-center">
-                      <input
-                        id="filter-category-0"
-                        name="category[]"
-                        value="new-arrivals"
-                        type="checkbox"
-                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                      />
-                      <label
-                        for="filter-category-0"
-                        className="ml-3 text-sm text-gray-600"
-                      >
-                        New Arrivals
-                      </label>
-                    </div>
-                    <div className="flex items-center">
-                      <input
-                        id="filter-category-1"
-                        name="category[]"
-                        value="sale"
-                        type="checkbox"
-                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                      />
-                      <label
-                        for="filter-category-1"
-                        className="ml-3 text-sm text-gray-600"
-                      >
-                        Sale
-                      </label>
-                    </div>
-                    <div className="flex items-center">
-                      <input
-                        id="filter-category-2"
-                        name="category[]"
-                        value="travel"
-                        type="checkbox"
-                        checked
-                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                      />
-                      <label
-                        for="filter-category-2"
-                        className="ml-3 text-sm text-gray-600"
-                      >
-                        Travel
-                      </label>
-                    </div>
-                    <div className="flex items-center">
-                      <input
-                        id="filter-category-3"
-                        name="category[]"
-                        value="organization"
-                        type="checkbox"
-                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                      />
-                      <label
-                        for="filter-category-3"
-                        className="ml-3 text-sm text-gray-600"
-                      >
-                        Organization
-                      </label>
-                    </div>
-                    <div className="flex items-center">
-                      <input
-                        id="filter-category-4"
-                        name="category[]"
-                        value="accessories"
-                        type="checkbox"
-                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                      />
-                      <label
-                        for="filter-category-4"
-                        className="ml-3 text-sm text-gray-600"
-                      >
-                        Accessories
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="border-b border-gray-200 py-6">
-                <h3 className="-my-3 flow-root">
-                  <button
-                    type="button"
-                    className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500"
-                    aria-controls="filter-section-2"
-                    aria-expanded="false"
-                  >
-                    <span className="font-medium text-gray-900">Size</span>
-                    <span className="ml-6 flex items-center">
-                      <svg
-                        className="h-5 w-5"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-                      </svg>
-                      <svg
-                        className="h-5 w-5"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
-                    </span>
-                  </button>
-                </h3>
-                <div className="pt-6" id="filter-section-2">
-                  <div className="space-y-4">
-                    <div className="flex items-center">
-                      <input
-                        id="filter-size-0"
-                        name="size[]"
-                        value="2l"
-                        type="checkbox"
-                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                      />
-                      <label
-                        for="filter-size-0"
-                        className="ml-3 text-sm text-gray-600"
-                      >
-                        2L
-                      </label>
-                    </div>
-                    <div className="flex items-center">
-                      <input
-                        id="filter-size-1"
-                        name="size[]"
-                        value="6l"
-                        type="checkbox"
-                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                      />
-                      <label
-                        for="filter-size-1"
-                        className="ml-3 text-sm text-gray-600"
-                      >
-                        6L
-                      </label>
-                    </div>
-                    <div className="flex items-center">
-                      <input
-                        id="filter-size-2"
-                        name="size[]"
-                        value="12l"
-                        type="checkbox"
-                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                      />
-                      <label
-                        for="filter-size-2"
-                        className="ml-3 text-sm text-gray-600"
-                      >
-                        12L
-                      </label>
-                    </div>
-                    <div className="flex items-center">
-                      <input
-                        id="filter-size-3"
-                        name="size[]"
-                        value="18l"
-                        type="checkbox"
-                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                      />
-                      <label
-                        for="filter-size-3"
-                        className="ml-3 text-sm text-gray-600"
-                      >
-                        18L
-                      </label>
-                    </div>
-                    <div className="flex items-center">
-                      <input
-                        id="filter-size-4"
-                        name="size[]"
-                        value="20l"
-                        type="checkbox"
-                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                      />
-                      <label
-                        for="filter-size-4"
-                        className="ml-3 text-sm text-gray-600"
-                      >
-                        20L
-                      </label>
-                    </div>
-                    <div className="flex items-center">
-                      <input
-                        id="filter-size-5"
-                        name="size[]"
-                        value="40l"
-                        type="checkbox"
-                        checked
-                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                      />
-                      <label
-                        for="filter-size-5"
-                        className="ml-3 text-sm text-gray-600"
-                      >
-                        40L
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              </div> */}
             </form>
 
             <div className="lg:col-span-3">
