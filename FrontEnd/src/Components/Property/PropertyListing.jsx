@@ -8,7 +8,17 @@ import {
   Checkbox,
   Slider,
 } from "@nextui-org/react";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+  Input,
+} from "@nextui-org/react";
 import { Autocomplete, AutocompleteItem, Button } from "@nextui-org/react";
+import {Select, SelectItem, Avatar} from "@nextui-org/react";
 import { motion, AnimatePresence } from "framer-motion";
 import Footer from "../Layouts/Footers/Footer";
 import Listing from "./Card/Listing";
@@ -18,6 +28,7 @@ const PropertyListing = () => {
   useEffect(() => {
     document.title = "Properties";
   }, []);
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const navigate = useNavigate();
   const location = useLocation();
   const [selectedKeys, setSelectedKeys] = React.useState(new Set(["Newest"]));
@@ -148,6 +159,7 @@ const PropertyListing = () => {
     queryParams.set("bedrooms", JSON.stringify(NoOfBedrooms));
     queryParams.set("bathrooms", JSON.stringify(NoOfBathrooms));
     queryParams.set("furnshing", JSON.stringify(Furnishing));
+    queryParams.set("sortBy", JSON.stringify(selectedValue));
     const updatedSearch = queryParams.toString();
     navigate(`${location.pathname}?${updatedSearch}`);
   }, [
@@ -158,6 +170,7 @@ const PropertyListing = () => {
     NoOfBedrooms,
     NoOfBathrooms,
     Furnishing,
+    selectedValue,
   ]);
   return (
     <div>
@@ -194,13 +207,13 @@ const PropertyListing = () => {
                         className="h-6 w-6"
                         fill="none"
                         viewBox="0 0 24 24"
-                        stroke-width="1.5"
+                        strokeWidth={1.5}
                         stroke="currentColor"
                         aria-hidden="true"
                       >
                         <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                           d="M6 18L18 6M6 6l12 12"
                         />
                       </svg>
@@ -304,13 +317,13 @@ const PropertyListing = () => {
                       <div className="pt-6" id="filter-section-0">
                         <div className="space-y-4">
                           <div
-                            class="inline-flex rounded-md shadow-sm"
+                            className="inline-flex rounded-md shadow-sm"
                             role="group"
                           >
                             <button
                               onClick={() => handleBedroomClick("any")}
                               type="button"
-                              class={`px-4 py-2 text-sm font-medium text-gray-900 bg-white  rounded-s-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2  dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  ${
+                              className={`px-4 py-2 text-sm font-medium text-gray-900 bg-white  rounded-s-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2  dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  ${
                                 NoOfBedrooms === "any"
                                   ? "border-black border-2 dark:border-white"
                                   : "border border-gray-200"
@@ -321,7 +334,7 @@ const PropertyListing = () => {
                             <button
                               onClick={() => handleBedroomClick("1")}
                               type="button"
-                              class={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
+                              className={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
                                 NoOfBedrooms === "1"
                                   ? "border-black border-2 dark:border-white"
                                   : "border border-t border-b border-r border-gray-200"
@@ -332,7 +345,7 @@ const PropertyListing = () => {
                             <button
                               onClick={() => handleBedroomClick("2")}
                               type="button"
-                              class={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
+                              className={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
                                 NoOfBedrooms === "2"
                                   ? "border-black border-2 dark:border-white"
                                   : "border border-t border-b border-r border-gray-200"
@@ -343,7 +356,7 @@ const PropertyListing = () => {
                             <button
                               onClick={() => handleBedroomClick("3")}
                               type="button"
-                              class={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
+                              className={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
                                 NoOfBedrooms === "3"
                                   ? "border-black border-2 dark:border-white"
                                   : "border border-t border-b border-r border-gray-200"
@@ -354,7 +367,7 @@ const PropertyListing = () => {
                             <button
                               onClick={() => handleBedroomClick("4")}
                               type="button"
-                              class={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
+                              className={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
                                 NoOfBedrooms === "4"
                                   ? "border-black border-2 dark:border-white"
                                   : "border border-t border-b border-r border-gray-200"
@@ -365,7 +378,7 @@ const PropertyListing = () => {
                             <button
                               onClick={() => handleBedroomClick("5+")}
                               type="button"
-                              class={`px-4 py-2 text-sm font-medium text-gray-900 bg-white  rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  ${
+                              className={`px-4 py-2 text-sm font-medium text-gray-900 bg-white  rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  ${
                                 NoOfBedrooms === "5+"
                                   ? "border-black border-2 dark:border-white"
                                   : "border border-gray-200"
@@ -387,13 +400,13 @@ const PropertyListing = () => {
                       <div className="pt-6" id="filter-section-0">
                         <div className="space-y-4">
                           <div
-                            class="inline-flex rounded-md shadow-sm"
+                            className="inline-flex rounded-md shadow-sm"
                             role="group"
                           >
                             <button
                               onClick={() => setNoOfBathrooms("any")}
                               type="button"
-                              class={`px-4 py-2 text-sm font-medium text-gray-900 bg-white  rounded-s-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2  dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  ${
+                              className={`px-4 py-2 text-sm font-medium text-gray-900 bg-white  rounded-s-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2  dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  ${
                                 NoOfBathrooms === "any"
                                   ? "border-black border-2 dark:border-white"
                                   : "border border-gray-200"
@@ -404,7 +417,7 @@ const PropertyListing = () => {
                             <button
                               onClick={() => setNoOfBathrooms("1")}
                               type="button"
-                              class={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
+                              className={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
                                 NoOfBathrooms === "1"
                                   ? "border-black border-2 dark:border-white"
                                   : "border border-t border-b border-r border-gray-200"
@@ -415,7 +428,7 @@ const PropertyListing = () => {
                             <button
                               onClick={() => setNoOfBathrooms("2")}
                               type="button"
-                              class={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
+                              className={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
                                 NoOfBathrooms === "2"
                                   ? "border-black border-2 dark:border-white"
                                   : "border border-t border-b border-r border-gray-200"
@@ -426,7 +439,7 @@ const PropertyListing = () => {
                             <button
                               onClick={() => setNoOfBathrooms("3")}
                               type="button"
-                              class={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
+                              className={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
                                 NoOfBathrooms === "3"
                                   ? "border-black border-2 dark:border-white"
                                   : "border border-t border-b border-r border-gray-200"
@@ -437,7 +450,7 @@ const PropertyListing = () => {
                             <button
                               onClick={() => setNoOfBathrooms("4")}
                               type="button"
-                              class={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
+                              className={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
                                 NoOfBathrooms === "4"
                                   ? "border-black border-2 dark:border-white"
                                   : "border border-t border-b border-r border-gray-200"
@@ -448,7 +461,7 @@ const PropertyListing = () => {
                             <button
                               onClick={() => setNoOfBathrooms("5+")}
                               type="button"
-                              class={`px-4 py-2 text-sm font-medium text-gray-900 bg-white  rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  ${
+                              className={`px-4 py-2 text-sm font-medium text-gray-900 bg-white  rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  ${
                                 NoOfBathrooms === "5+"
                                   ? "border-black border-2 dark:border-white"
                                   : "border border-gray-200"
@@ -521,7 +534,21 @@ const PropertyListing = () => {
           <h1 className="text-2xl font-bold tracking-tight text-gray-900 mb-2">
             Find your home
           </h1>
-          <Autocomplete
+          <div className="flex">
+            <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="center" backdrop="blur" size="xl">
+              <ModalContent>
+                {(onClose) => (
+                  <>
+                    <ModalHeader className="flex flex-col gap-1">
+                      Search your home
+                    </ModalHeader>
+                    <ModalBody>
+                      <div className="flex gap-x-4">
+                      
+
+
+
+<Autocomplete
             classNames={{
               base: "w-full",
               listboxWrapper: "max-h-[320px]",
@@ -538,7 +565,7 @@ const PropertyListing = () => {
               hideSelectedIcon: true,
               itemClasses: {
                 base: [
-                  "rounded-medium",
+                  // "rounded-medium",
                   "text-default-500",
                   "transition-opacity",
                   "data-[hover=true]:text-foreground",
@@ -555,12 +582,12 @@ const PropertyListing = () => {
             popoverProps={{
               offset: 10,
               classNames: {
-                base: "rounded-large",
+                // base: "rounded-large",
                 content: "p-1 border-small border-default-100 bg-background",
               },
             }}
-            startContent={<CiSearch size={25} />}
-            radius="full"
+            
+            radius="sm"
             variant="bordered"
           >
             {(item) => (
@@ -581,6 +608,162 @@ const PropertyListing = () => {
               </AutocompleteItem>
             )}
           </Autocomplete>
+
+
+
+
+          <Autocomplete
+            classNames={{
+              base: "w-full",
+              listboxWrapper: "max-h-[320px]",
+              selectorButton: "text-default-500",
+            }}
+            defaultItems={indianStates}
+            inputProps={{
+              classNames: {
+                input: "ml-1",
+                inputWrapper: "h-[48px]",
+              },
+            }}
+            listboxProps={{
+              hideSelectedIcon: true,
+              itemClasses: {
+                base: [
+                  // "rounded-medium",
+                  "text-default-500",
+                  "transition-opacity",
+                  "data-[hover=true]:text-foreground",
+                  "dark:data-[hover=true]:bg-default-50",
+                  "data-[pressed=true]:opacity-70",
+                  "data-[hover=true]:bg-default-200",
+                  "data-[selectable=true]:focus:bg-default-100",
+                  "data-[focus-visible=true]:ring-default-500",
+                ],
+              },
+            }}
+            aria-label="Select an employee"
+            placeholder="Enter city name"
+            popoverProps={{
+              offset: 10,
+              classNames: {
+                // base: "rounded-large",
+                content: "p-1 border-small border-default-100 bg-background",
+              },
+            }}
+            
+            radius="sm"
+            variant="bordered"
+          >
+            {(item) => (
+              <AutocompleteItem key={item.id} textValue={item.name}>
+                <div className="flex justify-between items-center">
+                  <div className="flex gap-2 items-center">
+                    {/* <Avatar
+                      alt={item.name}
+                      className="flex-shrink-0"
+                      size="sm"
+                      src={item.avatar}
+                    /> */}
+                    <div className="flex flex-col">
+                      <span className="text-medium">{item.name}</span>
+                    </div>
+                  </div>
+                </div>
+              </AutocompleteItem>
+            )}
+          </Autocomplete>
+
+    
+                      </div>
+
+
+
+
+<Autocomplete
+            classNames={{
+              base: "w-full",
+              listboxWrapper: "max-h-[320px]",
+              selectorButton: "text-default-500",
+            }}
+            defaultItems={indianStates}
+            inputProps={{
+              classNames: {
+                input: "ml-1",
+                inputWrapper: "h-[48px]",
+              },
+            }}
+            listboxProps={{
+              hideSelectedIcon: true,
+              itemClasses: {
+                base: [
+                  // "rounded-medium",
+                  "text-default-500",
+                  "transition-opacity",
+                  "data-[hover=true]:text-foreground",
+                  "dark:data-[hover=true]:bg-default-50",
+                  "data-[pressed=true]:opacity-70",
+                  "data-[hover=true]:bg-default-200",
+                  "data-[selectable=true]:focus:bg-default-100",
+                  "data-[focus-visible=true]:ring-default-500",
+                ],
+              },
+            }}
+            aria-label="Select an employee"
+            placeholder="Enter locality name"
+            popoverProps={{
+              offset: 10,
+              classNames: {
+                // base: "rounded-large",
+                content: "p-1 border-small border-default-100 bg-background",
+              },
+            }}
+            
+            radius="sm"
+            variant="bordered"
+          >
+            {(item) => (
+              <AutocompleteItem key={item.id} textValue={item.name}>
+                <div className="flex justify-between items-center">
+                  <div className="flex gap-2 items-center">
+                    {/* <Avatar
+                      alt={item.name}
+                      className="flex-shrink-0"
+                      size="sm"
+                      src={item.avatar}
+                    /> */}
+                    <div className="flex flex-col">
+                      <span className="text-medium">{item.name}</span>
+                    </div>
+                  </div>
+                </div>
+              </AutocompleteItem>
+            )}
+          </Autocomplete>
+
+                    </ModalBody>
+                    <ModalFooter>
+                      <Button color="danger" variant="light" onPress={onClose}>
+                        Close
+                      </Button>
+                      <Button color="primary" onPress={onClose}>
+                        Action
+                      </Button>
+                    </ModalFooter>
+                  </>
+                )}
+              </ModalContent>
+            </Modal>
+            <button type="button" className="w-full" onClick={onOpen}>
+            <Input
+              type="text"
+              variant="bordered"
+              placeholder="Enter your locality"
+              
+              startContent={<CiSearch size={25}/>}
+            />
+            </button>
+            
+          </div>
         </div>
 
         <section className="pb-24 pt-6 ">
@@ -686,11 +869,14 @@ const PropertyListing = () => {
 
                 <div className="pt-6" id="filter-section-0">
                   <div className="space-y-4">
-                    <div class="inline-flex rounded-md shadow-sm" role="group">
+                    <div
+                      className="inline-flex rounded-md shadow-sm"
+                      role="group"
+                    >
                       <button
                         onClick={() => handleBedroomClick("any")}
                         type="button"
-                        class={`px-4 py-2 text-sm font-medium text-gray-900 bg-white  rounded-s-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2  dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  ${
+                        className={`px-4 py-2 text-sm font-medium text-gray-900 bg-white  rounded-s-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2  dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  ${
                           NoOfBedrooms === "any"
                             ? "border-black border-2 dark:border-white"
                             : "border border-gray-200"
@@ -701,7 +887,7 @@ const PropertyListing = () => {
                       <button
                         onClick={() => handleBedroomClick("1")}
                         type="button"
-                        class={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
+                        className={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
                           NoOfBedrooms === "1"
                             ? "border-black border-2 dark:border-white"
                             : "border border-t border-b border-r border-gray-200"
@@ -712,7 +898,7 @@ const PropertyListing = () => {
                       <button
                         onClick={() => handleBedroomClick("2")}
                         type="button"
-                        class={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
+                        className={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
                           NoOfBedrooms === "2"
                             ? "border-black border-2 dark:border-white"
                             : "border border-t border-b border-r border-gray-200"
@@ -723,7 +909,7 @@ const PropertyListing = () => {
                       <button
                         onClick={() => handleBedroomClick("3")}
                         type="button"
-                        class={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
+                        className={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
                           NoOfBedrooms === "3"
                             ? "border-black border-2 dark:border-white"
                             : "border border-t border-b border-r border-gray-200"
@@ -734,7 +920,7 @@ const PropertyListing = () => {
                       <button
                         onClick={() => handleBedroomClick("4")}
                         type="button"
-                        class={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
+                        className={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
                           NoOfBedrooms === "4"
                             ? "border-black border-2 dark:border-white"
                             : "border border-t border-b border-r border-gray-200"
@@ -745,7 +931,7 @@ const PropertyListing = () => {
                       <button
                         onClick={() => handleBedroomClick("5+")}
                         type="button"
-                        class={`px-4 py-2 text-sm font-medium text-gray-900 bg-white  rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  ${
+                        className={`px-4 py-2 text-sm font-medium text-gray-900 bg-white  rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  ${
                           NoOfBedrooms === "5+"
                             ? "border-black border-2 dark:border-white"
                             : "border border-gray-200"
@@ -766,11 +952,14 @@ const PropertyListing = () => {
 
                 <div className="pt-6" id="filter-section-0">
                   <div className="space-y-4">
-                    <div class="inline-flex rounded-md shadow-sm" role="group">
+                    <div
+                      className="inline-flex rounded-md shadow-sm"
+                      role="group"
+                    >
                       <button
                         onClick={() => setNoOfBathrooms("any")}
                         type="button"
-                        class={`px-4 py-2 text-sm font-medium text-gray-900 bg-white  rounded-s-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2  dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  ${
+                        className={`px-4 py-2 text-sm font-medium text-gray-900 bg-white  rounded-s-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2  dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  ${
                           NoOfBathrooms === "any"
                             ? "border-black border-2 dark:border-white"
                             : "border border-gray-200"
@@ -781,7 +970,7 @@ const PropertyListing = () => {
                       <button
                         onClick={() => setNoOfBathrooms("1")}
                         type="button"
-                        class={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
+                        className={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
                           NoOfBathrooms === "1"
                             ? "border-black border-2 dark:border-white"
                             : "border border-t border-b border-r border-gray-200"
@@ -792,7 +981,7 @@ const PropertyListing = () => {
                       <button
                         onClick={() => setNoOfBathrooms("2")}
                         type="button"
-                        class={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
+                        className={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
                           NoOfBathrooms === "2"
                             ? "border-black border-2 dark:border-white"
                             : "border border-t border-b border-r border-gray-200"
@@ -803,7 +992,7 @@ const PropertyListing = () => {
                       <button
                         onClick={() => setNoOfBathrooms("3")}
                         type="button"
-                        class={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
+                        className={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
                           NoOfBathrooms === "3"
                             ? "border-black border-2 dark:border-white"
                             : "border border-t border-b border-r border-gray-200"
@@ -814,7 +1003,7 @@ const PropertyListing = () => {
                       <button
                         onClick={() => setNoOfBathrooms("4")}
                         type="button"
-                        class={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
+                        className={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
                           NoOfBathrooms === "4"
                             ? "border-black border-2 dark:border-white"
                             : "border border-t border-b border-r border-gray-200"
@@ -825,7 +1014,7 @@ const PropertyListing = () => {
                       <button
                         onClick={() => setNoOfBathrooms("5+")}
                         type="button"
-                        class={`px-4 py-2 text-sm font-medium text-gray-900 bg-white  rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  ${
+                        className={`px-4 py-2 text-sm font-medium text-gray-900 bg-white  rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  ${
                           NoOfBathrooms === "5+"
                             ? "border-black border-2 dark:border-white"
                             : "border border-gray-200"
@@ -839,7 +1028,9 @@ const PropertyListing = () => {
               </div>
               <div className="border-b border-gray-200 py-6">
                 <h3 className="-my-3 flow-root">
-                  <span className="font-medium text-gray-900 dark:text-white">Furnishing</span>
+                  <span className="font-medium text-gray-900 dark:text-white">
+                    Furnishing
+                  </span>
                 </h3>
                 <div
                   className="pt-6 flex flex-col gap-y-3"
@@ -899,9 +1090,9 @@ const PropertyListing = () => {
                             aria-hidden="true"
                           >
                             <path
-                              fill-rule="evenodd"
+                              fillRule="evenodd"
+                              clipRule="evenodd"
                               d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                              clip-rule="evenodd"
                             />
                           </svg>
                         }
@@ -939,9 +1130,9 @@ const PropertyListing = () => {
                     fill="currentColor"
                   >
                     <path
-                      fill-rule="evenodd"
+                      fillRule="evenodd"
                       d="M2.628 1.601C5.028 1.206 7.49 1 10 1s4.973.206 7.372.601a.75.75 0 01.628.74v2.288a2.25 2.25 0 01-.659 1.59l-4.682 4.683a2.25 2.25 0 00-.659 1.59v3.037c0 .684-.31 1.33-.844 1.757l-1.937 1.55A.75.75 0 018 18.25v-5.757a2.25 2.25 0 00-.659-1.591L2.659 6.22A2.25 2.25 0 012 4.629V2.34a.75.75 0 01.628-.74z"
-                      clip-rule="evenodd"
+                      clipRule="evenodd"
                     />
                   </svg>
                 </button>
