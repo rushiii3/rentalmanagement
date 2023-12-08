@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { CiSearch } from "react-icons/ci";
+import { FaCity } from "react-icons/fa6";
+import { IoLocation } from "react-icons/io5";
+import { FaLandmarkDome } from "react-icons/fa6";
+import { users } from "./Card/data";
+
 import {
   Dropdown,
   DropdownTrigger,
@@ -18,19 +23,21 @@ import {
   Input,
 } from "@nextui-org/react";
 import { Autocomplete, AutocompleteItem, Button } from "@nextui-org/react";
-import {Select, SelectItem, Avatar} from "@nextui-org/react";
 import { motion, AnimatePresence } from "framer-motion";
 import Footer from "../Layouts/Footers/Footer";
 import Listing from "./Card/Listing";
 import { useNavigate, useLocation } from "react-router-dom";
+import { States, City } from "../../statecities";
+import { propertServer } from "../../server";
+import axios from "axios";
 
 const PropertyListing = () => {
   useEffect(() => {
     document.title = "Properties";
   }, []);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const navigate = useNavigate();
-  const location = useLocation();
+  // const navigate = useNavigate();
+  // const location = useLocation();
   const [selectedKeys, setSelectedKeys] = React.useState(new Set(["Newest"]));
   const [priceRange, setpriceRange] = React.useState([0, 500000]);
   const selectedValue = React.useMemo(
@@ -42,7 +49,11 @@ const PropertyListing = () => {
   const [Furnishing, setFurnishing] = useState(["All"]);
   const [NoOfBedrooms, setNoOfBedrooms] = useState("any");
   const [NoOfBathrooms, setNoOfBathrooms] = useState("any");
-
+  const [state, setValue] = useState("");
+  const [cityy, setcityy] = useState("");
+  const city = City.filter((city) => state === city.state).map(
+    (city) => city.name
+  );
   const typesOfHouses = [
     "Haveli",
     "Bungalow",
@@ -55,42 +66,11 @@ const PropertyListing = () => {
     "Mansion",
     "Farmhouse",
   ];
-  const indianStates = [
-    { id: 1, name: "Andhra Pradesh" },
-    { id: 2, name: "Arunachal Pradesh" },
-    { id: 3, name: "Assam" },
-    { id: 4, name: "Bihar" },
-    { id: 5, name: "Chhattisgarh" },
-    { id: 6, name: "Goa" },
-    { id: 7, name: "Gujarat" },
-    { id: 8, name: "Haryana" },
-    { id: 9, name: "Himachal Pradesh" },
-    { id: 10, name: "Jharkhand" },
-    { id: 11, name: "Karnataka" },
-    { id: 12, name: "Kerala" },
-    { id: 13, name: "Madhya Pradesh" },
-    { id: 14, name: "Maharashtra" },
-    { id: 15, name: "Manipur" },
-    { id: 16, name: "Meghalaya" },
-    { id: 17, name: "Mizoram" },
-    { id: 18, name: "Nagaland" },
-    { id: 19, name: "Odisha" },
-    { id: 20, name: "Punjab" },
-    { id: 21, name: "Rajasthan" },
-    { id: 22, name: "Sikkim" },
-    { id: 23, name: "Tamil Nadu" },
-    { id: 24, name: "Telangana" },
-    { id: 25, name: "Tripura" },
-    { id: 26, name: "Uttar Pradesh" },
-    { id: 27, name: "Uttarakhand" },
-    { id: 28, name: "West Bengal" },
-    { id: 29, name: "Andaman and Nicobar Islands" },
-    { id: 30, name: "Chandigarh" },
-    { id: 31, name: "Dadra and Nagar Haveli and Daman and Diu" },
-    { id: 32, name: "Delhi" },
-    { id: 33, name: "Lakshadweep" },
-    { id: 34, name: "Puducherry" },
-  ];
+
+  const onInputChange = (value) => {
+    setValue(value);
+  };
+
   const OpenFilterForMobile = () => {
     setMobileFilter(true);
   };
@@ -100,7 +80,7 @@ const PropertyListing = () => {
   const handleBathroomsClick = (value) => {
     setNoOfBathrooms(value);
   };
-  const queryParams = new URLSearchParams(location.search);
+  // const queryParams = new URLSearchParams(location.search);
   const handlePropertyType = (e) => {
     const { value, checked } = e.target;
 
@@ -153,25 +133,36 @@ const PropertyListing = () => {
       });
     }
   };
-  useEffect(() => {
-    queryParams.set("types", JSON.stringify(selectedValues));
-    queryParams.set("priceRange", JSON.stringify(priceRange));
-    queryParams.set("bedrooms", JSON.stringify(NoOfBedrooms));
-    queryParams.set("bathrooms", JSON.stringify(NoOfBathrooms));
-    queryParams.set("furnshing", JSON.stringify(Furnishing));
-    queryParams.set("sortBy", JSON.stringify(selectedValue));
-    const updatedSearch = queryParams.toString();
-    navigate(`${location.pathname}?${updatedSearch}`);
-  }, [
-    selectedValues,
-    location.pathname,
-    navigate,
-    priceRange,
-    NoOfBedrooms,
-    NoOfBathrooms,
-    Furnishing,
-    selectedValue,
-  ]);
+  const onCityChange = async(value) =>{
+    console.log(value);
+    if(value!==''){
+      const response = await axios.get(
+        `${propertServer}/properties-landmark?state=${state}&city=${value}`
+      );
+      console.log(response);
+      setcityy(value);
+    }
+    
+  }
+  // useEffect(() => {
+  //   queryParams.set("types", JSON.stringify(selectedValues));
+  //   queryParams.set("priceRange", JSON.stringify(priceRange));
+  //   queryParams.set("bedrooms", JSON.stringify(NoOfBedrooms));
+  //   queryParams.set("bathrooms", JSON.stringify(NoOfBathrooms));
+  //   queryParams.set("furnshing", JSON.stringify(Furnishing));
+  //   queryParams.set("sortBy", JSON.stringify(selectedValue));
+  //   const updatedSearch = queryParams.toString();
+  //   navigate(`${location.pathname}?${updatedSearch}`);
+  // }, [
+  //   selectedValues,
+  //   location.pathname,
+  //   navigate,
+  //   priceRange,
+  //   NoOfBedrooms,
+  //   NoOfBathrooms,
+  //   Furnishing,
+  //   selectedValue,
+  // ]);
   return (
     <div>
       <AnimatePresence>
@@ -535,7 +526,13 @@ const PropertyListing = () => {
             Find your home
           </h1>
           <div className="flex">
-            <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="center" backdrop="blur" size="xl">
+            <Modal
+              isOpen={isOpen}
+              onOpenChange={onOpenChange}
+              placement="center"
+              backdrop="blur"
+              size="xl"
+            >
               <ModalContent>
                 {(onClose) => (
                   <>
@@ -544,209 +541,190 @@ const PropertyListing = () => {
                     </ModalHeader>
                     <ModalBody>
                       <div className="flex gap-x-4">
-                      
+                      <Autocomplete
+                        menuTrigger="input"
+                        classNames={{
+                          base: "w-full",
+                          listboxWrapper: "max-h-[320px]",
+                          selectorButton: "text-default-500",
+                        }}
+                        defaultItems={States}
+                        inputProps={{
+                          classNames: {
+                            input: "ml-1",
+                            inputWrapper: "h-[48px]",
+                          },
+                        }}
+                        listboxProps={{
+                          hideSelectedIcon: false,
+                          itemClasses: {
+                            base: [
+                              // "rounded-medium",
+                              "text-default-500",
+                              "transition-opacity",
+                              "data-[hover=true]:text-foreground",
+                              "dark:data-[hover=true]:bg-default-50",
+                              "data-[pressed=true]:opacity-70",
+                              "data-[hover=true]:bg-default-200",
+                              "data-[selectable=true]:focus:bg-default-100",
+                              "data-[focus-visible=true]:ring-default-500",
+                            ],
+                          },
+                        }}
+                        aria-label="Select state"
+                        placeholder="Enter state name"
+                        popoverProps={{
+                          offset: 10,
+                          classNames: {
+                            // base: "rounded-large",
+                            content:
+                              "p-1 border-small border-default-100 bg-background",
+                          },
+                        }}
+                        radius="sm"
+                        variant="bordered"
+                        onInputChange={onInputChange}
+                      >
+                        {(item) => (
+                          <AutocompleteItem key={item.id} textValue={item.name}>
+                            <div className="flex justify-between items-center">
+                              <div className="flex gap-2 items-center">
+                                <IoLocation
+                                  size={15}
+                                  className="flex-shrink-0"
+                                />
 
+                                <div className="flex flex-col">
+                                  <span className="text-medium">
+                                    {item.name}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </AutocompleteItem>
+                        )}
+                      </Autocomplete>
+                      <Autocomplete
+                        menuTrigger="input"
+                        classNames={{
+                          base: "w-full",
+                          listboxWrapper: "max-h-[320px]",
+                          selectorButton: "text-default-500",
+                        }}
+                        defaultItems={States}
+                        inputProps={{
+                          classNames: {
+                            input: "ml-1",
+                            inputWrapper: "h-[48px]",
+                          },
+                        }}
+                        listboxProps={{
+                          hideSelectedIcon: false,
+                          itemClasses: {
+                            base: [
+                              // "rounded-medium",
+                              "text-default-500",
+                              "transition-opacity",
+                              "data-[hover=true]:text-foreground",
+                              "dark:data-[hover=true]:bg-default-50",
+                              "data-[pressed=true]:opacity-70",
+                              "data-[hover=true]:bg-default-200",
+                              "data-[selectable=true]:focus:bg-default-100",
+                              "data-[focus-visible=true]:ring-default-500",
+                            ],
+                          },
+                        }}
+                        aria-label="Select city"
+                        placeholder="Enter city name"
+                        popoverProps={{
+                          offset: 10,
+                          classNames: {
+                            // base: "rounded-large",
+                            content:
+                              "p-1 border-small border-default-100 bg-background",
+                          },
+                        }}
+                        radius="sm"
+                        variant="bordered"
+                        onSelectionChange={onCityChange}
+                      >
+                        {city[0]?.map((value, key) => (
+                            <AutocompleteItem key={key} textValue={value}>
+                              <div className="flex justify-between items-center">
+                                <div className="flex gap-2 items-center">
+                                  <FaCity size={15} className="flex-shrink-0" />
 
-
-<Autocomplete
-            classNames={{
-              base: "w-full",
-              listboxWrapper: "max-h-[320px]",
-              selectorButton: "text-default-500",
-            }}
-            defaultItems={indianStates}
-            inputProps={{
-              classNames: {
-                input: "ml-1",
-                inputWrapper: "h-[48px]",
-              },
-            }}
-            listboxProps={{
-              hideSelectedIcon: true,
-              itemClasses: {
-                base: [
-                  // "rounded-medium",
-                  "text-default-500",
-                  "transition-opacity",
-                  "data-[hover=true]:text-foreground",
-                  "dark:data-[hover=true]:bg-default-50",
-                  "data-[pressed=true]:opacity-70",
-                  "data-[hover=true]:bg-default-200",
-                  "data-[selectable=true]:focus:bg-default-100",
-                  "data-[focus-visible=true]:ring-default-500",
-                ],
-              },
-            }}
-            aria-label="Select an employee"
-            placeholder="Enter state name"
-            popoverProps={{
-              offset: 10,
-              classNames: {
-                // base: "rounded-large",
-                content: "p-1 border-small border-default-100 bg-background",
-              },
-            }}
-            
-            radius="sm"
-            variant="bordered"
-          >
-            {(item) => (
-              <AutocompleteItem key={item.id} textValue={item.name}>
-                <div className="flex justify-between items-center">
-                  <div className="flex gap-2 items-center">
-                    {/* <Avatar
-                      alt={item.name}
-                      className="flex-shrink-0"
-                      size="sm"
-                      src={item.avatar}
-                    /> */}
-                    <div className="flex flex-col">
-                      <span className="text-medium">{item.name}</span>
-                    </div>
-                  </div>
-                </div>
-              </AutocompleteItem>
-            )}
-          </Autocomplete>
-
-
-
-
-          <Autocomplete
-            classNames={{
-              base: "w-full",
-              listboxWrapper: "max-h-[320px]",
-              selectorButton: "text-default-500",
-            }}
-            defaultItems={indianStates}
-            inputProps={{
-              classNames: {
-                input: "ml-1",
-                inputWrapper: "h-[48px]",
-              },
-            }}
-            listboxProps={{
-              hideSelectedIcon: true,
-              itemClasses: {
-                base: [
-                  // "rounded-medium",
-                  "text-default-500",
-                  "transition-opacity",
-                  "data-[hover=true]:text-foreground",
-                  "dark:data-[hover=true]:bg-default-50",
-                  "data-[pressed=true]:opacity-70",
-                  "data-[hover=true]:bg-default-200",
-                  "data-[selectable=true]:focus:bg-default-100",
-                  "data-[focus-visible=true]:ring-default-500",
-                ],
-              },
-            }}
-            aria-label="Select an employee"
-            placeholder="Enter city name"
-            popoverProps={{
-              offset: 10,
-              classNames: {
-                // base: "rounded-large",
-                content: "p-1 border-small border-default-100 bg-background",
-              },
-            }}
-            
-            radius="sm"
-            variant="bordered"
-          >
-            {(item) => (
-              <AutocompleteItem key={item.id} textValue={item.name}>
-                <div className="flex justify-between items-center">
-                  <div className="flex gap-2 items-center">
-                    {/* <Avatar
-                      alt={item.name}
-                      className="flex-shrink-0"
-                      size="sm"
-                      src={item.avatar}
-                    /> */}
-                    <div className="flex flex-col">
-                      <span className="text-medium">{item.name}</span>
-                    </div>
-                  </div>
-                </div>
-              </AutocompleteItem>
-            )}
-          </Autocomplete>
-
-    
+                                  <div className="flex flex-col">
+                                    <span className="text-medium">{value}</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </AutocompleteItem>
+                          ))}
+                      </Autocomplete>
                       </div>
+                      
+                      <Autocomplete
+                        menuTrigger="input"
+                        classNames={{
+                          base: "w-full",
+                          listboxWrapper: "max-h-[320px]",
+                          selectorButton: "text-default-500",
+                        }}
+                        defaultItems={States}
+                        inputProps={{
+                          classNames: {
+                            input: "ml-1",
+                            inputWrapper: "h-[48px]",
+                          },
+                        }}
+                        listboxProps={{
+                          hideSelectedIcon: false,
+                          itemClasses: {
+                            base: [
+                              // "rounded-medium",
+                              "text-default-500",
+                              "transition-opacity",
+                              "data-[hover=true]:text-foreground",
+                              "dark:data-[hover=true]:bg-default-50",
+                              "data-[pressed=true]:opacity-70",
+                              "data-[hover=true]:bg-default-200",
+                              "data-[selectable=true]:focus:bg-default-100",
+                              "data-[focus-visible=true]:ring-default-500",
+                            ],
+                          },
+                        }}
+                        aria-label="Select state"
+                        placeholder="Enter state name"
+                        popoverProps={{
+                          offset: 10,
+                          classNames: {
+                            // base: "rounded-large",
+                            content:
+                              "p-1 border-small border-default-100 bg-background",
+                          },
+                        }}
+                        radius="sm"
+                        variant="bordered"
+                      >
+                        {city[0]?.map((value, key) => (
+                            <AutocompleteItem key={key} textValue={value}>
+                              <div className="flex justify-between items-center">
+                                <div className="flex gap-2 items-center">
+                                  <FaCity size={15} className="flex-shrink-0" />
 
-
-
-
-<Autocomplete
-            classNames={{
-              base: "w-full",
-              listboxWrapper: "max-h-[320px]",
-              selectorButton: "text-default-500",
-            }}
-            defaultItems={indianStates}
-            inputProps={{
-              classNames: {
-                input: "ml-1",
-                inputWrapper: "h-[48px]",
-              },
-            }}
-            listboxProps={{
-              hideSelectedIcon: true,
-              itemClasses: {
-                base: [
-                  // "rounded-medium",
-                  "text-default-500",
-                  "transition-opacity",
-                  "data-[hover=true]:text-foreground",
-                  "dark:data-[hover=true]:bg-default-50",
-                  "data-[pressed=true]:opacity-70",
-                  "data-[hover=true]:bg-default-200",
-                  "data-[selectable=true]:focus:bg-default-100",
-                  "data-[focus-visible=true]:ring-default-500",
-                ],
-              },
-            }}
-            aria-label="Select an employee"
-            placeholder="Enter locality name"
-            popoverProps={{
-              offset: 10,
-              classNames: {
-                // base: "rounded-large",
-                content: "p-1 border-small border-default-100 bg-background",
-              },
-            }}
-            
-            radius="sm"
-            variant="bordered"
-          >
-            {(item) => (
-              <AutocompleteItem key={item.id} textValue={item.name}>
-                <div className="flex justify-between items-center">
-                  <div className="flex gap-2 items-center">
-                    {/* <Avatar
-                      alt={item.name}
-                      className="flex-shrink-0"
-                      size="sm"
-                      src={item.avatar}
-                    /> */}
-                    <div className="flex flex-col">
-                      <span className="text-medium">{item.name}</span>
-                    </div>
-                  </div>
-                </div>
-              </AutocompleteItem>
-            )}
-          </Autocomplete>
-
+                                  <div className="flex flex-col">
+                                    <span className="text-medium">{value}</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </AutocompleteItem>
+                          ))}
+                      </Autocomplete>
                     </ModalBody>
                     <ModalFooter>
-                      <Button color="danger" variant="light" onPress={onClose}>
-                        Close
-                      </Button>
                       <Button color="primary" onPress={onClose}>
-                        Action
+                        Search
                       </Button>
                     </ModalFooter>
                   </>
@@ -754,15 +732,13 @@ const PropertyListing = () => {
               </ModalContent>
             </Modal>
             <button type="button" className="w-full" onClick={onOpen}>
-            <Input
-              type="text"
-              variant="bordered"
-              placeholder="Enter your locality"
-              
-              startContent={<CiSearch size={25}/>}
-            />
+              <Input
+                type="text"
+                variant="bordered"
+                placeholder="Enter your locality"
+                startContent={<CiSearch size={25} />}
+              />
             </button>
-            
           </div>
         </div>
 

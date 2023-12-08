@@ -40,6 +40,7 @@ const Signup = () => {
   const toggleVisibility1 = () => setIsVisible1(!isVisible1);
   const [imageURL, setimageURL] = useState(null);
   const [loading, setloading] = useState(false);
+  const [profileError, setprofileError] = useState(false);
   const onchange = async (event) => {
     try {
       const file = event.target.files[0];
@@ -87,22 +88,28 @@ const Signup = () => {
     resolver: yupResolver(schema),
   });
   const onSubmit = async (data) => {
-    const data1 = { ...data, profile: imageURL };
-    setloading(true);
-    try {
-      const serverData = await axios.post(`${userServer}/register`, data1);
-      if (serverData.data.success) {
-        reset();
-        setimageURL("");
+    if (imageURL !== null) {
+      setprofileError(false);
+      const data1 = { ...data, profile: imageURL };
+      setloading(true);
+      try {
+        const serverData = await axios.post(`${userServer}/register`, data1);
+        if (serverData.data.success) {
+          reset();
+          setimageURL("");
+          setloading(false);
+          toast.success(serverData.data.message);
+        } else {
+          toast.error("Something went wrong");
+          setloading(false);
+        }
+      } catch (error) {
+        toast.error(error.message);
         setloading(false);
-        toast.success(serverData.data.message);
-      } else {
-        toast.error("Something went wrong");
-        setloading(false);
+        setprofileError(false);
       }
-    } catch (error) {
-      toast.error(error.message);
-      setloading(false);
+    } else {
+      setprofileError(true);
     }
   };
   return (
@@ -148,7 +155,15 @@ const Signup = () => {
                       />
                     </label>
                   </div>
-                  <p>{errors.profile?.message}</p>
+                  {profileError ? (
+                    <p class="text-sm text-center text-red-600">
+                      {" "}
+                      Image is required{" "}
+                    </p>
+                  ) : (
+                    ""
+                  )}
+
                   <Input
                     type="email"
                     variant="underlined"

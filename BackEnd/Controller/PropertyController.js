@@ -93,10 +93,24 @@ const get_properties = async (req, res) => {
     
     res.json(transformedProperties);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    next(error);
   }
 };
+const properties_landmark = asyncHandler(async(req,res,next) => {
+  const state = req.query.state;
+  const city = req.query.city;
+  try {
+    const property = await Property.find({
+      property_state: state,
+      property_city: city,
+    });
+    res.json(property);
+  } catch (error) {
+    next(error);
+  }
+})
 module.exports = {
   AddProperty,
-  get_properties
+  get_properties,
+  properties_landmark
 };

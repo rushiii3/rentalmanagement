@@ -55,7 +55,7 @@ const ChangePassword = (props) => {
     <p class="text-slate-500">Your new password must be different from previous used passwords.</p>
 
     <form class="my-10" onSubmit={handleSubmit(onSubmit)}>
-      <div class="flex flex-col space-y-5">
+      <div class="flex flex-col space-y-10">
       <Input
                 type="password"
                 label="Password"
@@ -65,10 +65,12 @@ const ChangePassword = (props) => {
                 size="lg"
                 variant="bordered"
                 {...register("password")}
-                    validationState={
-                      errors.email?.message ? "invalid" : "valid"
+               
+                validationState={
+                      errors.password?.message ? "invalid" : "valid"
                     }
-                    errorMessage={errors.email?.message}
+                // isInvalid={errors.password?.message ? false : true}
+                errorMessage={errors.password?.message}
               />
               <Input
                 type="password"
@@ -80,9 +82,9 @@ const ChangePassword = (props) => {
                 variant="bordered"
                 {...register("confirmPassword")}
                     validationState={
-                      errors.email?.message ? "invalid" : "valid"
+                      errors.confirmPassword?.message ? "invalid" : "valid"
                     }
-                    errorMessage={errors.email?.message}
+                    errorMessage={errors.confirmPassword?.message}
               />
 
 
