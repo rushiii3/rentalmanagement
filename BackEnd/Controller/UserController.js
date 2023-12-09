@@ -63,7 +63,7 @@ const register = asyncHandler(async (req, res) => {
   };
 
   const activationToken = createActivationToken(user);
-  const activationURL = `http://localhost:3000/activate/${activationToken}`;
+  const activationURL = `https://rentalmanagement-omega.vercel.app/activate/${activationToken}`;
 
   try {
     const maildata = {
