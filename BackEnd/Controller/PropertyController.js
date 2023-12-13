@@ -96,19 +96,30 @@ const get_properties = async (req, res) => {
     next(error);
   }
 };
-const properties_landmark = asyncHandler(async(req,res,next) => {
+const properties_landmark = asyncHandler(async (req, res, next) => {
   const state = req.query.state;
   const city = req.query.city;
   try {
-    const property = await Property.find({
+    const localitiesSet = new Set();
+    const properties = await Property.find({
       property_state: state,
       property_city: city,
     });
-    res.json(property);
+
+    properties.forEach((property) => {
+      localitiesSet.add(property.property_locality);
+    });
+
+    const uniqueLocalities = Array.from(localitiesSet).map((locality) => ({
+      property_locality: locality,
+    }));
+
+    res.json(uniqueLocalities);
   } catch (error) {
     next(error);
   }
-})
+});
+
 module.exports = {
   AddProperty,
   get_properties,

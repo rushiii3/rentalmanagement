@@ -5,16 +5,17 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { propertServer } from "../../../server";
 import InfiniteScroll from "react-infinite-scroll-component";
 import NotAvaiableImage from "../../../Assets/property.webp";
-const Listing = () => {
+import Loader from "../../Loader/loader";
+const Listing = ({selectedValues,selectedValue,priceRange}) => {
   const LIMIT = 3;
   const fetchProperties = async ({ pageParam }) => {
     const response = await axios.get(
-      `${propertServer}/properties?page=${pageParam}&limit=${LIMIT}`
+      `${propertServer}/properties?page=${pageParam}&limit=${LIMIT}&type=${selectedValues}&filter=${selectedValue}&price=${priceRange}`
     );
     return response.data;
   };
   const queryConfig = {
-    queryKey: ["properties"],
+    queryKey: ["properties",selectedValues,selectedValue,priceRange],
     queryFn: fetchProperties,
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) => {
@@ -27,11 +28,7 @@ const Listing = () => {
     data,
     fetchNextPage,
     hasNextPage,
-    isFetching,
-    isFetchingNextPage,
-    isError,
     isLoading,
-    status,
   } = useInfiniteQuery(queryConfig);
   const properties = data?.pages.reduce((acc, page) => {
     return [...acc, ...page];
@@ -39,31 +36,35 @@ const Listing = () => {
   const showendMessage = () => {};
   return (
     <div>
-      <InfiniteScroll
-        dataLength={properties ? properties.length : 0}
-        next={() => fetchNextPage()}
-        hasMore={hasNextPage}
-        loading={
-          <div>
-            <p className="font-semibold text-lg text-center">Loading...</p>
-          </div>
-        }
-        endMessage={showendMessage()}
-        // below props only if you need pull down functionality
-
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-6 w-full mb-4 py-4"
-      >
-        {properties?.length !== 0 ? (
-          properties?.map((property, i) => (
-            <PropertyCard property={property} key={i} />
-          ))
-        ) : (
-          <div className="col-span-2 h-auto w-auto">
-            <img src={NotAvaiableImage} alt="" />
-            <p className="font-bold text-3xl text-center">No Properties Avaiable</p>
-          </div>
-        )}
-      </InfiniteScroll>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <InfiniteScroll
+          dataLength={properties ? properties.length : 0}
+          next={() => fetchNextPage()}
+          hasMore={hasNextPage}
+          loading={
+            <div>
+              <p className="font-semibold text-lg text-center">Loading...</p>
+            </div>
+          }
+          endMessage={showendMessage()}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-6 w-full mb-4 py-4"
+        >
+          {properties?.length !== 0 ? (
+            properties?.map((property, i) => (
+              <PropertyCard property={property} key={i} />
+            ))
+          ) : (
+            <div className="col-span-2 h-auto w-auto">
+              <img src={NotAvaiableImage} alt="" />
+              <p className="font-bold text-3xl text-center">
+                No Properties Avaiable
+              </p>
+            </div>
+          )}
+        </InfiniteScroll>
+      )}
     </div>
   );
 };
