@@ -34,7 +34,6 @@ const Sorting = ({ selectedValue, setSelectedKeys, selectedKeys }) => {
         >
           <DropdownItem key="Newest">Newest</DropdownItem>
           <DropdownItem key="Oldest">Oldest</DropdownItem>
-          <DropdownItem key="Best Rating">Best Rating</DropdownItem>
           <DropdownItem key="Price Low">Price Low</DropdownItem>
           <DropdownItem key="Price High">Price High</DropdownItem>
         </DropdownMenu>

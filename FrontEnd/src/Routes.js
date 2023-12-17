@@ -7,6 +7,7 @@ import Activation from './Pages/Activation';
 import ForgotPage from './Pages/ForgotPage';
 import PropertyPage from './Pages/PropertyPage';
 import ProfileUpdatePage from './Pages/ProfileUpdatePage';
+import SinglePropertyViewPage from './Pages/SinglePropertyViewPage';
 
 export   {
     LandingPage,
@@ -18,4 +19,5 @@ export   {
     ForgotPage,
     PropertyPage,
     ProfileUpdatePage,
+    SinglePropertyViewPage
 }

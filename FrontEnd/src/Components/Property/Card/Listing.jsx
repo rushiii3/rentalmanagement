@@ -1,21 +1,50 @@
 import PropertyCard from "./PropertyCard";
-import React, { useEffect } from "react";
+import React from "react";
 import axios from "axios";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { propertServer } from "../../../server";
 import InfiniteScroll from "react-infinite-scroll-component";
 import NotAvaiableImage from "../../../Assets/property.webp";
 import Loader from "../../Loader/loader";
-const Listing = ({selectedValues,selectedValue,priceRange}) => {
+import { useDebounce } from "use-debounce";
+
+const Listing = ({
+  selectedValues,
+  selectedValue,
+  priceRange,
+  NoOfBedrooms,
+  NoOfBathrooms,
+  Furnishing,
+  State,
+  City,
+  Landmark,
+}) => {
   const LIMIT = 3;
+  const [houseTypes] = useDebounce(selectedValues, 1500);
+  const [price] = useDebounce(priceRange, 1500);
+  const [furnishing] = useDebounce(Furnishing, 1500);
+  // const [state] = useDebounce(State, 1000);
+  // const [city] = useDebounce(City, 1000);
+  // const [landmark] = useDebounce(Landmark, 1000);
   const fetchProperties = async ({ pageParam }) => {
     const response = await axios.get(
-      `${propertServer}/properties?page=${pageParam}&limit=${LIMIT}&type=${selectedValues}&filter=${selectedValue}&price=${priceRange}`
+      `${propertServer}/properties?page=${pageParam}&limit=${LIMIT}&type=${houseTypes}&sort=${selectedValue}&price=${price}&bedrooms=${NoOfBedrooms}&bathrooms=${NoOfBathrooms}&Furnishing=${furnishing}&state=${State}&city=${City}&landmark=${Landmark}`
     );
     return response.data;
   };
   const queryConfig = {
-    queryKey: ["properties",selectedValues,selectedValue,priceRange],
+    queryKey: [
+      "properties",
+      houseTypes,
+      selectedValue,
+      price,
+      NoOfBedrooms,
+      NoOfBathrooms,
+      furnishing,
+      State,
+      City,
+      Landmark,
+    ],
     queryFn: fetchProperties,
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) => {
@@ -24,12 +53,8 @@ const Listing = ({selectedValues,selectedValue,priceRange}) => {
     },
   };
 
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isLoading,
-  } = useInfiniteQuery(queryConfig);
+  const { data, fetchNextPage, hasNextPage, isLoading } =
+    useInfiniteQuery(queryConfig);
   const properties = data?.pages.reduce((acc, page) => {
     return [...acc, ...page];
   }, []);

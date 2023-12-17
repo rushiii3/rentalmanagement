@@ -17,23 +17,29 @@ const PropertyListing = () => {
     () => Array.from(selectedKeys).join(", ").replaceAll("_", " "),
     [selectedKeys]
   );
+  
   const [MobileFilter, setMobileFilter] = useState(false);
   const [selectedValues, setSelectedValues] = useState(["All"]);
-  const [Furnishing, setFurnishing] = useState(["All"]);
+  const [Furnishing, setFurnishing] = useState(["Any"]);
   const [NoOfBedrooms, setNoOfBedrooms] = useState("any");
   const [NoOfBathrooms, setNoOfBathrooms] = useState("any");
-
+  const [State, setState] = useState("");
+  const [City, setCity] = useState("");
+  const [Landmark, setLandmark] = useState("");
+  console.log(selectedValues);
   const typesOfHouses = [
     "Haveli",
     "Bungalow",
     "Villa",
-    "Apartment/Flat",
+    "Apartment",
+    "Flat",
     "Penthouse",
     "Row House",
     "Cottage",
     "Chawl",
     "Mansion",
     "Farmhouse",
+    "House"
   ];
 
   const OpenFilterForMobile = () => {
@@ -70,23 +76,22 @@ const PropertyListing = () => {
   };
   const handleFurnishingType = (e) => {
     const { value, checked } = e.target;
-
-    if (value === "All") {
-      setFurnishing(checked ? ["All"] : []);
+    if (value === "Any") {
+      setFurnishing(checked ? ["Any"] : []);
     } else {
       setFurnishing((prevSelectedValues) => {
-        if (checked && prevSelectedValues.includes("All")) {
+        if (checked && prevSelectedValues.includes("Any")) {
           return [value];
         } else if (
           !checked &&
           prevSelectedValues.length === 1 &&
-          !prevSelectedValues.includes("All")
+          !prevSelectedValues.includes("Any")
         ) {
-          return ["All"];
+          return ["Any"];
         } else if (checked && !prevSelectedValues.includes(value)) {
           const updatedValues = [...prevSelectedValues, value];
-          return updatedValues.includes("All")
-            ? updatedValues.filter((val) => val !== "All")
+          return updatedValues.includes("Any")
+            ? updatedValues.filter((val) => val !== "Any")
             : updatedValues;
         } else {
           return prevSelectedValues.filter((val) => val !== value);
@@ -94,10 +99,11 @@ const PropertyListing = () => {
       });
     }
   };
-useEffect(() => {
-  console.log(selectedValues);
-}, [selectedValues]);
-
+  const handleSearchLandmark = (state, city, landmark) => {
+    setState(state);
+    setCity(city);
+    setLandmark(landmark);
+  };
   return (
     <div>
       {/* filter for mobile view */}
@@ -118,7 +124,7 @@ useEffect(() => {
       />
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* landmark serach */}
-        <LandmarkSearch />
+        <LandmarkSearch handleSearchLandmark={handleSearchLandmark} />
 
         <section className="pb-24 pt-6 ">
           <h2 id="products-heading" className="sr-only">
@@ -159,7 +165,17 @@ useEffect(() => {
                   <FaFilter size={20} />
                 </button>
               </div>
-              <Listing selectedValues={selectedValues} selectedValue={selectedValue} priceRange={priceRange}/>
+              <Listing
+                selectedValues={selectedValues}
+                selectedValue={selectedValue}
+                priceRange={priceRange}
+                NoOfBedrooms={NoOfBedrooms}
+                NoOfBathrooms={NoOfBathrooms}
+                Furnishing={Furnishing}
+                State={State}
+                City={City}
+                Landmark={Landmark}
+              />
             </div>
           </div>
         </section>

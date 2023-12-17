@@ -153,26 +153,15 @@ const DesktopViewFilter = ({
                   3
                 </button>
                 <button
-                  onClick={() => handleBedroomClick("4")}
-                  type="button"
-                  className={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
-                    NoOfBedrooms === "4"
-                      ? "border-black border-2 dark:border-white"
-                      : "border border-t border-b border-r border-gray-200"
-                  }`}
-                >
-                  4
-                </button>
-                <button
-                  onClick={() => handleBedroomClick("5+")}
+                  onClick={() => handleBedroomClick("4+")}
                   type="button"
                   className={`px-4 py-2 text-sm font-medium text-gray-900 bg-white  rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  ${
-                    NoOfBedrooms === "5+"
+                    NoOfBedrooms === "4+"
                       ? "border-black border-2 dark:border-white"
                       : "border border-gray-200"
                   }`}
                 >
-                  5+
+                  4+
                 </button>
               </div>
             </div>
@@ -232,27 +221,17 @@ const DesktopViewFilter = ({
                 >
                   3
                 </button>
+                
                 <button
-                  onClick={() => setNoOfBathrooms("4")}
-                  type="button"
-                  className={`px-4 py-2 text-sm font-medium text-gray-900  hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  bg-white  ${
-                    NoOfBathrooms === "4"
-                      ? "border-black border-2 dark:border-white"
-                      : "border border-t border-b border-r border-gray-200"
-                  }`}
-                >
-                  4
-                </button>
-                <button
-                  onClick={() => setNoOfBathrooms("5+")}
+                  onClick={() => setNoOfBathrooms("4+")}
                   type="button"
                   className={`px-4 py-2 text-sm font-medium text-gray-900 bg-white  rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600  ${
-                    NoOfBathrooms === "5+"
+                    NoOfBathrooms === "4+"
                       ? "border-black border-2 dark:border-white"
                       : "border border-gray-200"
                   }`}
                 >
-                  5+
+                  4+
                 </button>
               </div>
             </div>
@@ -269,7 +248,7 @@ const DesktopViewFilter = ({
               value="Any"
               radius="small"
               onChange={handleFurnishingType}
-              isSelected={Furnishing.includes("All")}
+              isSelected={Furnishing.includes("Any")}
             >
               Any
             </Checkbox>

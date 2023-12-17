@@ -7,9 +7,9 @@ const NavbarShow = ({children}) => {
     useEffect(() => {
       if(Location.pathname==="/Login" || Location.pathname==="/login" || Location.pathname==="/register" || Location.pathname==="/Register" ){
         setShow(false);
-      }else if(Location.pathname==="/" || Location.pathname==="/about" || Location.pathname==="/addpost" || Location.pathname==="/edit" || Location.pathname==="/chat" || Location.pathname==="/properties" || Location.pathname==="/profile-update"  ){
+      }else if(Location.pathname==="/" || Location.pathname==="/about" || Location.pathname==="/addpost" || Location.pathname==="/edit" || Location.pathname==="/chat" || Location.pathname==="/properties" || Location.pathname==="/profile-update" ){
         setShow(true);
-      }else if (Location.pathname.includes("/profile/")){
+      }else if (Location.pathname.includes("/properties/")){
         setShow(true);
       }else{
         setShow(false);
