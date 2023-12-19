@@ -18,7 +18,7 @@ const propertySchema = new mongoose.Schema(
     property_size: { type: Number, required: true }, // Size of the property in sq. ft/m
     property_bathrooms: { type: Number, required: true }, // Number of bathrooms
     property_year_built: { type: Number, required: true }, // Year the property was built
-    property_type: {
+    property_type_of_house: {
       type: String,
       required: true,
       enum: ["Haveli",
@@ -43,6 +43,7 @@ const propertySchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    property_pincode: { type: String, required: true },
     property_furnishing: { type: String, required: true },
     property_parking: { type: String, required: true },
     property_description: { type: String, required: true },

@@ -7,33 +7,34 @@ const AddProperty = asyncHandler(async (req, res, next) => {
 
     // Create a new property document
     const newProperty = new Property({
-      building_name: "Tranquil Towers",
-      building_number: "301",
-      property_streetname: "Peaceful Lane",
-      property_city: "Delhi",
-      property_state: "Delhi",
-      property_locality: "South Extension",
-      property_size: 1800,
-      property_bathrooms: 3,
-      property_year_built: 2012,
-      property_type: "Flat",
-      property_type: "BHK", // Review this redefined field
-      property_no_of_bhk: 3,
-      property_furnishing: "Semi-furnished",
-      property_parking: "Available",
-      property_description: "Comfortable flat in a prime location.",
-      property_rent_price: 60000,
-      property_availability: true,
-      property_rented: false,
-      property_security_deposit: 120000,
-      property_coordinates: {
-        latitude: "28.6139",
-        longitude: "77.2090",
-      },
-      landlord_id: landlordId, // Replace with a valid User ID
-      images: ["image1.jpg", "image2.jpg"],
-      videos: ["video1.mp4", "video2.mp4"],
-      preferred_tenants: ["Working professionals", "Any"],
+      building_name: "Garden View",
+    building_number: "A-12",
+    property_streetname: "MG Road",
+    property_city: "Mumbai",
+    property_state: "Maharashtra",
+    property_locality: "Andheri West",
+    property_pincode: "400053",
+    property_size: 1500,
+    property_bathrooms: 2,
+    property_year_built: 2010,
+    property_type_of_house: "Apartment",
+    property_type: "BHK",
+    property_no_of_bhk: 2,
+    property_furnishing: "Semi-Furnished",
+    property_parking: "Available",
+    property_description: "Beautiful apartment with a garden view.",
+    property_rent_price: 25000,
+    property_availability: true,
+    property_rented: false,
+    property_security_deposit: 50000,
+    property_coordinates: {
+      latitude: "19.1157",
+      longitude: "72.8723",
+    },
+    landlord_id: landlordId,
+    images: ["image_url_1", "image_url_2"],
+    videos: ["video_url_1", "video_url_2"],
+    preferred_tenants: ["Family", "Working professionals"],
     });
 
     // Save the new property document
@@ -73,7 +74,7 @@ const get_properties = async (req, res, next) => {
     filters.property_locality = req.query.landmark;
   }
   if (!propertyTypes.includes("All")) {
-    filters.property_type = { $in: propertyTypes }; // Use $in operator for multiple values
+    filters.property_type_of_house = { $in: propertyTypes }; // Use $in operator for multiple values
   }
   if (price.length === 2) {
     filters.property_rent_price = {

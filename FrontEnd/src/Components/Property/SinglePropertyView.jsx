@@ -13,12 +13,20 @@ import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import "./map.css";
 import FsLightbox from "fslightbox-react";
-import axios from 'axios'
-import {propertServer} from '../../server';
-import {useParams} from 'react-router-dom'
+import axios from "axios";
+import { propertServer } from "../../server";
+import { useParams } from "react-router-dom";
+import { IoBedOutline } from "react-icons/io5";
+import { LiaBathSolid } from "react-icons/lia";
+import { BsHouse } from "react-icons/bs";
+import { LuCalendarDays } from "react-icons/lu";
+import { TbRulerMeasure } from "react-icons/tb";
+import { BiCar } from "react-icons/bi";
+import { GiSofa } from "react-icons/gi";
+import { MdOutlinePeopleOutline } from "react-icons/md";
 const SinglePropertyView = () => {
   const [toggler, setToggler] = useState(false);
-  const {id} = useParams();
+  const { id } = useParams();
   const [selected, setSelected] = React.useState("login");
   const mapContainer = useRef(null);
   const map = useRef(null);
@@ -27,27 +35,35 @@ const SinglePropertyView = () => {
   const [zoom] = useState(15);
   const [API_KEY] = useState("J4kHneKBdjILQG6r8F80	");
   const [Data, setData] = useState(null);
-const getData = async() => {
-  const {data} = await axios.get(`${propertServer}/property/${id}`);
-  setData(data);
-  console.log(Number(data.property_coordinates?.latitude));
-  console.log(Number(data.property_coordinates?.longitude));
-  new maplibregl.Marker({ color: "#FF0000" })
-      .setLngLat([data.property_coordinates?.longitude, Number(data.property_coordinates?.latitude)])
+  const getData = async () => {
+    const { data } = await axios.get(`${propertServer}/property/${id}`);
+    setData(data);
+    console.log(data);
+    new maplibregl.Marker({ color: "#FF0000" })
+      .setLngLat([
+        data.property_coordinates?.longitude,
+        Number(data.property_coordinates?.latitude),
+      ])
       .addTo(map.current);
 
-      map.current.flyTo({
-        center: [data.property_coordinates?.longitude, Number(data.property_coordinates?.latitude)],
-        zoom: 15, // You can set the desired zoom level here
-        speed: 2, // You can adjust the speed of the animation
-        curve: 1, // You can adjust the curve of the animation
-        easing: (t) => t, // You can define custom easing functions
-        essential: true // This ensures the animation is considered essential and not interrupted
+    map.current.flyTo({
+      center: [
+        data.property_coordinates?.longitude,
+        Number(data.property_coordinates?.latitude),
+      ],
+      zoom: 15, // You can set the desired zoom level here
+      speed: 2, // You can adjust the speed of the animation
+      curve: 1, // You can adjust the curve of the animation
+      easing: (t) => t, // You can define custom easing functions
+      essential: true, // This ensures the animation is considered essential and not interrupted
     });
-}
+  };
   useEffect(() => {
     window.scrollTo(0, 0);
     getData();
+  }, []);
+
+  useEffect(() => {
     if (map.current) return; // stops map from intializing more than once
     map.current = new maplibregl.Map({
       container: mapContainer.current,
@@ -56,34 +72,31 @@ const getData = async() => {
       zoom: zoom,
     });
     map.current.addControl(new maplibregl.NavigationControl(), "top-right");
-    
-
   }, [API_KEY, lng, lat, zoom]);
 
   return (
     <section>
-      <div className="container mx-auto px-2 py-10">
+      <div className="container mx-auto px-2 pb-10">
         <div className="lg:col-gap-12 xl:col-gap-16 mt-8 grid grid-cols-1 gap-12 lg:mt-12 lg:grid-cols-5 lg:gap-16">
           {/* image */}
           <div className="lg:col-span-3 lg:row-end-1">
-          
-			 <FsLightbox
-				toggler={toggler}
-				sources={[
-					'https://i.imgur.com/fsyrScY.jpg',
-					'https://www.youtube.com/watch?v=3nQNiWdeH2Q',
-					'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
-				]}
-			/>
+            <FsLightbox
+              toggler={toggler}
+              sources={[
+                "https://media.cnn.com/api/v1/images/stellar/prod/161122140823-wikkelhouse-1.jpg?q=w_1920,h_1080,x_0,y_0,c_fill/h_618",
+                "https://res.cloudinary.com/demo/video/upload/ar_9:16,c_fill,g_auto,w_400/gautodemo/eltmkteifxtcmmfv0vzy.mp4",
+                "https://demo-res.cloudinary.com/video/upload/f_auto/q_auto/w_600/v1/samples/cld-sample-video.webm",
+              ]}
+            />
             <div className="">
               <div>
                 <div className="w-full overflow-hidden rounded-lg">
                   <button type="button" onClick={() => setToggler(!toggler)}>
-                  <img
-                    className="h-full w-full max-w-full object-cover"
-                    src="https://images.pexels.com/photos/186077/pexels-photo-186077.jpeg?cs=srgb&dl=pexels-binyamin-mellish-186077.jpg&fm=jpg"
-                    alt=""
-                  />
+                    <img
+                      className="h-full w-full max-w-full object-cover"
+                      src="https://images.pexels.com/photos/186077/pexels-photo-186077.jpeg?cs=srgb&dl=pexels-binyamin-mellish-186077.jpg&fm=jpg"
+                      alt=""
+                    />
                   </button>
                 </div>
               </div>
@@ -196,157 +209,99 @@ const getData = async() => {
           </div>
           {/* details */}
           <div className="lg:col-span-2 lg:row-span-2 lg:row-end-2">
-            <h1 className="sm: text-2xl font-bold text-gray-900 sm:text-3xl dark:text-white">
+            <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl dark:text-white">
               Afro-Brazillian Coffee
             </h1>
+            <p className="mt-3">Overview</p>
+            <div className="grid grid-cols-2 gap-5 my-3">
+            
+              <div class="flex items-center">
+                <span className="border rounded-lg p-3">
+                  <IoBedOutline size={30} />
+                </span>
 
-            <div className="mt-5 flex items-center">
-              <div className="flex items-center">
-                <svg
-                  className="block h-4 w-4 align-middle text-yellow-500"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                    className=""
-                  ></path>
-                </svg>
-                <svg
-                  className="block h-4 w-4 align-middle text-yellow-500"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                    className=""
-                  ></path>
-                </svg>
-                <svg
-                  className="block h-4 w-4 align-middle text-yellow-500"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                    className=""
-                  ></path>
-                </svg>
-                <svg
-                  className="block h-4 w-4 align-middle text-yellow-500"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                    className=""
-                  ></path>
-                </svg>
-                <svg
-                  className="block h-4 w-4 align-middle text-yellow-500"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                    className=""
-                  ></path>
-                </svg>
+                <div className="ml-4">
+                  <h6 className="mb-0">Bedroom</h6>
+                  <p class="mb-0">{Data?.property_no_of_bhk}</p>
+                </div>
               </div>
-              <p className="ml-2 text-sm font-medium text-gray-500">
-                1,209 Reviews
-              </p>
-            </div>
+              <div class="flex items-center">
+                <span className="border rounded-lg p-3">
+                  <LiaBathSolid size={30} />
+                </span>
 
-            <h2 className="mt-8 text-base text-gray-900">Coffee Type</h2>
-            <div className="mt-3 flex select-none flex-wrap items-center gap-1">
-              <label className="">
-                <input
-                  type="radio"
-                  name="type"
-                  value="Powder"
-                  className="peer sr-only"
-                  checked
-                />
-                <p className="peer-checked:bg-black peer-checked:text-white rounded-lg border border-black px-6 py-2 font-bold">
-                  Powder
-                </p>
-              </label>
-              <label className="">
-                <input
-                  type="radio"
-                  name="type"
-                  value="Whole Bean"
-                  className="peer sr-only"
-                />
-                <p className="peer-checked:bg-black peer-checked:text-white rounded-lg border border-black px-6 py-2 font-bold">
-                  Whole Bean
-                </p>
-              </label>
-              <label className="">
-                <input
-                  type="radio"
-                  name="type"
-                  value="Groud"
-                  className="peer sr-only"
-                />
-                <p className="peer-checked:bg-black peer-checked:text-white rounded-lg border border-black px-6 py-2 font-bold">
-                  Groud
-                </p>
-              </label>
-            </div>
+                <div className="ml-4">
+                  <h6 className="mb-0">Bath</h6>
+                  <p class="mb-0">{Data?.property_bathrooms}</p>
+                </div>
+              </div>
+              <div class="flex items-center">
+                <span className="border rounded-lg p-3">
+                  <BsHouse size={30} />
+                </span>
 
-            <h2 className="mt-8 text-base text-gray-900">
-              Choose subscription
-            </h2>
-            <div className="mt-3 flex select-none flex-wrap items-center gap-1">
-              <label className="">
-                <input
-                  type="radio"
-                  name="subscription"
-                  value="4 Months"
-                  className="peer sr-only"
-                />
-                <p className="peer-checked:bg-black peer-checked:text-white rounded-lg border border-black px-6 py-2 font-bold">
-                  4 Months
-                </p>
-                <span className="mt-1 block text-center text-xs">$80/mo</span>
-              </label>
-              <label className="">
-                <input
-                  type="radio"
-                  name="subscription"
-                  value="8 Months"
-                  className="peer sr-only"
-                  checked
-                />
-                <p className="peer-checked:bg-black peer-checked:text-white rounded-lg border border-black px-6 py-2 font-bold">
-                  8 Months
-                </p>
-                <span className="mt-1 block text-center text-xs">$60/mo</span>
-              </label>
-              <label className="">
-                <input
-                  type="radio"
-                  name="subscription"
-                  value="12 Months"
-                  className="peer sr-only"
-                />
-                <p className="peer-checked:bg-black peer-checked:text-white rounded-lg border border-black px-6 py-2 font-bold">
-                  12 Months
-                </p>
-                <span className="mt-1 block text-center text-xs">$40/mo</span>
-              </label>
-            </div>
+                <div className="ml-4">
+                  <h6 className="mb-0">Type</h6>
+                  <p class="mb-0">{Data?.property_type_of_house}</p>
+                </div>
+              </div>
+              <div class="flex items-center">
+                <span className="border rounded-lg p-3">
+                  <LuCalendarDays size={30} />
+                </span>
 
-            <div className="mt-10 flex flex-col items-center justify-between space-y-4 border-t border-b py-4 sm:flex-row sm:space-y-0">
+                <div className="ml-4">
+                  <h6 className="mb-0">Year Built</h6>
+                  <p class="mb-0">{Data?.property_year_built}</p>
+                </div>
+              </div>
+              <div class="flex items-center">
+                <span className="border rounded-lg p-3">
+                  <TbRulerMeasure size={30} />
+                </span>
+
+                <div className="ml-4">
+                  <h6 className="mb-0">Sqft</h6>
+                  <p class="mb-0">{Data?.property_size}</p>
+                </div>
+              </div>
+              <div class="flex items-center">
+                <span className="border rounded-lg p-3">
+                  <BiCar size={30} />
+                </span>
+
+                <div className="ml-4">
+                  <h6 className="mb-0">Parking</h6>
+                  <p class="mb-0">{Data?.property_parking}</p>
+                </div>
+              </div>
+              <div class="flex items-center">
+                <span className="border rounded-lg p-3">
+                  <GiSofa size={30} />
+                </span>
+
+                <div className="ml-4">
+                  <h6 className="mb-0">Furnishing</h6>
+                  <p class="mb-0">{Data?.property_furnishing}</p>
+                </div>
+              </div>
+              <div class="flex items-center">
+                <span className="border rounded-lg p-3">
+                  <MdOutlinePeopleOutline size={30} />
+                </span>
+
+                <div className="ml-4">
+                  <h6 className="mb-0">Available For</h6>
+                  <p class="mb-0">{Data?.preferred_tenants.join(", ")} </p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="mt-5 flex flex-col items-center justify-between space-y-4 border-t border-b py-4 sm:flex-row sm:space-y-0">
               <div className="flex items-end">
-                <h1 className="text-3xl font-bold">$60.50</h1>
+                <h1 className="text-3xl font-bold">
+                  ₹{Data?.property_rent_price}
+                </h1>
                 <span className="text-base">/month</span>
               </div>
 
@@ -354,32 +309,20 @@ const getData = async() => {
                 type="button"
                 className="inline-flex items-center justify-center rounded-md border-2 border-transparent bg-gray-900 bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="shrink-0 mr-3 h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-                  />
-                </svg>
-                Add to cart
+                Book Now
               </button>
             </div>
-            <div class="py-8 px-0 w-full mx-auto bg-white space-y-2 sm:py-4 sm:flex sm:items-center sm:space-y-0 sm:space-x-6">
+            <div class="py-8 px-0 w-full mx-auto bg-white space-y-2 sm:py-4 sm:flex sm:items-center sm:space-y-0 sm:space-x-6 dark:bg-black">
               <img
                 class="block mx-auto h-24 rounded-full sm:mx-0 sm:shrink-0"
-                src="https://tailwindcss.com/img/erin-lindford.jpg"
+                src={Data?.landlord_id?.avatar?.url}
                 alt="Woman's Face"
               />
-              <div class="text-center space-y-2 sm:text-left">
+              <div class="text-center space-y-2 sm:text-left ">
                 <div class="space-y-0.5">
-                  <p class="text-lg text-black font-semibold">Erin Lindford</p>
+                  <p class="text-lg text-black font-semibold dark:text-white">
+                    {Data?.landlord_id?.firstname} {Data?.landlord_id?.lastname}
+                  </p>
                   {/* <p class="text-slate-500 font-medium">Product Engineer</p> */}
                 </div>
                 <button class="px-10 py-2 text-sm text-purple-600 font-semibold rounded-full border border-purple-200 hover:text-white hover:bg-purple-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2">
@@ -393,35 +336,23 @@ const getData = async() => {
           <div className="lg:col-span-4 lg:row-end-1">
             {/* description */}
             <div className="flow-root bg-white border border-gray-300 shadow-xl  rounded-2xl  p-4">
-              <p className="text-3xl font-bold">Description</p>
-              <h1 className="text-xl font-bold">Delivered To Your Door</h1>
+              <h1 className="text-2xl font-bold">Description</h1>
               <p className="mt-4">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia
-                accusantium nesciunt fuga.
-              </p>
-              <h1 className="mt-8 text-3xl font-bold">
-                From the Fine Farms of Brazil
-              </h1>
-              <p className="mt-4">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio
-                numquam enim facere.
-              </p>
-              <p className="mt-4">
-                Amet consectetur adipisicing elit. Optio numquam enim facere.
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolore
-                rerum nostrum eius facere, ad neque.
+              {Data?.property_description}
               </p>
             </div>
             {/* address */}
             <div className="flow-root bg-white border border-gray-300 shadow-xl  rounded-2xl mt-5 p-4">
-              <p className="text-3xl font-bold">Address</p>
-              <div class="grid md:grid-cols-2 grid-cols-1 gap-4">
-                <div>Steet Name : ABC</div>
-                <div>Steet Name : ABC</div>
-                <div>Steet Name : ABC</div>
-                <div>Steet Name : ABC</div>
-                <div>Steet Name : ABC</div>
-                <div>Steet Name : ABC</div>
+              <p className="text-2xl font-bold">Address</p>
+              <div class="grid md:grid-cols-2 grid-cols-1 gap-4 mt-4 text-md">
+                <div><span className="font-bold">{Data?.property_type === "BHK" ? "Building Number" : "House Number"}</span> : {Data?.building_number}</div>
+                <div><span className="font-bold">{Data?.property_type === "BHK" ? "Building Name" : "Chawal Name"}</span> : {Data?.building_name}</div>
+                <div><span className="font-bold">Street name</span> : {Data?.property_streetname}</div>
+                <div><span className="font-bold">Locality</span> : {Data?.property_locality}</div>
+                <div><span className="font-bold">State</span> : {Data?.property_state}</div>
+                <div><span className="font-bold">City</span> : {Data?.property_city}</div>
+                <div><span className="font-bold">Pincode</span> : {Data?.property_pincode}</div>
+
               </div>
             </div>
             {/* map  */}
@@ -431,190 +362,201 @@ const getData = async() => {
                 <div ref={mapContainer} className="map rounded-lg" />
               </div>
               <div>
-              <div className="flex flex-col w-full">
-              <Card className="max-w-full hidden lg:block">
-                <CardBody className="overflow-hidden">
-                  <h1 className="mb-8 text-3xl text-center">Schedule a tour</h1>
-                  <Tabs
-                    fullWidth
-                    size="md"
-                    aria-label="Tabs form"
-                    selectedKey={selected}
-                    onSelectionChange={setSelected}
-                  >
-                    <Tab key="physicalvisit" title="Physical Visit">
-                      <form className="flex flex-col gap-4">
-                        <Input
-                          isRequired
-                          label="Email"
-                          placeholder="Enter your email"
-                          type="email"
-                        />
-                        <Input
-                          isRequired
-                          label="Password"
-                          placeholder="Enter your password"
-                          type="password"
-                        />
+                <div className="flex flex-col w-full">
+                  <Card className="max-w-full hidden lg:block">
+                    <CardBody className="overflow-hidden">
+                      <h1 className="mb-8 text-3xl text-center">
+                        Schedule a tour
+                      </h1>
+                      <Tabs
+                        fullWidth
+                        size="md"
+                        aria-label="Tabs form"
+                        selectedKey={selected}
+                        onSelectionChange={setSelected}
+                      >
+                        <Tab key="physicalvisit" title="Physical Visit">
+                          <form className="flex flex-col gap-4">
+                            <Input
+                              isRequired
+                              label="Email"
+                              placeholder="Enter your email"
+                              type="email"
+                            />
+                            <Input
+                              isRequired
+                              label="Password"
+                              placeholder="Enter your password"
+                              type="password"
+                            />
 
-                        <div className="flex gap-2 justify-end">
-                          <Button fullWidth color="primary">
-                            Login
-                          </Button>
-                        </div>
-                      </form>
-                    </Tab>
-                    <Tab key="video-conference" title="Video Conference">
-                      <form className="flex flex-col gap-4 h-[300px]">
-                        <Input
-                          isRequired
-                          label="Name"
-                          placeholder="Enter your name"
-                          type="password"
-                        />
-                        <Input
-                          isRequired
-                          label="Email"
-                          placeholder="Enter your email"
-                          type="email"
-                        />
-                        <Input
-                          isRequired
-                          label="Password"
-                          placeholder="Enter your password"
-                          type="password"
-                        />
-                        <p className="text-center text-small">
-                          Already have an account?{" "}
-                          <Link size="sm" onPress={() => setSelected("login")}>
-                            Login
-                          </Link>
-                        </p>
-                        <div className="flex gap-2 justify-end">
-                          <Button fullWidth color="primary">
-                            Sign up
-                          </Button>
-                        </div>
-                      </form>
-                    </Tab>
-                    <Tab key="physicalvisit" title="Physical Visit">
-                      <form className="flex flex-col gap-4">
-                        <Input
-                          isRequired
-                          label="Email"
-                          placeholder="Enter your email"
-                          type="email"
-                        />
-                        <Input
-                          isRequired
-                          label="Password"
-                          placeholder="Enter your password"
-                          type="password"
-                        />
+                            <div className="flex gap-2 justify-end">
+                              <Button fullWidth color="primary">
+                                Login
+                              </Button>
+                            </div>
+                          </form>
+                        </Tab>
+                        <Tab key="video-conference" title="Video Conference">
+                          <form className="flex flex-col gap-4 h-[300px]">
+                            <Input
+                              isRequired
+                              label="Name"
+                              placeholder="Enter your name"
+                              type="password"
+                            />
+                            <Input
+                              isRequired
+                              label="Email"
+                              placeholder="Enter your email"
+                              type="email"
+                            />
+                            <Input
+                              isRequired
+                              label="Password"
+                              placeholder="Enter your password"
+                              type="password"
+                            />
+                            <p className="text-center text-small">
+                              Already have an account?{" "}
+                              <Link
+                                size="sm"
+                                onPress={() => setSelected("login")}
+                              >
+                                Login
+                              </Link>
+                            </p>
+                            <div className="flex gap-2 justify-end">
+                              <Button fullWidth color="primary">
+                                Sign up
+                              </Button>
+                            </div>
+                          </form>
+                        </Tab>
+                        <Tab key="physicalvisit1" title="Physical Visit">
+                          <form className="flex flex-col gap-4">
+                            <Input
+                              isRequired
+                              label="Email"
+                              placeholder="Enter your email"
+                              type="email"
+                            />
+                            <Input
+                              isRequired
+                              label="Password"
+                              placeholder="Enter your password"
+                              type="password"
+                            />
 
-                        <div className="flex gap-2 justify-end">
-                          <Button fullWidth color="primary">
-                            Login
-                          </Button>
-                        </div>
-                      </form>
-                    </Tab>
-                    <Tab key="video-conference" title="Video Conference">
-                      <form className="flex flex-col gap-4 h-[300px]">
-                        <Input
-                          isRequired
-                          label="Name"
-                          placeholder="Enter your name"
-                          type="password"
-                        />
-                        <Input
-                          isRequired
-                          label="Email"
-                          placeholder="Enter your email"
-                          type="email"
-                        />
-                        <Input
-                          isRequired
-                          label="Password"
-                          placeholder="Enter your password"
-                          type="password"
-                        />
-                        <p className="text-center text-small">
-                          Already have an account?{" "}
-                          <Link size="sm" onPress={() => setSelected("login")}>
-                            Login
-                          </Link>
-                        </p>
-                        <div className="flex gap-2 justify-end">
-                          <Button fullWidth color="primary">
-                            Sign up
-                          </Button>
-                        </div>
-                      </form>
-                    </Tab>
-                    <Tab key="physicalvisit" title="Physical Visit">
-                      <form className="flex flex-col gap-4">
-                        <Input
-                          isRequired
-                          label="Email"
-                          placeholder="Enter your email"
-                          type="email"
-                        />
-                        <Input
-                          isRequired
-                          label="Password"
-                          placeholder="Enter your password"
-                          type="password"
-                        />
+                            <div className="flex gap-2 justify-end">
+                              <Button fullWidth color="primary">
+                                Login
+                              </Button>
+                            </div>
+                          </form>
+                        </Tab>
+                        <Tab key="video-conference2" title="Video Conference">
+                          <form className="flex flex-col gap-4 h-[300px]">
+                            <Input
+                              isRequired
+                              label="Name"
+                              placeholder="Enter your name"
+                              type="password"
+                            />
+                            <Input
+                              isRequired
+                              label="Email"
+                              placeholder="Enter your email"
+                              type="email"
+                            />
+                            <Input
+                              isRequired
+                              label="Password"
+                              placeholder="Enter your password"
+                              type="password"
+                            />
+                            <p className="text-center text-small">
+                              Already have an account?{" "}
+                              <Link
+                                size="sm"
+                                onPress={() => setSelected("login")}
+                              >
+                                Login
+                              </Link>
+                            </p>
+                            <div className="flex gap-2 justify-end">
+                              <Button fullWidth color="primary">
+                                Sign up
+                              </Button>
+                            </div>
+                          </form>
+                        </Tab>
+                        <Tab key="physicalvisit3" title="Physical Visit">
+                          <form className="flex flex-col gap-4">
+                            <Input
+                              isRequired
+                              label="Email"
+                              placeholder="Enter your email"
+                              type="email"
+                            />
+                            <Input
+                              isRequired
+                              label="Password"
+                              placeholder="Enter your password"
+                              type="password"
+                            />
 
-                        <div className="flex gap-2 justify-end">
-                          <Button fullWidth color="primary">
-                            Login
-                          </Button>
-                        </div>
-                      </form>
-                    </Tab>
-                    <Tab key="video-conference" title="Video Conference">
-                      <form className="flex flex-col gap-4 h-[300px]">
-                        <Input
-                          isRequired
-                          label="Name"
-                          placeholder="Enter your name"
-                          type="password"
-                        />
-                        <Input
-                          isRequired
-                          label="Email"
-                          placeholder="Enter your email"
-                          type="email"
-                        />
-                        <Input
-                          isRequired
-                          label="Password"
-                          placeholder="Enter your password"
-                          type="password"
-                        />
-                        <p className="text-center text-small">
-                          Already have an account?{" "}
-                          <Link size="sm" onPress={() => setSelected("login")}>
-                            Login
-                          </Link>
-                        </p>
-                        <div className="flex gap-2 justify-end">
-                          <Button fullWidth color="primary">
-                            Sign up
-                          </Button>
-                        </div>
-                      </form>
-                    </Tab>
-                  </Tabs>
-                </CardBody>
-              </Card>
-            </div>
+                            <div className="flex gap-2 justify-end">
+                              <Button fullWidth color="primary">
+                                Login
+                              </Button>
+                            </div>
+                          </form>
+                        </Tab>
+                        <Tab key="video-conference4" title="Video Conference">
+                          <form className="flex flex-col gap-4 h-[300px]">
+                            <Input
+                              isRequired
+                              label="Name"
+                              placeholder="Enter your name"
+                              type="password"
+                            />
+                            <Input
+                              isRequired
+                              label="Email"
+                              placeholder="Enter your email"
+                              type="email"
+                            />
+                            <Input
+                              isRequired
+                              label="Password"
+                              placeholder="Enter your password"
+                              type="password"
+                            />
+                            <p className="text-center text-small">
+                              Already have an account?{" "}
+                              <Link
+                                size="sm"
+                                onPress={() => setSelected("login")}
+                              >
+                                Login
+                              </Link>
+                            </p>
+                            <div className="flex gap-2 justify-end">
+                              <Button fullWidth color="primary">
+                                Sign up
+                              </Button>
+                            </div>
+                          </form>
+                        </Tab>
+                      </Tabs>
+                    </CardBody>
+                  </Card>
+                </div>
               </div>
             </div>
             {/* review */}
-            <div className="flow-root bg-white border border-gray-300 shadow-xl  rounded-2xl mt-5 p-4">
+            <div className="flow-root bg-white border border-gray-300 shadow-xl  rounded-2xl mt-5 p-4 dark:border-0 dark:dark:divide-gray-700 dark:dark:bg-gray-900">
               <p className="text-3xl font-bold">Reviews</p>
               <div className="container flex flex-col w-full  p-6 mx-auto divide-y rounded-md dark:dark:divide-gray-700 dark:dark:bg-gray-900 dark:dark:text-gray-100">
                 <div className="flex justify-between p-4">
