@@ -26,7 +26,6 @@ const PropertyListing = () => {
   const [State, setState] = useState("");
   const [City, setCity] = useState("");
   const [Landmark, setLandmark] = useState("");
-  console.log(selectedValues);
   const typesOfHouses = [
     "Haveli",
     "Bungalow",
