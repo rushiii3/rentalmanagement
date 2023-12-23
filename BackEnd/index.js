@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const UserRouter = require("./Routes/UserRoutes");
 const PropertyRouter = require("./Routes/PropertyRoutes");
+const ReviewRouter = require("./Routes/ReviewRoutes");
 const port = process.env.PORT || 4000;
 const MongoURL = process.env.MONGO_URL;
 const production = true;
@@ -47,6 +48,7 @@ mongoose
 // Routes
 app.use("/api/v2/user", UserRouter);
 app.use("/api/v2/property", PropertyRouter);
+app.use("/api/v2/review", ReviewRouter);
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   res

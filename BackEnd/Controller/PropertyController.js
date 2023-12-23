@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const mongoose = require("mongoose");
 const Property = require("../Models/PropertyModel");
+const Review = require('../Models/ReviewModel');
 const AddProperty = asyncHandler(async (req, res, next) => {
   try {
     const landlordId = "65561f44d26a706edf92f1ba";
@@ -171,20 +172,31 @@ const properties_landmark = asyncHandler(async (req, res, next) => {
     next(error);
   }
 });
-const getSinglePropertyDetail = asyncHandler(async(req,res,next) => {
+const getSinglePropertyDetail = asyncHandler(async (req, res, next) => {
   try {
-    const {id} = req.params;
-    const properties = await Property.findById(id)
+    const { id } = req.params;
+    const property = await Property.findById(id)
       .populate({
-        path: "landlord_id",
-        select: "firstname lastname avatar.url",
+        path: 'landlord_id',
+        select: 'firstname lastname avatar.url',
       })
+    const review = await Review.find({ property_id: id }).
+    populate({
+      path: 'user_id',
+      select: 'firstname lastname avatar.url',
+    });
    
-    res.status(200).json(properties);
+
+    if (!property) {
+      errorThrow('No property available', 404);
+    }
+
+    res.status(200).json({property,review});
   } catch (error) {
     next(error);
   }
-})
+});
+
 module.exports = {
   AddProperty,
   get_properties,

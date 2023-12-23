@@ -1,4 +1,4 @@
-import React, {useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Footer from "../Layouts/Footers/Footer";
 import {
   Tabs,
@@ -18,7 +18,7 @@ import Address from "./SingleProerty/Address";
 import Review from "./SingleProerty/Review";
 import NearBy from "./SingleProerty/NearBy";
 import Loader from "../Loader/loader";
-
+import ErrorPage from "../Loader/ErrorPage";
 const SinglePropertyView = () => {
   const { id } = useParams();
   const [selected, setSelected] = React.useState("login");
@@ -29,22 +29,26 @@ const SinglePropertyView = () => {
     image: null,
     video: null,
   });
-const [Loading, setLoading] = useState(false);
+  const [Loading, setLoading] = useState(false);
+  const [Error, setError] = useState(false);
+  const [Reviews, setReviews] = useState([]);
   const getData = async () => {
     try {
       setLoading(true);
       const { data } = await axios.get(`${propertServer}/property/${id}`);
-      setData(data);
-      console.log(data);
-      if (data && data.images && data.videos) {
+      setData(data.property);
+      setReviews(data.review);
+      if (data && data.property.images && data.property.videos) {
         setImagesVideos({
-          images: data.images,
-          videos: data.videos,
+          images: data.property.images,
+          videos:  data.property.videos,
         });
-        setCurrentImage({ image: data.images[0], video: null });
+        setCurrentImage({ image: data.property.images[0], video: null });
       }
       setLoading(false);
+      setError(false);
     } catch (error) {
+      setError(true);
       setLoading(false);
     }
   };
@@ -53,27 +57,36 @@ const [Loading, setLoading] = useState(false);
     getData();
   }, []);
 
-
-  return (
-
-      Loading===true ? (<Loader />) : (
-        <section>
+  return Loading === true ? (
+    <Loader />
+  ) : Error===true ? (
+    <ErrorPage message={"There's no such property exists."}/>
+  ):
+  
+  (
+    <section>
       <div className="container mx-auto px-2 pb-10">
-      {/* details component */}
-        <Details Data={Data} combinedMedia={combinedMedia} imagesVideos={imagesVideos} currentImage={currentImage} setCurrentImage={setCurrentImage}/> 
+        {/* details component */}
+        <Details
+          Data={Data}
+          combinedMedia={combinedMedia}
+          imagesVideos={imagesVideos}
+          currentImage={currentImage}
+          setCurrentImage={setCurrentImage}
+        />
         <div className="lg:col-gap-12 xl:col-gap-16 mt-8 grid grid-cols-1 gap-12 lg:mt-12 lg:grid-cols-6 lg:gap-16">
           <div className="lg:col-span-4 lg:row-end-1">
             {/* description */}
-            <Description Data={Data}/>
+            <Description Data={Data} />
 
             {/* address */}
-            <Address Data={Data}/>
+            <Address Data={Data} />
 
             {/* map / Near by */}
-            <NearBy Data={Data}/>
+            <NearBy Data={Data} />
 
             {/* review */}
-            <Review />
+            <Review Reviews={Reviews}/>
           </div>
           {/* Schedule tour */}
           <div className="lg:col-span-3 lg:row-span-2 lg:row-end-2">
@@ -153,9 +166,6 @@ const [Loading, setLoading] = useState(false);
 
       <Footer />
     </section>
-      )
-
-    
   );
 };
 
