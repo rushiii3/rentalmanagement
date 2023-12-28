@@ -1,7 +1,8 @@
 import React from 'react'
+import AddPropertyLandlord from '../Components/Property/AddPropertyLandlord'
 const AddProperty = () => {
   return (
-    <div>AddProperty</div>
+    <AddPropertyLandlord />
   )
 }
 export default AddProperty

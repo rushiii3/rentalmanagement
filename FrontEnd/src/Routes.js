@@ -8,7 +8,7 @@ import ForgotPage from './Pages/ForgotPage';
 import PropertyPage from './Pages/PropertyPage';
 import ProfileUpdatePage from './Pages/ProfileUpdatePage';
 import SinglePropertyViewPage from './Pages/SinglePropertyViewPage';
-
+import AddProperty from './Pages/AddProperty';
 export   {
     LandingPage,
     SignUpPage,
@@ -19,5 +19,6 @@ export   {
     ForgotPage,
     PropertyPage,
     ProfileUpdatePage,
-    SinglePropertyViewPage
+    SinglePropertyViewPage,
+    AddProperty
 }
