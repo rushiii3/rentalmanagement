@@ -1,6 +1,6 @@
 import { useState } from "react"
 export function useHandleForm(steps){
-    const [step, setStep] = useState(1)
+    const [step, setStep] = useState(0)
    
     const next = () => {
         setStep(prevStep => {
