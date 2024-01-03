@@ -34,118 +34,229 @@ const Details = () => {
 
       <div className="w-full mt-5">
         <div className="mt-5 gap-3 flex flex-col lg:flex-row">
-        <Select
-            size="lg"
-            className="max-w-full"
-            variant="bordered"
-            label="Tenant Preferences"
-            placeholder="Select tenant preference"
-            labelPlacement="outside"
-            classNames={{
-              label: "font-medium text-default-700 text-medium",
-            }}
-          >
-            <SelectItem key="BHK">BHK</SelectItem>
-            <SelectItem key="RK">RK</SelectItem>
-          </Select>
-          <Select
-            size="lg"
-            className="max-w-full"
-            variant="bordered"
-            label="Property Type"
-            placeholder="Select property type"
-            labelPlacement="outside"
-            classNames={{
-              label: "font-medium text-default-700 text-medium",
-            }}
-          >
-            <SelectItem key="BHK">BHK</SelectItem>
-            <SelectItem key="RK">RK</SelectItem>
-          </Select>
+        <div className="w-full">
+            <label
+              for="username-error"
+              className={`block mb-2 text-sm font-medium ${
+                errors.prefferedTenant?.message ? "text-red-700 dark:text-red-500" : ""
+              } `}
+            >
+              Tenant Preferences
+            </label>
+            <select
+              id="countries"
+              {...register("prefferedTenant")}
+              class={`block p-2.5 w-full text-sm  rounded-lg border ${
+                errors.prefferedTenant?.message
+                  ? "dark:bg-red-100 dark:border-red-400 border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500 focus:border-red-500 bg-red-50"
+                  : "text-gray-900 bg-gray-50 border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              }  
+`}
+            >
+              <option selected="">Select tenant preference</option>
+              <option value="true">Active</option>
+              <option value="false">Inactive</option>
+            </select>
+
+            <p class="mt-2 text-sm text-red-600 dark:text-red-500">
+              {errors.prefferedTenant?.message}
+            </p>
+          </div>
+          <div className="w-full">
+            <label
+              for="username-error"
+              className={`block mb-2 text-sm font-medium ${
+                errors.propertyType?.message ? "text-red-700 dark:text-red-500" : ""
+              } `}
+            >
+              Property Type
+            </label>
+            <select
+              id="countries"
+              {...register("propertyType")}
+              class={`block p-2.5 w-full text-sm  rounded-lg border ${
+                errors.propertyType?.message
+                  ? "dark:bg-red-100 dark:border-red-400 border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500 focus:border-red-500 bg-red-50"
+                  : "text-gray-900 bg-gray-50 border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              }  
+`}
+            >
+              <option selected="">Select property type</option>
+              <option value="BHK">BHK</option>
+              <option value="RK">RK</option>
+            </select>
+
+            <p class="mt-2 text-sm text-red-600 dark:text-red-500">
+              {errors.propertyType?.message}
+            </p>
+          </div>          
+        </div>
+        <div className="mt-5 gap-3 flex flex-col lg:flex-row">
+        <div className="w-full">
+            <label
+              for="username-error"
+              className={`block mb-2 text-sm font-medium ${
+                errors.numberOfBHKRK?.message ? "text-red-700 dark:text-red-500" : ""
+              } `}
+            >
+              Number of BHK/RK
+            </label>
+            <input
+              {...register("numberOfBHKRK")}
+              type="number"
+              id="username-error"
+              class={`block p-2.5 w-full text-sm  rounded-lg border ${
+                errors.numberOfBHKRK?.message
+                  ? "dark:bg-red-100 dark:border-red-400 border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500 focus:border-red-500 bg-red-50"
+                  : "text-gray-900 bg-gray-50 border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              }  
+            `}
+              placeholder="Enter number of BHK/RK"
+            />
+            <p class="mt-2 text-sm text-red-600 dark:text-red-500">
+              {errors.numberOfBHKRK?.message}
+            </p>
+          </div>
+          <div className="w-full">
+            <label
+              for="username-error"
+              className={`block mb-2 text-sm font-medium ${
+                errors.numberOfBathrooms?.message ? "text-red-700 dark:text-red-500" : ""
+              } `}
+            >
+              Number of Bathrooms
+            </label>
+            <input
+              {...register("numberOfBathrooms")}
+              type="number"
+              id="username-error"
+              class={`block p-2.5 w-full text-sm  rounded-lg border ${
+                errors.numberOfBathrooms?.message
+                  ? "dark:bg-red-100 dark:border-red-400 border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500 focus:border-red-500 bg-red-50"
+                  : "text-gray-900 bg-gray-50 border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              }  
+            `}
+              placeholder="Enter number of bathroom"
+            />
+            <p class="mt-2 text-sm text-red-600 dark:text-red-500">
+              {errors.numberOfBathrooms?.message}
+            </p>
+          </div>
           
         </div>
         <div className="mt-5 gap-3 flex flex-col lg:flex-row">
-        <Input
-            size="lg"
-            labelPlacement="outside"
-            variant="bordered"
-            type="number"
-            label="Number of BHK/RK"
-            placeholder="Enter number of BHK/RK"
-            classNames={{
-              label: "font-medium text-default-700 text-medium",
-            }}
-          />
-          <Input
-            size="lg"
-            labelPlacement="outside"
-            variant="bordered"
-            type="number"
-            label="Number of Bathrooms"
-            placeholder="Enter number of bathroom"
-            classNames={{
-              label: "font-medium text-default-700 text-medium",
-            }}
-          />
+        <div className="w-full">
+            <label
+              for="username-error"
+              className={`block mb-2 text-sm font-medium ${
+                errors.furnishing?.message ? "text-red-700 dark:text-red-500" : ""
+              } `}
+            >
+              Furnishing
+            </label>
+            <select
+              id="countries"
+              {...register("furnishing")}
+              class={`block p-2.5 w-full text-sm  rounded-lg border ${
+                errors.furnishing?.message
+                  ? "dark:bg-red-100 dark:border-red-400 border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500 focus:border-red-500 bg-red-50"
+                  : "text-gray-900 bg-gray-50 border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              }  
+`}
+            >
+              <option selected="">Select furnishing</option>
+              <option value="Furnishing">Furnishing</option>
+              <option value="Semi-Furnishing">Semi-Furnishing</option>
+              <option value="Unfurnished">Unfurnished</option>
+            </select>
+
+            <p class="mt-2 text-sm text-red-600 dark:text-red-500">
+              {errors.furnishing?.message}
+            </p>
+          </div>
+          <div className="w-full">
+            <label
+              for="username-error"
+              className={`block mb-2 text-sm font-medium ${
+                errors.parking?.message ? "text-red-700 dark:text-red-500" : ""
+              } `}
+            >
+              Parking
+            </label>
+            <select
+              id="countries"
+              {...register("parking")}
+              class={`block p-2.5 w-full text-sm  rounded-lg border ${
+                errors.parking?.message
+                  ? "dark:bg-red-100 dark:border-red-400 border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500 focus:border-red-500 bg-red-50"
+                  : "text-gray-900 bg-gray-50 border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              }  
+`}
+            >
+              <option selected="">Select parking</option>
+              <option value="BHK">Available</option>
+              <option value="RK">Unavailable</option>
+            </select>
+
+            <p class="mt-2 text-sm text-red-600 dark:text-red-500">
+              {errors.parking?.message}
+            </p>
+          </div>          
         </div>
         <div className="mt-5 gap-3 flex flex-col lg:flex-row">
-          <Select
-            size="lg"
-            className="max-w-full"
-            variant="bordered"
-            label="Furnishing"
-            placeholder="Select furnishing"
-            labelPlacement="outside"
-            classNames={{
-              label: "font-medium text-default-700 text-medium",
-            }}
-          >
-            <SelectItem key="Furnishing">Furnishing</SelectItem>
-            <SelectItem key="Semi-Furnishing">Semi-Furnishing</SelectItem>
-            <SelectItem key="None">None</SelectItem>
-          </Select>
-          <Select
-            size="lg"
-            className="max-w-full"
-            variant="bordered"
-            label="Parking"
-            placeholder="Select parking"
-            labelPlacement="outside"
-            classNames={{
-              label: "font-medium text-default-700 text-medium",
-            }}
-          >
-            <SelectItem key="true">Available</SelectItem>
-            <SelectItem key="false">Non-available</SelectItem>
-          </Select>
+        <div className="w-full">
+            <label
+              for="username-error"
+              className={`block mb-2 text-sm font-medium ${
+                errors.yearBuilt?.message ? "text-red-700 dark:text-red-500" : ""
+              } `}
+            >
+              Year built
+            </label>
+            <input
+            maxLength={4}
+              {...register("yearBuilt")}
+              type="number"
+              id="username-error"
+              class={`block p-2.5 w-full text-sm  rounded-lg border ${
+                errors.yearBuilt?.message
+                  ? "dark:bg-red-100 dark:border-red-400 border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500 focus:border-red-500 bg-red-50"
+                  : "text-gray-900 bg-gray-50 border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              }  
+            `}
+              placeholder="Enter property year built"
+            />
+            <p class="mt-2 text-sm text-red-600 dark:text-red-500">
+              {errors.yearBuilt?.message}
+            </p>
+          </div>
+          <div className="w-full">
+            <label
+              for="username-error"
+              className={`block mb-2 text-sm font-medium ${
+                errors.propertySize?.message ? "text-red-700 dark:text-red-500" : ""
+              } `}
+            >
+              Property size in sq/ft
+            </label>
+            <input
+              {...register("propertySize")}
+              type="number"
+              id="username-error"
+              class={`block p-2.5 w-full text-sm  rounded-lg border ${
+                errors.propertySize?.message
+                  ? "dark:bg-red-100 dark:border-red-400 border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500 focus:border-red-500 bg-red-50"
+                  : "text-gray-900 bg-gray-50 border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              }  
+            `}
+              placeholder="Enter your property size"
+            />
+            <p class="mt-2 text-sm text-red-600 dark:text-red-500">
+              {errors.propertySize?.message}
+            </p>
+          </div>
+          
         </div>
-        <div className="mt-5 gap-3 flex flex-col lg:flex-row">
-          <Input
-          maxLength={4}
-            size="lg"
-            labelPlacement="outside"
-            variant="bordered"
-            type="number"
-            label="Year built"
-            placeholder="Enter property year built"
-            classNames={{
-              label: "font-medium text-default-700 text-medium",
-            }}
-          />
-          <Input
-            size="lg"
-            labelPlacement="outside"
-            variant="bordered"
-            type="number"
-            label="Property size in sq/ft"
-            placeholder="Enter your property size"
-            classNames={{
-              label: "font-medium text-default-700 text-medium",
-            }}
-          />
-        </div>
-        
-        {/* Repeat similar structure for other input fields */}
       </div>
     </m.div>
   );

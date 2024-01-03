@@ -55,9 +55,8 @@ const Location = () => {
   }, [_formValues.state, _formValues.city]);
   const handleCityChange = (e) => {
     setSelectedState(e.target.value);
-    const city = City.filter((city) => e.target.value === city.state).map(
-      (city) => city.name
-    );
+    const selectedState = e.target.value;
+    const city = City.filter((city) => selectedState === city.state).map((city) => city.name);
     setCities(city[0]);
     setSelectedCity(""); // Reset selected city when state changes
   };

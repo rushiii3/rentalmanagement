@@ -34,14 +34,50 @@ const Form = ({ step, next, prev, goto }) => {
     buildingNumber: yup.string().required("Building number is required"),
     streetAddress: yup.string().required("Street address is required"),
     locality: yup.string().required("Locality is required"),
-    city: yup.string().required("City is required").notOneOf(["Select state first"], "Please select state first!").notOneOf(["Select city"], "Please select city!"),
-    state: yup.string().required("State is required").notOneOf(["Select state"], "Please select state!"),
+    city: yup
+      .string()
+      .required("City is required")
+      .notOneOf(["Select state first"], "Please select state first!")
+      .notOneOf(["Select city"], "Please select city!"),
+    state: yup
+      .string()
+      .required("State is required")
+      .notOneOf(["Select state"], "Please select state!"),
     pincode: yup
       .string()
       .required("Pincode is required")
       .matches(/^\d{6}$/, "Please enter a valid 6-digit pincode"),
     latitude: yup.string().required("Latitude is required"),
     longitude: yup.string().required("Longitude is required"),
+    prefferedTenant: yup
+      .string()
+      .required("Tenant preference is requried")
+      .notOneOf(
+        ["Select tenant preference"],
+        "Please select tenant preference!"
+      ),
+    propertyType: yup
+      .string()
+      .required("Property Type is requried")
+      .notOneOf(["Select property type"], "Please select property type!"),
+    numberOfBHKRK: yup
+      .number()
+      .typeError("Enter a valid number")
+      .required("Number of BHK/RK is required"),
+    numberOfBathrooms: yup
+      .number()
+      .typeError("Enter a valid number")
+      .required("Number of Bathrooms is required"),
+    furnishing: yup.string().required("Furnishing is required").notOneOf(["Select furnishing"], "Please select property furnishing!"),
+    parking: yup.string().required("Parking is required").notOneOf(["Select parking"], "Please select parking!"),
+    yearBuilt: yup
+      .number()
+      .typeError("Enter a valid year")
+      .required("Year built is required"),
+    propertySize: yup
+      .number()
+      .typeError("Enter a valid size")
+      .required("Property size is required"),
   });
   const methods = useForm({
     shouldUnregister: false,
@@ -80,6 +116,21 @@ const Form = ({ step, next, prev, goto }) => {
         next();
       }
     }
+    if (step === 2) {
+      const isValid = await methods.trigger([
+        "prefferedTenant",
+        "propertyType",
+        "numberOfBHKRK",
+        "numberOfBathrooms",
+        "furnishing",
+        "parking",
+        "yearBuilt",
+        "propertySize",
+      ]);
+      if (isValid) {
+        next();
+      }
+    }
   };
 
   const btnVariants = {
@@ -93,7 +144,7 @@ const Form = ({ step, next, prev, goto }) => {
       scale: 0.98,
     },
   };
-console.log(methods);
+  console.log(methods);
   return (
     <div className="flex flex-col justify-between  p-4">
       <FormProvider {...methods}>
