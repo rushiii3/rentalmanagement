@@ -125,8 +125,8 @@ export default function Description() {
 `}
             >
               <option selected="">Select property status</option>
-              <option value="true">Active</option>
-              <option value="false">Inactive</option>
+              <option value={true}>Active</option>
+              <option value={false}>Inactive</option>
             </select>
 
             <p class="mt-2 text-sm text-red-600 dark:text-red-500">

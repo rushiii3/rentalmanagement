@@ -268,7 +268,7 @@ const Location = () => {
               Pincode
             </label>
             <input
-              maxLength={6}
+              maxLength="6"
               {...register("pincode")}
               type="number"
               id="username-error"

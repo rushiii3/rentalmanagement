@@ -1,13 +1,23 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Resizer from "react-image-file-resizer";
 import { motion as m } from "framer-motion";
 import UploadSection from "./MediaComponents/UploadSection";
 import ImageVideoCarousal from "./MediaComponents/ImageVideoCarousal";
 import ImageVideoModal from "./MediaComponents/ImageVideoModal";
-const Media = () => {
+import toast from "react-hot-toast";
+import { useFormContext } from "react-hook-form";
+const Media = ({ ImageVideoData, setImageVideoData }) => {
+  const {
+    register,
+    setValue,
+    trigger,
+    formState: { errors },
+  } = useFormContext();
   const [ModelOpen, setModelOpen] = useState(false);
   const [ModalViewer, setModalViewer] = useState();
+  const [imageCount, setImageCount] = useState();
+  const [videoCount, setVideoCount] = useState();
   const container = {
     hidden: {
       opacity: 0,
@@ -20,7 +30,7 @@ const Media = () => {
     },
   };
   const [UploadProgress, setUploadProgress] = React.useState(0);
-  const [ImageVideoData, setImageVideoData] = useState([]);
+
   const CLOUD_NAME = "dmuhioahv";
   const UPLOAD_PRESET = "rtl8kav3";
   const uploadVideo = async (file) => {
@@ -88,7 +98,9 @@ const Media = () => {
           console.info("File upload complete.");
         }
       } catch (error) {
+        setUploadProgress(0);
         console.error("Error uploading chunk:", error);
+        toast.error("Error uploading file");
       }
     };
     const start = 0;
@@ -125,8 +137,10 @@ const Media = () => {
       setImageVideoData((prevData) =>
         prevData.filter((data) => data.deleteToken !== token)
       );
+      toast.success("File Deleted Successfully!");
     } catch (error) {
       console.error("Error deleting image:", error);
+      toast.error("Error deleting file");
     }
   };
 
@@ -165,29 +179,47 @@ const Media = () => {
       ]);
     } catch (error) {
       console.error("Error uploading file:", error);
+      toast.error("Error uploading file");
     } finally {
       setUploadProgress(0);
     }
   };
+  const MAX_FILE_SIZE_MB = 50; // Maximum file size in megabytes
+
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
+
+    // Check if a file was selected
+    if (!file) {
+      console.error("Please select a file.");
+      toast.error("Please select a file.");
+
+      return;
+    }
 
     // Get the MIME type of the file
     const fileType = file.type;
 
-    // Check if the file type starts with 'image'
+    // Check if the file type starts with 'image' or 'video'
     if (fileType.startsWith("image")) {
       // It's an image file
       uploadImage(file);
     } else if (fileType.startsWith("video")) {
       // It's a video file
+      // Perform file size validation
+      const fileSizeMB = file.size / (1024 * 1024); // File size in megabytes
+      if (fileSizeMB > MAX_FILE_SIZE_MB) {
+        console.error("File size exceeds the maximum allowed limit.");
+        toast.error("File size exceeds the maximum allowed limit.");
+        return;
+      }
+      // File size is within limit, proceed with upload
       uploadVideo(file);
     } else {
       // It's neither an image nor a video
       console.log("This is neither an image nor a video");
+      toast.error("This is neither an image nor a video");
     }
-
-    console.log(file);
   };
 
   const handleDragOver = (event) => {
@@ -207,6 +239,21 @@ const Media = () => {
 
     console.log("Dropped files:", resizedImages);
   };
+  useEffect(() => {
+    const imageArrayLength = ImageVideoData.filter(
+      (item) => item.type === "image"
+    ).length;
+    const videoArrayLength = ImageVideoData.filter(
+      (item) => item.type === "video"
+    ).length;
+    if (videoArrayLength !== 0 || imageArrayLength !== 0) {
+      setImageCount(imageArrayLength);
+      setVideoCount(videoArrayLength);
+      setValue("image", imageArrayLength);
+      setValue("video", videoArrayLength);
+      trigger(["image", "video"]);
+    }
+  }, [ImageVideoData, setValue]);
 
   return (
     <>
@@ -216,6 +263,16 @@ const Media = () => {
         initial="hidden"
         animate="show"
       >
+        {/* <input
+        type="text"
+        readOnly
+        name="image"
+        id="image"
+        value={imageCount}
+        onChange={(e) => console.log("hehe")} // Update the value dynamically
+        // {...register('image')} // Register 'image' field with react-hook-form
+      /> */}
+        {/* <input type="number" readOnly name="" id=""  {...register('video', { value: videoCount })} /> */}
         <h1 className="text-2xl font-bold text-marine-blue mb-2 md:text-3xl md:mb-1">
           Media
         </h1>
@@ -227,14 +284,34 @@ const Media = () => {
             Upload your property images & videos
           </h1>
           {/* upload */}
-          <UploadSection UploadProgress={UploadProgress} handleDragOver={handleDragOver} handleDrop={handleDrop} handleFileChange={handleFileChange} />
+          <UploadSection
+            UploadProgress={UploadProgress}
+            handleDragOver={handleDragOver}
+            handleDrop={handleDrop}
+            handleFileChange={handleFileChange}
+          />
           {/* image coursol */}
-          <ImageVideoCarousal ImageVideoData={ImageVideoData} deleteImage={deleteImage} setModalViewer={setModalViewer} setModelOpen={setModelOpen}/>
+          <p class="mt-2 text-sm text-red-600 dark:text-red-500">
+            {errors.image?.message}
+          </p>
+          <p class="mt-2 text-sm text-red-600 dark:text-red-500">
+            {errors.video?.message}
+          </p>
+          <ImageVideoCarousal
+            ImageVideoData={ImageVideoData}
+            deleteImage={deleteImage}
+            setModalViewer={setModalViewer}
+            setModelOpen={setModelOpen}
+          />
         </div>
 
         <div>
-          <ImageVideoModal ModelOpen={ModelOpen} setModelOpen={setModelOpen} ModalViewer={ModalViewer}/>
-          </div>
+          <ImageVideoModal
+            ModelOpen={ModelOpen}
+            setModelOpen={setModelOpen}
+            ModalViewer={ModalViewer}
+          />
+        </div>
       </m.div>
     </>
   );

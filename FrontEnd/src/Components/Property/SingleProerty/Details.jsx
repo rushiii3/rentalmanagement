@@ -55,18 +55,18 @@ const Details = ({
                 <button
                   key={key}
                   onClick={() => {
-                    setCurrentImage({ image: value, video: null });
+                    setCurrentImage({ image: value.url, video: null });
                   }}
                   type="button"
                   className={`flex-shrink-0 aspect-square h-20  overflow-hidden rounded-lg text-center  ${
-                    currentImage.image === value
+                    currentImage.image === value.url
                       ? "border-2 border-gray-900 dark:border-white"
                       : ""
                   }`}
                 >
                   <img
                     className="h-full w-full object-cover"
-                    src={value}
+                    src={value.url}
                     alt=""
                   />
                 </button>
@@ -75,17 +75,17 @@ const Details = ({
                 <button
                   key={key}
                   onClick={() => {
-                    setCurrentImage({ image: null, video: value });
+                    setCurrentImage({ image: null, video: value.url });
                   }}
                   type="button"
                   className={`flex-shrink-0 aspect-square h-20  overflow-hidden rounded-lg text-center  ${
-                    currentImage.video === value
+                    currentImage.video === value.url
                       ? "border-2 border-gray-900 dark:border-white"
                       : ""
                   }`}
                 >
                   <VideoThumbnail
-                    videoUrl={value}
+                    videoUrl={value.url}
                     // thumbnailHandler={(thumbnail) => console.log(thumbnail)}
                     className="h-full w-full object-cover"
                   />
@@ -160,7 +160,7 @@ const Details = ({
 
             <div className="ml-4">
               <h6 className="mb-0 font-semibold">Parking</h6>
-              <p class="mb-0">{Data?.property_parking}</p>
+              <p class="mb-0">{Data?.property_parking?"Available":"Unavailable"}</p>
             </div>
           </div>
           <div class="flex items-center">

@@ -1,11 +1,17 @@
 const mongoose = require("mongoose");
 const User = require("./UserModel");
 // Define subdocument for coordinates
-const coordinatesSchema = new mongoose.Schema({
-  latitude: { type: String, required: true },
-  longitude: { type: String, required: true },
-});
-
+const coordinatesSchema = new mongoose.Schema(
+  {
+    latitude: { type: String, required: true },
+    longitude: { type: String, required: true },
+  },
+  { _id: false } // Set _id to false to prevent generating the default _id field
+);
+const mediaSchema = new mongoose.Schema({
+  url: { type: String, required: true },
+  publicKey: { type: String, required: true },
+}, { _id: false });
 // Define the property schema
 const propertySchema = new mongoose.Schema(
   {
@@ -45,7 +51,7 @@ const propertySchema = new mongoose.Schema(
     },
     property_pincode: { type: String, required: true },
     property_furnishing: { type: String, required: true },
-    property_parking: { type: String, required: true },
+    property_parking: { type: Boolean, required: true },
     property_description: { type: String, required: true },
     property_rent_price: { type: Number, required: true },
     property_availability: { type: Boolean, required: true },
@@ -57,8 +63,8 @@ const propertySchema = new mongoose.Schema(
       ref: "User", // Reference to the User model
       required: true,
     },
-    images: { type: [String], required: true },
-    videos: { type: [String], required: true },
+    images: [mediaSchema], // Array of images with URL and publicKey
+    videos: [mediaSchema], // Array of videos with URL and publicKey  
     preferred_tenants: {
       type: [String],
       required: true,

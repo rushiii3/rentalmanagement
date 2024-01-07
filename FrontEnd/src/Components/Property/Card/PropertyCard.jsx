@@ -10,7 +10,7 @@ const PropertyCard = ({ property }) => {
             <div className="transition-transform duration-500 transform ease-in-out hover:scale-110 w-full">
               <div className="absolute inset-0">
                 <img
-                  className="mr-2 object-cover text-center"
+                  className="object-cover text-center mx-auto"
                   src={property && property.image}
                   alt={`${property.property_bhks} ${
                     property && property.property_type

@@ -26,6 +26,9 @@ const UploadSection = ({
             <p className="text-xs text-gray-500 dark:text-gray-400">
               JPEG, PNG, JPG or WEBP
             </p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+            Size of the video must be less than 50mb
+            </p>
           </div>
           <input
             id="dropzone-file"
