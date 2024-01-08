@@ -63,7 +63,7 @@ const Navbar1 = () => {
         <NavbarContent>
           <NavbarMenuToggle
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-            className="sm:hidden"
+            className="md:hidden"
           />
           <NavbarBrand>
             <img
@@ -76,7 +76,7 @@ const Navbar1 = () => {
           </NavbarBrand>
         </NavbarContent>
 
-        <NavbarContent className="hidden sm:flex gap-4" justify="center">
+        <NavbarContent className="hidden md:flex gap-4" justify="center">
           <NavbarItem>
             <Link color="foreground" to="/properties">
               Properties

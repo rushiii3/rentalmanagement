@@ -9,6 +9,7 @@ import PropertyPage from './Pages/PropertyPage';
 import ProfileUpdatePage from './Pages/ProfileUpdatePage';
 import SinglePropertyViewPage from './Pages/SinglePropertyViewPage';
 import AddProperty from './Pages/AddProperty';
+import Bookings from './Pages/Bookings';
 export   {
     LandingPage,
     SignUpPage,
@@ -20,5 +21,6 @@ export   {
     PropertyPage,
     ProfileUpdatePage,
     SinglePropertyViewPage,
-    AddProperty
+    AddProperty,
+    Bookings,
 }

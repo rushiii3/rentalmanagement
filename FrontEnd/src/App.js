@@ -15,6 +15,7 @@ import {
   ProfileUpdatePage,
   SinglePropertyViewPage,
   AddProperty,
+  Bookings
 } from "./Routes";
 import NavbarShow from "./Components/Layouts/Headers/NavBarShow";
 import { Toaster } from "react-hot-toast";
@@ -58,6 +59,7 @@ function App() {
               element={<SinglePropertyViewPage />}
             />
             <Route path="/add-property" element={<AddProperty />} />
+            <Route path="/bookings" element={<Bookings />} />
           </Routes>
         </BrowserRouter>
         <DarkMode />

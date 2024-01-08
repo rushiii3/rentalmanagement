@@ -55,7 +55,7 @@ const AddProperty = asyncHandler(async (req, res, next) => {
       errorThrow('Failed to save property due to validation errors.', 500);
     }
   } catch (error) {
-    next();
+    next(error);
   }
 });
 

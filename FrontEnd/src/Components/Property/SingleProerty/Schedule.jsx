@@ -18,7 +18,7 @@ import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { PhysicalVisitServer } from "../../../server";
+import { PhysicalVisitServer, VideoConferenceServer } from "../../../server";
 const Schedule = ({id}) => {
   const {isAuthenticated, user } = useSelector((state) => state.user);
   const navigate = useNavigate();
@@ -71,34 +71,53 @@ const Schedule = ({id}) => {
       .required("Visit time is required"),
   });
   // For Physical Visit form
-const { handleSubmit: handlePhysicalSubmit, control: physicalControl, formState: physicalFormState } = useForm({
-  resolver: yupResolver(physicalVisitSchema),
-  mode: "all",
-});
-const { errors: physicalErrors } = physicalFormState;
-
-// For Video Conference form
-const { handleSubmit: handleVideoSubmit, control: videoControl, formState: videoFormState } = useForm({
-  resolver: yupResolver(videoConferenceSchema),
-  mode: "all",
-});
-const { errors: videoErrors } = videoFormState;
+  const { handleSubmit: handlePhysicalSubmit, control: physicalControl, formState: physicalFormState, reset: resetPhysicalForm } = useForm({
+    resolver: yupResolver(physicalVisitSchema),
+    mode: "all",
+  });
+  const { errors: physicalErrors } = physicalFormState;
+  
+  // For Video Conference form
+  const { handleSubmit: handleVideoSubmit, control: videoControl, formState: videoFormState, reset: resetVideoForm } = useForm({
+    resolver: yupResolver(videoConferenceSchema),
+    mode: "all",
+  });
+  const { errors: videoErrors } = videoFormState;
 
   const onSubmitphysicalVisit = async(data) => {
     if(isAuthenticated){
-      const datas = {...data,id:id,userid:user?.user?._id};
+      try {
+        const datas = {...data,id:id,userid:user?.user?._id};
       const serverResponse = await axios.post(`${PhysicalVisitServer}/add`,datas);
-      console.log(serverResponse);
+      console.log(serverResponse.data.success);
+      if(serverResponse.data.success){
+        toast.success("Your booking for physical visit has been done successfully!");
+        resetPhysicalForm();
+      }
+      } catch (error) {
+        toast.error(error.message);
+      }
+      
     }else{
       toast.error("You need to login first!");
       navigate('/login');
     }
     
   };
-  const onSubmitvideoConference = (data) => {
+  const onSubmitvideoConference = async(data) => {
     if(isAuthenticated){
-      const datas = {...data,id:id,userid:user?.user?._id}
-      console.log(datas);
+      try {
+        const datas = {...data,id:id,userid:user?.user?._id};
+      const serverResponse = await axios.post(`${VideoConferenceServer}/add`,datas);
+      console.log(serverResponse.data.success);
+      if(serverResponse.data.success){
+        toast.success("Your booking for video conference has been done successfully!");
+        resetVideoForm();
+      }
+      } catch (error) {
+        toast.error(error.message);
+      }
+      
     }else{
       toast.error("You need to login first!");
       navigate('/login');
