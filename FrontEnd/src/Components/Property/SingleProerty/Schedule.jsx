@@ -17,7 +17,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { useNavigate, useNavigation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { PhysicalVisitServer } from "../../../server";
 const Schedule = ({id}) => {
   const {isAuthenticated, user } = useSelector((state) => state.user);
   const navigate = useNavigate();
@@ -83,10 +84,11 @@ const { handleSubmit: handleVideoSubmit, control: videoControl, formState: video
 });
 const { errors: videoErrors } = videoFormState;
 
-  const onSubmitphysicalVisit = (data) => {
+  const onSubmitphysicalVisit = async(data) => {
     if(isAuthenticated){
-      const datas = {...data,id:id,userid:user?.user?._id}
-      console.log(datas);
+      const datas = {...data,id:id,userid:user?.user?._id};
+      const serverResponse = await axios.post(`${PhysicalVisitServer}/add`,datas);
+      console.log(serverResponse);
     }else{
       toast.error("You need to login first!");
       navigate('/login');

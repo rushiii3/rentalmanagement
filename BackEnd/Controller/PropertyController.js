@@ -4,51 +4,58 @@ const Property = require("../Models/PropertyModel");
 const Review = require('../Models/ReviewModel');
 const AddProperty = asyncHandler(async (req, res, next) => {
   try {
-    const landlordId = "65561f44d26a706edf92f1ba";
+    const data = req.body;
+    console.log(data);
+    const imagesWithKeys = data?.ImageVideoData
+    .filter(item => item.type === 'image')
+    .map(item => ({ url: item.url, key: item.publicKey }));
+  
+  const videosWithKeys = data?.ImageVideoData
+    .filter(item => item.type === 'video')
+    .map(item => ({ url: item.url, key: item.publicKey }));
 
     // Create a new property document
     const newProperty = new Property({
-      building_name: "Garden View",
-    building_number: "A-12",
-    property_streetname: "MG Road",
-    property_city: "Mumbai",
-    property_state: "Maharashtra",
-    property_locality: "Andheri West",
-    property_pincode: "400053",
-    property_size: 1500,
-    property_bathrooms: 2,
-    property_year_built: 2010,
-    property_type_of_house: "Apartment",
-    property_type: "BHK",
-    property_no_of_bhk: 2,
-    property_furnishing: "Semi-Furnished",
-    property_parking: "Available",
-    property_description: "Beautiful apartment with a garden view.",
-    property_rent_price: 25000,
-    property_availability: true,
+      building_name: data.buildingName,
+    building_number: data.buildingNumber,
+    property_streetname: data.streetAddress,
+    property_city: data.city,
+    property_state: data.state,
+    property_locality: data.locality,
+    property_pincode: data.pincode,
+    property_size: data.propertySize,
+    property_bathrooms: data.numberOfBathrooms,
+    property_year_built: data.yearBuilt,
+    property_type_of_house: data.category,
+    property_type: data.propertyType,
+    property_no_of_bhk: data.numberOfBHKRK,
+    property_furnishing: data.furnishing,
+    property_parking: data.parking,
+    property_description: data.description,
+    property_rent_price: data.price,
+    property_availability: data.status,
     property_rented: false,
-    property_security_deposit: 50000,
+    property_security_deposit: data.deposit,
     property_coordinates: {
-      latitude: "19.1157",
-      longitude: "72.8723",
+      latitude: data.latitude,
+      longitude: data.longitude,
     },
-    landlord_id: landlordId,
-    images: ["image_url_1", "image_url_2"],
-    videos: ["video_url_1", "video_url_2"],
-    preferred_tenants: ["Family", "Working professionals"],
+    landlord_id: data.id,
+    images: imagesWithKeys,
+    videos: videosWithKeys,
+    preferred_tenants:data.prefferedTenant,
     });
-
     // Save the new property document
-    newProperty
-      .save()
-      .then((savedProperty) => {
-        console.log("Property saved:", savedProperty);
-      })
-      .catch((error) => {
-        console.error("Error saving property:", error);
-      });
+    const savedProperty = await newProperty.save();
+    console.log(savedProperty);
+    if (savedProperty) {
+      res.status(200).json({ success: true });
+    } else {
+      console.error('Failed to save property due to validation errors:', newProperty.errors);
+      errorThrow('Failed to save property due to validation errors.', 500);
+    }
   } catch (error) {
-    console.log(error.message);
+    next();
   }
 });
 
@@ -138,7 +145,7 @@ const get_properties = async (req, res, next) => {
         lastname: property.landlord_id.lastname,
         url: property.landlord_id.avatar.url,
       },
-      image: property.images[0], // Only include the first image value
+      image: property.images[0].url, // Only include the first image value
       property_type: property.property_type,
       property_bhks: property.property_no_of_bhk,
       id : property._id,

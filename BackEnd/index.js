@@ -8,9 +8,10 @@ const mongoose = require("mongoose");
 const UserRouter = require("./Routes/UserRoutes");
 const PropertyRouter = require("./Routes/PropertyRoutes");
 const ReviewRouter = require("./Routes/ReviewRoutes");
+const PhysicalVisitRouter = require('./Routes/PhysicalVisitRoutes');
 const port = process.env.PORT || 4000;
 const MongoURL = process.env.MONGO_URL;
-const production = true;
+const production = false;
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -49,6 +50,7 @@ mongoose
 app.use("/api/v2/user", UserRouter);
 app.use("/api/v2/property", PropertyRouter);
 app.use("/api/v2/review", ReviewRouter);
+app.use("/api/v2/physical-visit", PhysicalVisitRouter);
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   res
