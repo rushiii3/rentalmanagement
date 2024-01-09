@@ -22,6 +22,7 @@ import { Toaster } from "react-hot-toast";
 import { useEffect } from "react";
 import { LoadUser } from "./Redux/action/user";
 import Store from "./Redux/store";
+import ProtectedTenant from "./Protected/ProtectedTenant";
 function App() {
   const { mode } = useSelector((state) => state.mode);
 
@@ -59,7 +60,7 @@ function App() {
               element={<SinglePropertyViewPage />}
             />
             <Route path="/add-property" element={<AddProperty />} />
-            <Route path="/bookings" element={<Bookings />} />
+            <Route path="/bookings" element={<ProtectedTenant><Bookings /></ProtectedTenant>} />
           </Routes>
         </BrowserRouter>
         <DarkMode />
