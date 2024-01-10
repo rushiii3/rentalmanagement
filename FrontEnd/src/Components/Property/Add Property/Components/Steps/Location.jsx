@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useMemo } from "react";
 import { motion as m } from "framer-motion";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
@@ -10,28 +10,69 @@ const Location = () => {
     register,
     formState: { errors },
     control: { _formValues },
+    setValue,
+    trigger
   } = useFormContext();
-  const mapContainer = useRef(null);
-  const map = useRef(null);
-  const [lng] = useState(72.877426);
-  const [lat] = useState(19.07609);
-  const [zoom] = useState(15);
   const [API_KEY] = useState("J4kHneKBdjILQG6r8F80");
   const [Cities, setCities] = useState([]);
   const [SelectedState, setSelectedState] = useState();
   const [selectedCity, setSelectedCity] = useState("");
 
+  const mapContainerRef = useRef(null);
+  const [lng, setLng] = useState();
+  const [lat, setLat] = useState();
+  const [zoom] = useState(15);
+  const [marker, setMarker] = useState(null);
+  const [map, setMap] = useState(null);
+
   useEffect(() => {
-    if (!map.current) {
-      map.current = new maplibregl.Map({
-        container: mapContainer.current,
-        style: `https://api.maptiler.com/maps/streets-v2/style.json?key=${API_KEY}`,
-        center: [lng, lat],
-        zoom: zoom,
-      });
-      map.current.addControl(new maplibregl.NavigationControl(), "top-right");
+    const initializedMap = new maplibregl.Map({
+      container: mapContainerRef.current,
+      style: `https://api.maptiler.com/maps/streets-v2/style.json?key=${API_KEY}`,
+      center: [72.877426, 19.07609],
+      zoom: zoom,
+    });
+    initializedMap.addControl(new maplibregl.NavigationControl(), "top-right");
+    setMap(initializedMap);
+
+    return () => {
+      if (initializedMap) {
+        initializedMap.remove();
+      }
+    };
+  }, [API_KEY, lat, lng, zoom]);
+
+  useEffect(() => {
+    if (!map) return;
+
+    const newMarker = new maplibregl.Marker({ draggable: true })
+      .setLngLat([72.877426, 19.07609])
+      .addTo(map);
+
+    function onDragEnd() {
+      const lngLat = newMarker.getLngLat();
+      setLat(lngLat.lat);
+      setLng(lngLat.lng);
+      console.log(lngLat);
+      setValue("latitude", lngLat.lat);
+      setValue("longitude", lngLat.lng);
+      trigger(["latitude", "longitude"]);
     }
-  }, [API_KEY, lng, lat, zoom]);
+
+    newMarker.on('dragend', onDragEnd);
+    setMarker(newMarker);
+
+    return () => {
+      if (newMarker) {
+        newMarker.remove();
+      }
+    };
+  }, [map, lat, lng]);
+  
+  
+  
+  
+  
   const container = {
     hidden: {
       opacity: 0,
@@ -286,7 +327,7 @@ const Location = () => {
           </div>
         </div>
         <div className="map-wrap rounded-lg relative my-4">
-          <div ref={mapContainer} className="map rounded-lg" />
+          <div ref={mapContainerRef} className="map rounded-lg" />
         </div>
 
         <div className="mt-5 gap-3 flex flex-col lg:flex-row">
@@ -300,10 +341,12 @@ const Location = () => {
               Latitude
             </label>
             <input
-              maxLength={6}
-              {...register("latitude")}
+              
+              // {...register("latitude")}
               type="text"
+              readOnly
               id="username-error"
+              defaultValue={lat}
               class={`block p-2.5 w-full text-sm  rounded-lg border ${
                 errors.latitude?.message
                   ? "dark:bg-red-100 dark:border-red-400 border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500 focus:border-red-500 bg-red-50"
@@ -329,8 +372,10 @@ const Location = () => {
               Longitude
             </label>
             <input
-              maxLength={6}
-              {...register("longitude")}
+              
+              readOnly
+              // {...register("longitude")}
+              value={lng}
               type="text"
               id="username-error"
               class={`block p-2.5 w-full text-sm  rounded-lg border ${

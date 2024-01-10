@@ -53,9 +53,21 @@ const Signup = () => {
     }
   };
   const schema = yup.object().shape({
-    firstname: yup.string().required("Please provide your first name"),
-    middlename: yup.string().required("Please provide your middle name"),
-    lastname: yup.string().required("Please provide your last name"),
+    firstname: yup
+    .string()
+    .matches(/^[A-Za-z]+$/, 'First name must contain only letters')
+    .max(50, 'First name must be at most 50 characters')
+    .required('Please provide your first name'),
+  middlename: yup
+    .string()
+    .matches(/^[A-Za-z]+$/, 'Middle name must contain only letters')
+    .max(50, 'Middle name must be at most 50 characters')
+    .required('Please provide your middle name'),
+  lastname: yup
+    .string()
+    .matches(/^[A-Za-z]+$/, 'Last name must contain only letters')
+    .max(50, 'Last name must be at most 50 characters')
+    .required('Please provide your last name'),
     phoneno: yup
       .string()
       .required("Please provide your phone number")
