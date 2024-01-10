@@ -71,7 +71,7 @@ const Form = ({ step, next, prev, goto }) => {
       .string()
       .required("Pincode is required")
       .matches(/^\d{6}$/, "Pincode should be exactly 6 digits"),
-    latitude: yup.string().required("Latitude is required"),
+    latitude: yup.number().required("Latitude is required"),
     longitude: yup.string().required("Longitude is required"),
     prefferedTenant: yup
     .array()
