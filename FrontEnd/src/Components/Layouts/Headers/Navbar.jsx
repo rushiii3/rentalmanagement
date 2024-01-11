@@ -150,7 +150,7 @@ const Navbar1 = () => {
                     </Link>
                   </DropdownItem>
                   <DropdownItem key="settings" onClick={() =>{navigate('/profile-update')} }>My Profile</DropdownItem>
-                  <DropdownItem key="team_settings">Team Settings</DropdownItem>
+                  <DropdownItem key="team_setbookingsings" onClick={() =>{navigate('/bookings')} }>Bookings</DropdownItem>
                   <DropdownItem key="analytics">Analytics</DropdownItem>
                   <DropdownItem key="system">System</DropdownItem>
                   <DropdownItem key="configurations">
