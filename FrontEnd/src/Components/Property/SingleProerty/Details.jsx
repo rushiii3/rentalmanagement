@@ -11,15 +11,31 @@ import VideoThumbnail from "react-video-thumbnail"; // use npm published version
 import { Player } from "react-tuby";
 import FsLightbox from "fslightbox-react";
 import "react-tuby/css/main.css";
+import toast from "react-hot-toast";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 const Details = ({
   Data,
   combinedMedia,
   imagesVideos,
   currentImage,
   setCurrentImage,
+  user,
+  isAuthenticated
 }) => {
   const [toggler, setToggler] = useState(false);
-
+  const navigate = useNavigate();
+  const handleSubmit = async () => {
+    try {
+      if(isAuthenticated){
+        console.log("cliclked book");
+      }else{
+        toast.error("You need to login first!");
+        navigate("/login");
+      }
+      
+    } catch (error) {}
+  };
   return (
     <div className="lg:col-gap-12 xl:col-gap-16 mt-8 grid grid-cols-1 gap-12 lg:mt-12 lg:grid-cols-5 lg:gap-16">
       {/* image */}
@@ -160,7 +176,9 @@ const Details = ({
 
             <div className="ml-4">
               <h6 className="mb-0 font-semibold">Parking</h6>
-              <p class="mb-0">{Data?.property_parking?"Available":"Unavailable"}</p>
+              <p class="mb-0">
+                {Data?.property_parking ? "Available" : "Unavailable"}
+              </p>
             </div>
           </div>
           <div class="flex items-center">
@@ -190,13 +208,17 @@ const Details = ({
             <h1 className="text-3xl font-bold">₹{Data?.property_rent_price}</h1>
             <span className="text-base">/month</span>
           </div>
-
-          <button
-            type="button"
-            className="inline-flex items-center justify-center rounded-md border-2 border-transparent bg-gray-900 bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800"
-          >
-            Book Now
-          </button>
+          {Data?.landlord_id?._id !== user?.user?._id ? (
+            <button
+              onClick={handleSubmit}
+              type="button"
+              className="inline-flex items-center justify-center rounded-md border-2 border-transparent bg-gray-900 bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800"
+            >
+              Book Now
+            </button>
+          ) : (
+            ""
+          )}
         </div>
         <div class="py-8 px-0 w-full mx-auto bg-white space-y-2 sm:py-4 sm:flex sm:items-center sm:space-y-0 sm:space-x-6 dark:bg-black">
           <img
@@ -211,9 +233,13 @@ const Details = ({
               </p>
               {/* <p class="text-slate-500 font-medium">Product Engineer</p> */}
             </div>
-            <button class="px-10 py-2 text-sm text-purple-600 font-semibold rounded-full border border-purple-200 hover:text-white hover:bg-purple-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2">
-              Message
-            </button>
+            {Data?.landlord_id?._id !== user?.user?._id ? (
+              <button class="px-10 py-2 text-sm text-purple-600 font-semibold rounded-full border border-purple-200 hover:text-white hover:bg-purple-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2">
+                Message
+              </button>
+            ) : (
+              ""
+            )}
           </div>
         </div>
       </div>

@@ -11,9 +11,10 @@ import NearBy from "./SingleProerty/NearBy";
 import Loader from "../Loader/loader";
 import ErrorPage from "../Loader/ErrorPage";
 import Schedule from "./SingleProerty/Schedule";
+import { useSelector } from "react-redux";
 const SinglePropertyView = () => {
+  const { isAuthenticated, user } = useSelector((state) => state.user);
   const { id } = useParams();
-
   const [Data, setData] = useState(null);
   const [imagesVideos, setImagesVideos] = useState({ images: [], videos: [] });
   const combinedMedia = [...imagesVideos.images.map((value)=>value.url), ...imagesVideos.videos.map((value)=>value.url)];
@@ -65,6 +66,8 @@ const SinglePropertyView = () => {
           imagesVideos={imagesVideos}
           currentImage={currentImage}
           setCurrentImage={setCurrentImage}
+          user={user}
+          isAuthenticated={isAuthenticated}
         />
         <div className="lg:col-gap-12 xl:col-gap-16 mt-8 grid grid-cols-1 gap-12 lg:mt-12 lg:grid-cols-6 lg:gap-16">
           <div className="lg:col-span-4 lg:row-end-1">
@@ -83,7 +86,7 @@ const SinglePropertyView = () => {
           {/* Schedule tour */}
           <div className="lg:col-span-3 lg:row-span-2 lg:row-end-2">
             <div className="flex flex-col h-auto w-full">
-              <Schedule id={id} />
+              <Schedule id={id}  Data={Data}/>
             </div>
           </div>
         </div>
