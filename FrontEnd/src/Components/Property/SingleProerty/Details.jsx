@@ -14,6 +14,7 @@ import "react-tuby/css/main.css";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { PropertyBookingServer } from "../../../server";
 const Details = ({
   Data,
   combinedMedia,
@@ -21,14 +22,26 @@ const Details = ({
   currentImage,
   setCurrentImage,
   user,
-  isAuthenticated
+  isAuthenticated,
+  id
 }) => {
   const [toggler, setToggler] = useState(false);
   const navigate = useNavigate();
   const handleSubmit = async () => {
     try {
       if(isAuthenticated){
-        console.log("cliclked book");
+        // console.log("cliclked book");
+        const data = {  id: id, userid: user?.user?._id };
+        const serverResponse = await axios.post(
+          `${PropertyBookingServer}/add`,
+          data
+        );
+        if (serverResponse.data.success) {
+          toast.success(
+            "Your booking for physical visit has been done successfully!"
+          );
+          
+        }
       }else{
         toast.error("You need to login first!");
         navigate("/login");

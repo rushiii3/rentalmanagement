@@ -68,6 +68,7 @@ const SinglePropertyView = () => {
           setCurrentImage={setCurrentImage}
           user={user}
           isAuthenticated={isAuthenticated}
+          id={id}
         />
         <div className="lg:col-gap-12 xl:col-gap-16 mt-8 grid grid-cols-1 gap-12 lg:mt-12 lg:grid-cols-6 lg:gap-16">
           <div className="lg:col-span-4 lg:row-end-1">
