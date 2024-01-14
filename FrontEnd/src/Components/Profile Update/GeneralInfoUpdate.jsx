@@ -19,20 +19,20 @@ const GeneralInfoUpdate = ({ userEmail }) => {
   const [loading, setloading] = useState(false);
   const schema = yup.object().shape({
     firstname: yup
-    .string()
-    .matches(/^[A-Za-z]+$/, 'First name must contain only letters')
-    .max(50, 'First name must be at most 50 characters')
-    .required('Please provide your first name'),
-  middlename: yup
-    .string()
-    .matches(/^[A-Za-z]+$/, 'Middle name must contain only letters')
-    .max(50, 'Middle name must be at most 50 characters')
-    .required('Please provide your middle name'),
-  lastname: yup
-    .string()
-    .matches(/^[A-Za-z]+$/, 'Last name must contain only letters')
-    .max(50, 'Last name must be at most 50 characters')
-    .required('Please provide your last name'),
+      .string()
+      .matches(/^[A-Za-z]+$/, "First name must contain only letters")
+      .max(50, "First name must be at most 50 characters")
+      .required("Please provide your first name"),
+    middlename: yup
+      .string()
+      .matches(/^[A-Za-z]+$/, "Middle name must contain only letters")
+      .max(50, "Middle name must be at most 50 characters")
+      .required("Please provide your middle name"),
+    lastname: yup
+      .string()
+      .matches(/^[A-Za-z]+$/, "Last name must contain only letters")
+      .max(50, "Last name must be at most 50 characters")
+      .required("Please provide your last name"),
     phoneno: yup
       .string()
       .required("Please provide your phone number")
@@ -100,7 +100,7 @@ const GeneralInfoUpdate = ({ userEmail }) => {
   });
 
   const onSubmit = async (data) => {
-    const toastId = toast.loading('Saving info...');
+    const toastId = toast.loading("Saving info...");
     try {
       setloading(true);
       const serverRespnse = await axios.put(`${userServer}/update-user-info`, {
@@ -109,11 +109,13 @@ const GeneralInfoUpdate = ({ userEmail }) => {
       });
       setloading(false);
       if (serverRespnse?.data?.success) {
-        toast.success('Profile information has been changes successfully!', {
+        toast.success("Profile information has been changes successfully!", {
           id: toastId,
         });
         Store.dispatch(LoadUser());
-        fromBooking ? (navigate(fromBooking)) : "";
+        if (fromBooking) {
+          navigate(fromBooking);
+        }
       }
     } catch (error) {
       setloading(false);
@@ -360,7 +362,7 @@ const GeneralInfoUpdate = ({ userEmail }) => {
 
         <div class="flex justify-end">
           <Button
-          type="submit"
+            type="submit"
             isLoading={loading}
             className="text-white bg-indigo-700  hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-indigo-800"
           >
