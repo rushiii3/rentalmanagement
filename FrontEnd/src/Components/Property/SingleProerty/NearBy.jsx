@@ -60,7 +60,6 @@ const NearBy = ({ Data }) => {
 
   const getGEOdata = async (longitude, latitude) => {
     try {
-      console.log(longitude);
       const busdata = await axios.get(
         "https://api.geoapify.com/v2/places?categories=public_transport.bus&filter=circle:" +
           longitude +
@@ -96,13 +95,14 @@ const NearBy = ({ Data }) => {
           latitude +
           ",1000&bias=proximity:72.92763004995084,19.138128898604606&limit=20&apiKey=c812604000de4ba782f0e21ac705694b"
       );
-      console.log(busdata.data.features);
       setBus(busdata.data.features);
       setTrainData(traindata.data.features);
       setSchoolData(schooldata.data.features);
       setHospitalData(hospitaldata.data.features);
       setMallsData(mallsdata.data.features);
-    } catch (error) {}
+    } catch (error) {
+
+    }
   };
 
   useEffect(() => {
@@ -133,7 +133,6 @@ const NearBy = ({ Data }) => {
         Data.property_coordinates?.longitude,
         Number(Data.property_coordinates?.latitude)
       );
-      console.log("yes");
       // Adding the circle to the map after the marker is added
       addCircleToMap(map.current, [
         Data.property_coordinates?.longitude,

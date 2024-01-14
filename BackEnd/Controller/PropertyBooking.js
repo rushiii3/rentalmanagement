@@ -4,10 +4,10 @@ const PropertyModel = require("../Models/UserModel");
 const BookingModel = require("../Models/PropertyBooking");
 const AddBooking = asyncHandler(async (req, res, next) => {
     try {
-        const {id, userid} = req.body;
-        const newBooking = new newBooking({
-            user_id: userid,
-            property_id: id
+        const data = req.body;
+        const newBooking = new BookingModel({
+            user_id: data.userid,
+            property_id: data.property_id
         })
         const SavedBooking = await newBooking.save();
         if (SavedBooking) {
@@ -17,7 +17,8 @@ const AddBooking = asyncHandler(async (req, res, next) => {
           errorThrow('Failed to save property due to validation errors.', 500);
         }
     } catch (error) {
-        next(error);
+        console.log(error);
+        next(error)
     }
 });
 module.exports = {
