@@ -13,7 +13,8 @@ import FsLightbox from "fslightbox-react";
 import "react-tuby/css/main.css";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { PropertyBookingServer } from "../../../server";
 const Details = ({
   Data,
   combinedMedia,
@@ -21,21 +22,39 @@ const Details = ({
   currentImage,
   setCurrentImage,
   user,
-  isAuthenticated
+  isAuthenticated,
+  id,
+  isAddressSet,
 }) => {
   const [toggler, setToggler] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const pathname = location.pathname;
   const handleSubmit = async () => {
-    try {
-      if(isAuthenticated){
-        console.log("cliclked book");
-      }else{
-        toast.error("You need to login first!");
-        navigate("/login");
+    if (isAuthenticated) {
+      if (isAddressSet) {
+        try {
+          const data = { property_id: id, userid: user?.user?._id };
+          const serverResponse = await axios.post(
+            `${PropertyBookingServer}/add`,
+            data
+          );
+          if (serverResponse.data.success) {
+            toast.success(
+              "Your booking for physical visit has been done successfully!"
+            );
+          }
+        } catch (error) {}
+      } else {
+        navigate("/profile-update", { state: { pathname } });
+        toast.error("You need to first add your address!");
       }
-      
-    } catch (error) {}
+    } else {
+      toast.error("You need to login first!");
+      navigate("/login", { state: { pathname } });
+    }
   };
+
   return (
     <div className="lg:col-gap-12 xl:col-gap-16 mt-8 grid grid-cols-1 gap-12 lg:mt-12 lg:grid-cols-5 lg:gap-16">
       {/* image */}

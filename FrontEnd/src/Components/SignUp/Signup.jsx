@@ -13,7 +13,7 @@ import imgLogo from "../../Assets/Logo.png";
 import toast from "react-hot-toast";
 import { userServer } from "../../server";
 import { Button } from "@nextui-org/react";
-
+import { Link } from "react-router-dom";
 const Signup = () => {
   useEffect(() => {
     document.title = "Register";
@@ -54,20 +54,20 @@ const Signup = () => {
   };
   const schema = yup.object().shape({
     firstname: yup
-    .string()
-    .matches(/^[A-Za-z]+$/, 'First name must contain only letters')
-    .max(50, 'First name must be at most 50 characters')
-    .required('Please provide your first name'),
-  middlename: yup
-    .string()
-    .matches(/^[A-Za-z]+$/, 'Middle name must contain only letters')
-    .max(50, 'Middle name must be at most 50 characters')
-    .required('Please provide your middle name'),
-  lastname: yup
-    .string()
-    .matches(/^[A-Za-z]+$/, 'Last name must contain only letters')
-    .max(50, 'Last name must be at most 50 characters')
-    .required('Please provide your last name'),
+      .string()
+      .matches(/^[A-Za-z]+$/, "First name must contain only letters")
+      .max(50, "First name must be at most 50 characters")
+      .required("Please provide your first name"),
+    middlename: yup
+      .string()
+      .matches(/^[A-Za-z]+$/, "Middle name must contain only letters")
+      .max(50, "Middle name must be at most 50 characters")
+      .required("Please provide your middle name"),
+    lastname: yup
+      .string()
+      .matches(/^[A-Za-z]+$/, "Last name must contain only letters")
+      .max(50, "Last name must be at most 50 characters")
+      .required("Please provide your last name"),
     phoneno: yup
       .string()
       .required("Please provide your phone number")
@@ -104,19 +104,26 @@ const Signup = () => {
       setprofileError(false);
       const data1 = { ...data, profile: imageURL };
       setloading(true);
+      const toastId = toast.loading('Booking your physical visit...');
       try {
         const serverData = await axios.post(`${userServer}/register`, data1);
         if (serverData.data.success) {
           reset();
           setimageURL("");
           setloading(false);
-          toast.success(serverData.data.message);
+          toast.success(serverData.data.message, {
+            id: toastId,
+          });
         } else {
-          toast.error("Something went wrong");
+          toast.error("Something went wrong", {
+            id: toastId,
+          });
           setloading(false);
         }
       } catch (error) {
-        toast.error(error.message);
+        toast.error(error.message, {
+          id: toastId,
+        });
         setloading(false);
         setprofileError(false);
       }
@@ -327,21 +334,11 @@ const Signup = () => {
                       </>
                     )}
                   </Button>
-                  <p className="mt-6 text-xs text-gray-600 text-center">
-                    I agree to abide by Rent Me
-                    <a
-                      href="#"
-                      className="border-b border-gray-500 border-dotted"
-                    >
-                      Terms of Service
-                    </a>
-                    and its
-                    <a
-                      href="#"
-                      className="border-b border-gray-500 border-dotted"
-                    >
-                      Privacy Policy
-                    </a>
+                  <p className="mt-6 text-md text-gray-600 text-center">
+                    Already have an account?{" "}
+                    <Link to="/login" className="text-blue-500 underline">
+                      Login
+                    </Link>
                   </p>
                 </div>
               </form>

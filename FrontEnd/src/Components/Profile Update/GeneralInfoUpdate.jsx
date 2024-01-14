@@ -8,7 +8,13 @@ import toast from "react-hot-toast";
 import { Button } from "@nextui-org/react";
 import Store from "../../Redux/store";
 import { LoadUser } from "../../Redux/action/user";
+import { useNavigate, useLocation } from "react-router-dom";
+
 const GeneralInfoUpdate = ({ userEmail }) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const fromBooking = location.state && location.state.pathname;
+  console.log(fromBooking);
   const [userID, setuserID] = useState(null);
   const [loading, setloading] = useState(false);
   const schema = yup.object().shape({
@@ -81,7 +87,6 @@ const GeneralInfoUpdate = ({ userEmail }) => {
         ? ""
         : serverRespnse?.data?.user?.address?.pincode
     );
-    console.log(serverRespnse?.data?.user?._id);
     setuserID(serverRespnse?.data?.user?._id);
   };
 
@@ -95,21 +100,26 @@ const GeneralInfoUpdate = ({ userEmail }) => {
   });
 
   const onSubmit = async (data) => {
+    const toastId = toast.loading('Saving info...');
     try {
       setloading(true);
       const serverRespnse = await axios.put(`${userServer}/update-user-info`, {
         ...data,
         id: userID,
       });
-      console.log(serverRespnse.data.msg);
       setloading(false);
       if (serverRespnse?.data?.success) {
-        toast.success("Profile information has been changes successfully!");
+        toast.success('Profile information has been changes successfully!', {
+          id: toastId,
+        });
         Store.dispatch(LoadUser());
+        fromBooking ? (navigate(fromBooking)) : "";
       }
     } catch (error) {
       setloading(false);
-      toast.error(error.message);
+      toast.error(error.message, {
+        id: toastId,
+      });
     }
   };
   useEffect(() => {

@@ -10,7 +10,7 @@ const Review = ({ Reviews }) => {
       <CardBody>
         {Reviews && Reviews.length !== 0 ? (
           Reviews.map((value, key) => (
-            <div className="container flex flex-col w-full  p-6 mx-auto divide-y rounded-md dark:dark:divide-gray-700 dark:dark:bg-zinc-900 dark:dark:text-gray-100">
+            <div key={key} className="container flex flex-col w-full  p-6 mx-auto divide-y rounded-md dark:dark:divide-gray-700 dark:dark:bg-zinc-900 dark:dark:text-gray-100">
               <div className="flex justify-between p-4">
                 <div className="flex space-x-4">
                   <div>

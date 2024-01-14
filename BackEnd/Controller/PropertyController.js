@@ -91,7 +91,6 @@ const get_properties = async (req, res, next) => {
     };
   }
   if (req.query.bedrooms !== "any") {
-    console.log(req.query.bedrooms.trim() == 4);
     if (req.query.bedrooms.trim() == 4) {
       filters.property_no_of_bhk = { $gte: 4 };
     } else {

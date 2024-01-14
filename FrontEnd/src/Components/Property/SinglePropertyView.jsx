@@ -14,6 +14,15 @@ import Schedule from "./SingleProerty/Schedule";
 import { useSelector } from "react-redux";
 const SinglePropertyView = () => {
   const { isAuthenticated, user } = useSelector((state) => state.user);
+  const address = () => {
+    return (
+      user?.user?.address?.streetname !== "N/A" &&
+      user?.user?.address?.state !== "N/A" &&
+      user?.user?.address?.city !== "N/A" &&
+      user?.user?.address?.pincode !== 0
+    );
+  };
+  const isAddressSet = address();
   const { id } = useParams();
   const [Data, setData] = useState(null);
   const [imagesVideos, setImagesVideos] = useState({ images: [], videos: [] });
@@ -68,6 +77,8 @@ const SinglePropertyView = () => {
           setCurrentImage={setCurrentImage}
           user={user}
           isAuthenticated={isAuthenticated}
+          id={id}
+          isAddressSet={isAddressSet}
         />
         <div className="lg:col-gap-12 xl:col-gap-16 mt-8 grid grid-cols-1 gap-12 lg:mt-12 lg:grid-cols-6 lg:gap-16">
           <div className="lg:col-span-4 lg:row-end-1">
@@ -86,7 +97,7 @@ const SinglePropertyView = () => {
           {/* Schedule tour */}
           <div className="lg:col-span-3 lg:row-span-2 lg:row-end-2">
             <div className="flex flex-col h-auto w-full">
-              <Schedule id={id}  Data={Data}/>
+              <Schedule id={id}  Data={Data} isAddressSet={isAddressSet}/>
             </div>
           </div>
         </div>

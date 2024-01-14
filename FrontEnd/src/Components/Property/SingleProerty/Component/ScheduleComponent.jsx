@@ -8,12 +8,14 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { PhysicalVisitServer, VideoConferenceServer } from "../../../../server";
-const ScheduleComponent = ({ id, Data }) => {
+const ScheduleComponent = ({ id, Data, isAddressSet }) => {
   const [selected, setSelected] = React.useState("login");
   const { isAuthenticated, user } = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const location = useLocation();
+  const pathname = location.pathname;
   const physicalVisitSchema = yup.object().shape({
     visitDate: yup
       .date()
@@ -81,50 +83,66 @@ const ScheduleComponent = ({ id, Data }) => {
     mode: "all",
   });
   const { errors: videoErrors } = videoFormState;
-
   const onSubmitphysicalVisit = async (data) => {
     if (isAuthenticated) {
-      try {
-        const datas = { ...data, id: id, userid: user?.user?._id };
-        const serverResponse = await axios.post(
-          `${PhysicalVisitServer}/add`,
-          datas
-        );
-        if (serverResponse.data.success) {
-          toast.success(
-            "Your booking for physical visit has been done successfully!"
+      if(isAddressSet){
+        const toastId = toast.loading('Booking your physical visit...');
+        try {
+          toast.loading('Waiting...');
+          const datas = { ...data, id: id, userid: user?.user?._id };
+          const serverResponse = await axios.post(
+            `${PhysicalVisitServer}/add`,
+            datas
           );
-          resetPhysicalForm();
+          if (serverResponse.data.success) {
+            toast.success("Your booking for physical visit has been done successfully!", {
+              id: toastId,
+            });
+            resetPhysicalForm();
+          }
+        } catch (error) {
+          toast.error(error.message, {
+            id: toastId,
+          });
         }
-      } catch (error) {
-        toast.error(error.message);
+      }else{
+        navigate("/profile-update", { state: { pathname } });
+        toast.error("You need to first add your address!");
       }
     } else {
       toast.error("You need to login first!");
-      navigate("/login");
+      navigate("/login", { state: { pathname } });
     }
   };
   const onSubmitvideoConference = async (data) => {
     if (isAuthenticated) {
-      try {
-        const datas = { ...data, id: id, userid: user?.user?._id };
-        const serverResponse = await axios.post(
-          `${VideoConferenceServer}/add`,
-          datas
-        );
-        console.log(serverResponse.data.success);
-        if (serverResponse.data.success) {
-          toast.success(
-            "Your booking for video conference has been done successfully!"
+      if(isAddressSet){
+        const toastId = toast.loading('Booking your physical visit...');
+        try {
+          const datas = { ...data, id: id, userid: user?.user?._id };
+          const serverResponse = await axios.post(
+            `${VideoConferenceServer}/add`,
+            datas
           );
-          resetVideoForm();
+          console.log(serverResponse.data.success);
+          if (serverResponse.data.success) {
+            toast.success("Your booking for video conference has been done successfully!", {
+              id: toastId,
+            });
+            resetVideoForm();
+          }
+        } catch (error) {
+          toast.error(error.message, {
+            id: toastId,
+          });
         }
-      } catch (error) {
-        toast.error(error.message);
+      }else{
+        navigate("/profile-update", { state: { pathname } });
+        toast.error("You need to first add your address!");
       }
     } else {
       toast.error("You need to login first!");
-      navigate("/login");
+      navigate("/login", { state: { pathname } });
     }
   };
   return (
