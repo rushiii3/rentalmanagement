@@ -18,7 +18,7 @@
     "@turf/turf": "^6.5.0",
     "axios": "^1.6.1",
     "dotenv": "^16.3.1",
-    "framer-motion": "^10.16.5",
+    "framer-motion": "^10.18.0",
     "fslightbox-react": "^1.7.6",
     "maplibre-gl": "^3.6.2",
     "next-themes": "^0.2.1",

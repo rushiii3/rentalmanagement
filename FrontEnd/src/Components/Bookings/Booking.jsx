@@ -11,7 +11,7 @@ import { CiVideoOff } from "react-icons/ci";
 import { LuCalendarOff } from "react-icons/lu";
 import VideoConferenceVisit from "./Component/VideoConferenceVisit";
 import { BsFilterCircle } from "react-icons/bs";
-import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button} from "@nextui-org/react";
+import {Popover, PopoverTrigger, PopoverContent, Button, Input} from "@nextui-org/react";
 
 const Booking = () => {
   const { user } = useSelector((state) => state.user);
@@ -157,24 +157,34 @@ const Booking = () => {
                     />
                   </div>
                   <div className="flex items-center justify-center">
-                  <Dropdown>
-      <DropdownTrigger>
-        <Button 
-         isIconOnly
-         className="bg-white dark:bg-black"
-        >
-          <BsFilterCircle size={30}/>
-        </Button>
-      </DropdownTrigger>
-      <DropdownMenu aria-label="Static Actions">
-        <DropdownItem key="new">New file</DropdownItem>
-        <DropdownItem key="copy">Copy link</DropdownItem>
-        <DropdownItem key="edit">Edit file</DropdownItem>
-        <DropdownItem key="delete" className="text-danger" color="danger">
-          Delete file
-        </DropdownItem>
-      </DropdownMenu>
-    </Dropdown>
+                  <Popover placement="bottom" showArrow offset={10}>
+      <PopoverTrigger>
+        <Button color="primary">Customize</Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-[240px]">
+        {(titleProps) => (
+          <div className="px-1 py-2 w-full">
+            <p className="text-small font-bold text-foreground" {...titleProps}>
+              Dimensions
+            </p>
+            <div className="mt-2 flex flex-col gap-2 w-full">
+            <div class="flex flex-col">
+        <label for="status" class="text-stone-600 text-sm font-medium">Status</label>
+
+        <select id="status" class="mt-2 block w-full rounded-md border border-gray-200 px-2 py-2 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+          <option>Dispached Out</option>
+          <option>In Warehouse</option>
+          <option>Being Brought In</option>
+        </select>
+      </div>
+              <Input defaultValue="300px" label="Max. width" size="sm" variant="bordered" />
+              <Input defaultValue="24px" label="Height" size="sm" variant="bordered" />
+              <Input defaultValue="30px" label="Max. height" size="sm" variant="bordered" />
+            </div>
+          </div>
+        )}
+      </PopoverContent>
+    </Popover>
                     
                   </div>
                 </div>

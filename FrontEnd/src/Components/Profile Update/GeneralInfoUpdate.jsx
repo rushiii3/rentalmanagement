@@ -113,7 +113,9 @@ const GeneralInfoUpdate = ({ userEmail }) => {
           id: toastId,
         });
         Store.dispatch(LoadUser());
-        fromBooking ? (navigate(fromBooking)) : "";
+        if(fromBooking){
+          navigate(fromBooking)
+        }
       }
     } catch (error) {
       setloading(false);

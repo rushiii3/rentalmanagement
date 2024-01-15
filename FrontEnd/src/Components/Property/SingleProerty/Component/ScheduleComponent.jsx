@@ -173,8 +173,9 @@ const ScheduleComponent = ({ id, Data, isAddressSet }) => {
               className="w-full"
               control={physicalControl}
               name="visitDate"
-              render={({ field: { onChange, name, value } }) => (
+              render={({ field: { onChange, value } }) => (
                 <DatePicker
+                minDate={new Date(Date.now() + 6 * 24*60*60*1000)}
                   style={{
                     width: "100%",
                     boxSizing: "border-box",
@@ -281,6 +282,7 @@ const ScheduleComponent = ({ id, Data, isAddressSet }) => {
               name="visitDate"
               render={({ field: { onChange, name, value } }) => (
                 <DatePicker
+                minDate={new Date(Date.now() + 6 * 24*60*60*1000)}
                   style={{
                     width: "100%",
                     boxSizing: "border-box",
