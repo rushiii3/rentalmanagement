@@ -1,7 +1,7 @@
 import React from "react";
 import { Tabs, Tab, Button } from "@nextui-org/react";
 import { useForm, Controller } from "react-hook-form";
-import DatePicker from "react-multi-date-picker";
+import DatePicker, { DateObject } from "react-multi-date-picker";
 import TimePicker from "react-multi-date-picker/plugins/analog_time_picker";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -11,6 +11,10 @@ import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import { PhysicalVisitServer, VideoConferenceServer } from "../../../../server";
 const ScheduleComponent = ({ id, Data, isAddressSet }) => {
+  const minDateTime = new Date();
+  minDateTime.setHours(10, 0, 0, 0);
+  const maxTime = new Date();
+  maxTime.setHours(18, 0, 0, 0);
   const [selected, setSelected] = React.useState("login");
   const { isAuthenticated, user } = useSelector((state) => state.user);
   const navigate = useNavigate();
@@ -219,6 +223,14 @@ const ScheduleComponent = ({ id, Data, isAddressSet }) => {
               render={({ field: { onChange, name, value } }) => (
                 <DatePicker
                   disableDayPicker
+                  currentDate={
+                    new DateObject({ 
+                      hour:10
+                    })
+                  }
+  
+                  minDate={minDateTime}
+                  maxDate={maxTime}
                   format="HH:mm:A"
                   plugins={[<TimePicker hideSeconds />]}
                   style={{
@@ -323,11 +335,18 @@ const ScheduleComponent = ({ id, Data, isAddressSet }) => {
               className="w-full"
               control={videoControl}
               name="visitTime"
-              render={({ field: { onChange, name, value } }) => (
+              render={({ field: { onChange,value } }) => (
                 <DatePicker
+                currentDate={
+                  new DateObject({ 
+                    hour:10
+                  })
+                }
+                minDate={minDateTime}
+                maxDate={maxTime}
                   disableDayPicker
                   format="HH:mm:A"
-                  plugins={[<TimePicker hideSeconds />]}
+                  plugins={[<TimePicker hideSeconds  />]}
                   style={{
                     width: "100%",
                     boxSizing: "border-box",
@@ -336,7 +355,7 @@ const ScheduleComponent = ({ id, Data, isAddressSet }) => {
                     width: "100%",
                   }}
                   calendarPosition="bottom-center"
-                  value={value || ""}
+                  value={value}
                   onChange={(date) => {
                     onChange(date?.isValid ? date : "");
                   }}

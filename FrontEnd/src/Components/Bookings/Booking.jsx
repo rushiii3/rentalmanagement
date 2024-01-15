@@ -11,7 +11,16 @@ import { CiVideoOff } from "react-icons/ci";
 import { LuCalendarOff } from "react-icons/lu";
 import VideoConferenceVisit from "./Component/VideoConferenceVisit";
 import { BsFilterCircle } from "react-icons/bs";
-import {Popover, PopoverTrigger, PopoverContent, Button, Input} from "@nextui-org/react";
+import DatePicker from "react-multi-date-picker";
+import DatePickerHeader from "react-multi-date-picker/plugins/date_picker_header";
+
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  Button,
+  Input,
+} from "@nextui-org/react";
 
 const Booking = () => {
   const { user } = useSelector((state) => state.user);
@@ -30,7 +39,25 @@ const Booking = () => {
   useEffect(() => {
     getData();
   }, []);
-
+  const data = VideoConference;
+  const onChangeInput = (e) => {
+    const searchValue = e.target.value.toLowerCase();
+    if (!searchValue.trim()) {
+      // If the search value is empty or contains only whitespace, return the entire data array
+      setVideoConference(data)
+    }
+    const filtered = data.filter((value) =>
+      value.property_id.property_state.toLowerCase().includes(searchValue) ||
+      value.property_id.property_city.toLowerCase().includes(searchValue) ||
+      value.property_id.property_locality.toLowerCase().includes(searchValue)
+    );
+  
+    // Now 'filtered' contains the items that match the search criteria.
+    // You can use 'filtered' in your application as needed.
+    setVideoConference(filtered)
+    console.log(filtered);
+  };
+  
   return (
     <div className="lg:mx-16 mt-5 mx-3 min-h-screen">
       <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
@@ -138,6 +165,73 @@ const Booking = () => {
               </div>
             }
           >
+             <div className="mb-5 flex justify-center items-center flex-row w-full gap-6">
+                  <div class=" bg-white w-full md:w-1/2 mx-auto flex flex-row  items-center justify-center border py-2 px-2 rounded-2xl gap-2 shadow-2xl focus-within:border-gray-300">
+                    <input
+                      id="search-bar"
+                      placeholder="your keyword here"
+                      class="px-6 py-2 w-full rounded-md  outline-none bg-white"
+                      onInput={onChangeInput}
+                    />
+                  </div>
+                  <div className="flex items-center justify-center">
+                    <Popover placement="bottom" showArrow offset={10}>
+                      <PopoverTrigger>
+                        <Button color="white" isIconOnly><BsFilterCircle size={30} /></Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[240px]">
+                        {(titleProps) => (
+                          <div className="px-1 py-2 w-full">
+                            <p
+                              className="text-small font-bold text-foreground"
+                              {...titleProps}
+                            >
+                              Dimensions
+                            </p>
+                            <div className="mt-2 flex flex-col gap-2 w-full">
+                              <div class="flex flex-col">
+                                <label
+                                  htmlFor="status"
+                                  class="text-stone-600 text-sm font-medium"
+                                >
+                                  Status
+                                </label>
+
+                                <select
+                                  id="status"
+                                  class="mt-2 block w-full rounded-md border border-gray-200 px-2 py-2 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                                >
+                                  <option value="any" selected>Any</option>
+                                  <option value="Completed">Completed</option>
+                                  <option value="Booked">Booked</option>
+                                  <option value="Accepted">Accepted</option>
+                                  <option value="Rejected">Rejected</option>
+                                </select>
+                              </div>
+                              <div class="flex flex-col">
+                                <label
+                                  htmlFor="manufacturer"
+                                  class="text-stone-600 text-sm font-medium"
+                                >
+                                  Date
+                                </label>
+                                <DatePicker
+                                  plugins={[<DatePickerHeader />]}
+                                  render={
+                                    <input
+                                      placeholder="Select date"
+                                      class="mt-2 block w-full rounded-md border border-gray-200 px-2 py-2 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                                    />
+                                  }
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                </div>
             {VideoConference && VideoConference.length === 0 ? (
               <NoBookings
                 icon={
@@ -146,48 +240,7 @@ const Booking = () => {
               />
             ) : (
               <div>
-                <div className="mb-5 flex justify-end items-center flex-row w-full gap-6">
-                  <div
-                    class=" mb-5  bg-white w-full md:w-1/2 mx-auto flex flex-row  items-center justify-center border py-2 px-2 rounded-2xl gap-2 shadow-2xl focus-within:border-gray-300"
-                  >
-                    <input
-                      id="search-bar"
-                      placeholder="your keyword here"
-                      class="px-6 py-2 w-full rounded-md  outline-none bg-white"
-                    />
-                  </div>
-                  <div className="flex items-center justify-center">
-                  <Popover placement="bottom" showArrow offset={10}>
-      <PopoverTrigger>
-        <Button color="primary">Customize</Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-[240px]">
-        {(titleProps) => (
-          <div className="px-1 py-2 w-full">
-            <p className="text-small font-bold text-foreground" {...titleProps}>
-              Dimensions
-            </p>
-            <div className="mt-2 flex flex-col gap-2 w-full">
-            <div class="flex flex-col">
-        <label for="status" class="text-stone-600 text-sm font-medium">Status</label>
-
-        <select id="status" class="mt-2 block w-full rounded-md border border-gray-200 px-2 py-2 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-          <option>Dispached Out</option>
-          <option>In Warehouse</option>
-          <option>Being Brought In</option>
-        </select>
-      </div>
-              <Input defaultValue="300px" label="Max. width" size="sm" variant="bordered" />
-              <Input defaultValue="24px" label="Height" size="sm" variant="bordered" />
-              <Input defaultValue="30px" label="Max. height" size="sm" variant="bordered" />
-            </div>
-          </div>
-        )}
-      </PopoverContent>
-    </Popover>
-                    
-                  </div>
-                </div>
+               
                 <div className="flex flex-col gap-y-5 mt-5">
                   {VideoConference.map((value, key) => (
                     <VideoConferenceVisit key={key} value={value} />
