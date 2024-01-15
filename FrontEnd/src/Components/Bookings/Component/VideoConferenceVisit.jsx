@@ -1,15 +1,16 @@
 import React from "react";
 import {Link} from 'react-router-dom';
 const formatDateString = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
-  };
-const PhysicalVisitCard = ({ value }) => {
-  const formattedDate = formatDateString(value?.pv_date);
+  const date = new Date(dateString);
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+};
+const VideoConferenceVisit = ({ value }) => {
+    console.log(value);
+  const formattedDate = formatDateString(value?.vc_date);
   return (
     <div class="bg-white rounded-xl border shadow-md overflow-hidden ">
       <div class="md:flex max-w-full">
@@ -23,7 +24,7 @@ const PhysicalVisitCard = ({ value }) => {
         <div class="p-8">
           <div class="flex flex-row lg:justify-start justify-center">
             <div class="text-gray-700 font-medium text-sm text-center lg:text-left px-2">
-              <i class="far fa-clock"></i> {formattedDate} {value?.pv_time}
+               {formattedDate} {value?.vc_time}
             </div>
             <div class="text-gray-700 font-medium text-sm text-center lg:text-left px-2">
               Landlord : {value?.property_id?.landlord_id?.firstname}{" "}
@@ -50,11 +51,11 @@ const PhysicalVisitCard = ({ value }) => {
           </div>
         </div>
         <div className="flex justify-center items-center px-3 ml-auto py-2 font-semibold">
-          {value?.pv_status}
+          {value?.vc_status}
         </div>
       </div>
     </div>
   );
 };
 
-export default PhysicalVisitCard;
+export default VideoConferenceVisit;
