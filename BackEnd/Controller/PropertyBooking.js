@@ -7,7 +7,8 @@ const AddBooking = asyncHandler(async (req, res, next) => {
         const data = req.body;
         const newBooking = new BookingModel({
             user_id: data.userid,
-            property_id: data.property_id
+            property_id: data.property_id,
+            status : "Pending"
         })
         const SavedBooking = await newBooking.save();
         if (SavedBooking) {
