@@ -2,14 +2,20 @@ import React from "react";
 import {Link} from 'react-router-dom';
 const formatDateString = (dateString) => {
   const date = new Date(dateString);
-  return date.toLocaleDateString("en-US", {
+
+  const options = {
     year: "numeric",
     month: "short",
     day: "numeric",
-  });
+    timeZone: "UTC", // Set the desired time zone here
+  };
+
+  const formatter = new Intl.DateTimeFormat("en-US", options);
+
+  return formatter.format(date);
 };
+
 const VideoConferenceVisit = ({ value }) => {
-    console.log(value);
   const formattedDate = formatDateString(value?.vc_date);
   return (
     <div class="bg-white rounded-xl border shadow-md overflow-hidden ">
