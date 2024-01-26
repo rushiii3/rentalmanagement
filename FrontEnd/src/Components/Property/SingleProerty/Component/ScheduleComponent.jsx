@@ -92,7 +92,6 @@ const ScheduleComponent = ({ id, Data, isAddressSet }) => {
       if(isAddressSet){
         const toastId = toast.loading('Booking your physical visit...');
         try {
-          toast.loading('Waiting...');
           const datas = { ...data, id: id, userid: user?.user?._id };
           const serverResponse = await axios.post(
             `${PhysicalVisitServer}/add`,
@@ -105,7 +104,7 @@ const ScheduleComponent = ({ id, Data, isAddressSet }) => {
             resetPhysicalForm();
           }
         } catch (error) {
-          toast.error(error.message, {
+          toast.error(error.response.data.message, {
             id: toastId,
           });
         }
@@ -121,7 +120,7 @@ const ScheduleComponent = ({ id, Data, isAddressSet }) => {
   const onSubmitvideoConference = async (data) => {
     if (isAuthenticated) {
       if(isAddressSet){
-        const toastId = toast.loading('Booking your physical visit...');
+        const toastId = toast.loading('Booking your video conference...');
         try {
           const datas = { ...data, id: id, userid: user?.user?._id };
           const serverResponse = await axios.post(
@@ -136,7 +135,7 @@ const ScheduleComponent = ({ id, Data, isAddressSet }) => {
             resetVideoForm();
           }
         } catch (error) {
-          toast.error(error.message, {
+          toast.error(error.response.data.message, {
             id: toastId,
           });
         }

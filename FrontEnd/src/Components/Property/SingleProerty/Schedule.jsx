@@ -12,7 +12,7 @@ import "./map.css";
 import ScheduleComponent from "./Component/ScheduleComponent";
 
 
-const Schedule = ({ id, Data }) => {
+const Schedule = ({ id, Data, isAddressSet }) => {
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -21,7 +21,7 @@ const Schedule = ({ id, Data }) => {
     <div>
       <div className="max-w-full h-auto hidden lg:block  p-6 bg-white border border-gray-200 rounded-xl shadow-lg dark:bg-zinc-900 dark:border-zinc-900">
         <h1 className="mb-8 text-3xl text-center">Schedule a tour</h1>
-        <ScheduleComponent id={id} Data={Data}/>
+        <ScheduleComponent id={id} Data={Data} isAddressSet={isAddressSet}/>
       </div>
       <div class="lg:hidden block fixed bottom-0 left-0 z-50 w-full h-16 bg-white border-t border-gray-200 dark:bg-gray-700 dark:border-gray-600">
         <Modal size="full" isOpen={isOpen} onOpenChange={onOpenChange}>
@@ -32,7 +32,7 @@ const Schedule = ({ id, Data }) => {
                   Schedule a tour
                 </ModalHeader>
                 <ModalBody>
-                  <ScheduleComponent id={id} Data={Data}/>
+                  <ScheduleComponent id={id} Data={Data} isAddressSet={isAddressSet}/>
                 </ModalBody>
                 <ModalFooter>
                   <Button color="danger" variant="light" onPress={onClose}>
