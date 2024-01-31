@@ -6,15 +6,12 @@ const User = require("../Models/UserModel");
 const AddProperty = asyncHandler(async (req, res, next) => {
   try {
     const data = req.body;
-    console.log(data);
     const imagesWithKeys = data?.ImageVideoData
     .filter(item => item.type === 'image')
-    .map(item => ({ url: item.url, key: item.publicKey }));
-  
+    .map(item => ({ url: item.url, publicKey: item.publicKey }));
   const videosWithKeys = data?.ImageVideoData
     .filter(item => item.type === 'video')
-    .map(item => ({ url: item.url, key: item.publicKey }));
-
+    .map(item => ({ url: item.url, publicKey: item.publicKey }));
     // Create a new property document
     const newProperty = new Property({
       building_name: data.buildingName,

@@ -19,8 +19,8 @@ const Location = () => {
   const [selectedCity, setSelectedCity] = useState("");
 
   const mapContainerRef = useRef(null);
-  const [lng, setLng] = useState();
-  const [lat, setLat] = useState();
+  const [lng, setLng] = useState(72.877426);
+  const [lat, setLat] = useState(19.07609);
   const [zoom] = useState(15);
   const [marker, setMarker] = useState(null);
   const [map, setMap] = useState(null);
@@ -29,7 +29,7 @@ const Location = () => {
     const initializedMap = new maplibregl.Map({
       container: mapContainerRef.current,
       style: `https://api.maptiler.com/maps/streets-v2/style.json?key=${API_KEY}`,
-      center: [72.877426, 19.07609],
+      center: [lng,lat ],
       zoom: zoom,
     });
     initializedMap.addControl(new maplibregl.NavigationControl(), "top-right");
@@ -46,7 +46,7 @@ const Location = () => {
     if (!map) return;
 
     const newMarker = new maplibregl.Marker({ draggable: true })
-      .setLngLat([72.877426, 19.07609])
+      .setLngLat([lng, lat])
       .addTo(map);
 
     function onDragEnd() {

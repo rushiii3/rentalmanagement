@@ -2,6 +2,7 @@ const UserModel = require("../Models/UserModel");
 const asyncHandler = require("express-async-handler");
 const PropertyModel = require("../Models/UserModel");
 const BookingModel = require("../Models/PropertyBooking");
+
 const AddBooking = asyncHandler(async (req, res, next) => {
   try {
     const data = req.body;
@@ -65,6 +66,26 @@ const AddBooking = asyncHandler(async (req, res, next) => {
     }
   }
 });
+const get_user_bookings_properties = asyncHandler(async (req, res, next) => {
+  try {
+    const ids = req.body;
+    const property_data = await Promise.all(ids.map(async (data) => {
+      const Bookings = await BookingModel.find({
+        property_id: data,
+      }).populate({
+        path: "user_id",
+        model:"User",
+        select: "-_id firstname lastname avatar",
+      });
+      return { bookings: Bookings };
+    }));
+    res.status(200).json({ success: true, property_data });
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = {
   AddBooking,
+  get_user_bookings_properties
 };
