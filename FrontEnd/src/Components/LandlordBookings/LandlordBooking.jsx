@@ -12,40 +12,45 @@ import { PropertyBookingServer, propertServer } from "../../server";
 
 const LandlordBooking = () => {
   const [selectedTab, setSelectedTab] = useState(null);
+  const [SelectedProperty, setSelectedProperty] = useState(null);
+  const [PropertyIDS, setPropertyIDS] = useState([]);
   const [PropertyData, setPropertyData] = useState([]);
+  const [SelectedPropertyData, setSelectedPropertyData] = useState([]);
     const {user} = useSelector((state) => state.user);
     const userid = user?.user?.email;
     useEffect(() => {
-      const getProperties = async() => {
+      const getProperties = async () => {
         try {
-          const { data } = await axios.get(
-            `${propertServer}/landlord-property/${userid}`
-          );
-            setPropertyData(data.property);
-            if(data.property){
-              setSelectedTab('property_booking');
-              try {
-                const property_ids = data.property?.map((value)=>value?._id);
-                const serverResponse = await axios.post(`${PropertyBookingServer}/get-bookings`,property_ids);
-                console.log(serverResponse.data.property_data);
-                const data = [ /* Your array of objects */ ];
-
-const targetId = '65b366b299d21cb018e6ea8c';
-
-const targetObject = data.find(item => item.bookings.some(booking => booking._id === targetId));
-
-console.log(targetObject);
-
-              } catch (error) {
-                console.log(error.message);
+          const { data } = await axios.get(`${propertServer}/landlord-property/${userid}`);
+          setPropertyData(data.property);
+          if (data.property) {
+            const property_ids = data.property?.map((value) => value?._id);
+            setPropertyIDS(property_ids);
+            setSelectedTab('property_booking');
+            setSelectedProperty(property_ids[0]);
+    
+            try {
+              const serverResponse = await axios.post(`${PropertyBookingServer}/get-bookings`, property_ids);
+              if (serverResponse.data.property_data) {
+                const dataResponse = serverResponse.data.property_data;
+                const targetId = property_ids[0];
+                if (targetId && dataResponse) {
+                  const targetPropertyBookings = dataResponse.find(item => item.bookings.some(booking => booking.property_id === targetId));
+                  setSelectedPropertyData(targetPropertyBookings.bookings);
+                  console.log(targetPropertyBookings.bookings);
+                  console.log("Propterydata",SelectedPropertyData);
+                }
               }
+            } catch (error) {
+              console.log(error.message);
             }
+          }
         } catch (error) {
           console.log(error.message);
         }
-      }
-      getProperties()
-    }, [])
+      };
+      getProperties();
+    }, []);
     const handleSelection = async(e) => {
       setSelectedTab(e);
       const property_ids = PropertyData?.map((value)=>value?._id);
@@ -53,14 +58,14 @@ console.log(targetObject);
         console.log("hehe2");
         console.log(PropertyData.map((value)=>value._id));
       }else if(e==="physical_visit"){
-        console.log("boobies");
+        console.log("");
       }else if(e==="video_conference"){
         console.log("hehe");
       }
     }
   return (
     <div className="lg:mx-16 mt-5 mx-3 min-h-screen">
-    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+    <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
       Your Bookings
     </h5>
     <div className="flex w-full flex-col">
@@ -114,7 +119,12 @@ console.log(targetObject);
           <Tab key={item._id}  title={item.building_name}>
             <Card>
               <CardBody>
-                {item.building_name}
+                {
+                  SelectedPropertyData.map((value,key)=>{
+                    <p>{value}</p>
+                  })
+                }
+                {/* {item.building_name} */}
               </CardBody>
             </Card>  
           </Tab>
