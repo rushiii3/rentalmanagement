@@ -5,6 +5,7 @@ const PropertyModel = require("../Models/UserModel"); // Import your Property mo
 const PhysicalVisitModel = require("../Models/PhysicalVisit");
 const VideoConferenceModel = require("../Models/VideoConferenceModel");
 const BookingModel = require("../Models/PropertyBooking");
+const errorThrow = require("../Middleware/ErrorHandler");
 const AddVisit = asyncHandler(async (req, res, next) => {
   try {
     const { visitTime, visitDate, id, userid } = req.body;
@@ -175,7 +176,27 @@ const getUserPhysicalVisitFortenant = asyncHandler(async (req, res, next) => {
   }
 });
 
+const get_user_bookings_properties = asyncHandler(async (req, res, next) => {
+  try {
+    const ids = req.body;
+    const property_data = await Promise.all(ids.map(async (data) => {
+      const Bookings = await PhysicalVisitModel.find({
+        property_id: data,
+      }).populate({
+        path: "user_id",
+        model:"User",
+        select: "-_id firstname lastname avatar",
+      });
+      return { bookings: Bookings };
+    }));
+    res.status(200).json({ success: true, property_data });
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = {
   AddVisit,
   getUserPhysicalVisitFortenant,
+  get_user_bookings_properties
 };

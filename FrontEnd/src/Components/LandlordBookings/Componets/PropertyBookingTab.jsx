@@ -9,10 +9,11 @@ import {
   PopoverContent,
   Button,
 } from "@nextui-org/react";
-import PropertyBookingCard from "../../Bookings/Component/PropertyBookingCard";
+// import PropertyBookingCard from "../../Bookings/Component/PropertyBookingCard";
+import PropertyBookingTabCard from "./PropertyBookingTabCard";
 
 
-const PropertyBookingTab = ({FilteredBookings,setFilteredBookings,setinput3,input3, PropertyBookings}) => {
+const PropertyBookingTab = ({FilteredBookings,setFilteredBookings,setinput3,input3, PropertyBookings,setSelectedPropertyData,selectedTab}) => {
   const [SelectedStatus, setSelectedStatus] = useState("");
   const [Value, setValue] = useState(new Date());
   const onChangeInput = (e) => {
@@ -130,7 +131,7 @@ const PropertyBookingTab = ({FilteredBookings,setFilteredBookings,setinput3,inpu
           <div className="flex flex-col gap-y-5 mt-5">
             {FilteredBookings.map((value, key) => (
                 // <PropertyBookingCard />
-                <PropertyBookingCard key={key} value={value} />
+                <PropertyBookingTabCard key={key} value={value} FilteredBookings={FilteredBookings} setSelectedPropertyData={setSelectedPropertyData} selectedTab={selectedTab}/>
             ))}
           </div>
         </div>

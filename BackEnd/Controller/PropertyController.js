@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const Property = require("../Models/PropertyModel");
 const Review = require('../Models/ReviewModel');
 const User = require("../Models/UserModel");
+const errorThrow = require("../Middleware/ErrorHandler");
 const AddProperty = asyncHandler(async (req, res, next) => {
   try {
     const data = req.body;

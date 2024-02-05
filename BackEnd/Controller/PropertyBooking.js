@@ -2,7 +2,7 @@ const UserModel = require("../Models/UserModel");
 const asyncHandler = require("express-async-handler");
 const PropertyModel = require("../Models/UserModel");
 const BookingModel = require("../Models/PropertyBooking");
-
+const errorThrow = require("../Middleware/ErrorHandler");
 const AddBooking = asyncHandler(async (req, res, next) => {
   try {
     const data = req.body;
@@ -85,7 +85,27 @@ const get_user_bookings_properties = asyncHandler(async (req, res, next) => {
   }
 });
 
+const updateStatus = asyncHandler(async(req,res,next)=>{
+  try {
+    const { id, type } = req.body;
+    const update_status = await BookingModel.findByIdAndUpdate(id, { status: type });
+  
+    if (!update_status) {
+      // If update_status is null, the document with the specified ID was not found
+      return errorThrow("Failed to update property status! Booking not found.", 404);
+    }
+  
+    res.status(200).json({ success: true });
+  } catch (error) {
+    // Handle other errors, e.g., database connection issues
+    next(error);
+  }
+  
+  
+})
+
 module.exports = {
   AddBooking,
-  get_user_bookings_properties
+  get_user_bookings_properties,
+  updateStatus
 };

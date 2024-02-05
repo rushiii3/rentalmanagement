@@ -32,6 +32,7 @@ const BookingTab = ({FilteredBookings,setFilteredBookings,setinput3,input3, Prop
     );
     setFilteredBookings(filtered);
     setSelectedStatus(selectedValue);
+    
   };
   function handleChangeDate(value) {
     setValue(value);

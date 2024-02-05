@@ -5,11 +5,9 @@ import { IoVideocam } from "react-icons/io5";
 import { FaCalendar } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import { PropertyBookingServer, propertServer } from "../../server";
+import { PropertyBookingServer, VideoConferenceServer, PhysicalVisitServer, propertServer } from "../../server";
 import PropertyBookingTab from "./Componets/PropertyBookingTab";
-// import PhysicalVisitTab from "./Component/PhysicalVisit";
-// import VideoConfereneceTab from "./Component/VideoConfereneceTab";
-// import BookingTab from "./Component/BookingTab";
+
 
 const LandlordBooking = () => {
   const [selectedTab, setSelectedTab] = useState(null);
@@ -51,12 +49,21 @@ const LandlordBooking = () => {
                     (booking) => booking.property_id === targetId
                   )
                 );
-                setSelectedPropertyData(targetPropertyBookings.bookings);
+                if(targetPropertyBookings){
+                  setSelectedPropertyData(targetPropertyBookings.bookings);
+                }else{
+                  setSelectedPropertyData([]);
+                }
+                // if(targetPropertyBookings.bookings.length>0){
+                //   
+
+                // }
               }
             }
           } catch (error) {
             console.log(error.message);
           }
+
         }
       } catch (error) {
         console.log(error.message);
@@ -66,16 +73,43 @@ const LandlordBooking = () => {
     getProperties();
   }, []);
 
+  const get_bookings = async(api) => {
+    try {
+      setSelectedProperty(PropertyIDS[0]);
+      const serverResponse = await axios.post(
+        `${api}/get-bookings`,
+        PropertyIDS
+      );
+      if (serverResponse.data.property_data) {
+        const dataResponse = serverResponse.data.property_data;
+        setPropertyBookings(dataResponse);
+        const targetId = PropertyIDS[0];
+        if (targetId && dataResponse) {
+          const targetPropertyBookings = dataResponse.find((item) =>
+            item.bookings.some(
+              (booking) => booking.property_id === targetId
+            )
+          );
+          if(targetPropertyBookings){
+            setSelectedPropertyData(targetPropertyBookings.bookings);
+          }else{
+            setSelectedPropertyData([]);
+          }
+          // setSelectedPropertyData(targetPropertyBookings.bookings);
+        }
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
   const handleSelection = async (e) => {
     setSelectedTab(e);
-    const property_ids = PropertyData?.map((value) => value?._id);
-    if (e === "property_booking" && property_ids.length !== 0) {
-      console.log("hehe2");
-      console.log(PropertyData.map((value) => value._id));
+    if (e === "property_booking" && PropertyIDS.length !== 0) {
+      get_bookings(PropertyBookingServer)
     } else if (e === "physical_visit") {
-      console.log("");
+      get_bookings(PhysicalVisitServer)
     } else if (e === "video_conference") {
-      console.log("hehe");
+      get_bookings(VideoConferenceServer)
     }
   };
   const handlePropertyChange = async (e) => {
@@ -83,7 +117,12 @@ const LandlordBooking = () => {
     const targetPropertyBookings = PropertyBookings.find((item) =>
       item.bookings.some((booking) => booking.property_id === e)
     );
-    setSelectedPropertyData(targetPropertyBookings.bookings);
+    if (targetPropertyBookings) {
+      setSelectedPropertyData(targetPropertyBookings.bookings);
+
+    }else{
+      setSelectedPropertyData([]);
+    }
   };
   return (
     <div className="lg:mx-16 mt-5 mx-3 min-h-screen">
@@ -145,20 +184,14 @@ const LandlordBooking = () => {
           {PropertyData.map((value, key) => (
             <Tab key={value._id} title={value.building_name}>
               {SelectedPropertyData ? (
-                selectedTab === "property_booking" ? (
-                  <PropertyBookingTab
-                    PropertyBookings={PropertyData}
-                    setinput3={setinput3}
-                    input3={input3}
-                    FilteredBookings={SelectedPropertyData}
-                  />
-                ) : selectedTab === "physical_visit" ? (
-                  "physical"
-                ) : selectedTab === "video_conference" ? (
-                  "video_conference"
-                ) : (
-                  ""
-                )
+                <PropertyBookingTab
+                PropertyBookings={PropertyData}
+                setinput3={setinput3}
+                input3={input3}
+                FilteredBookings={SelectedPropertyData}
+                setSelectedPropertyData={setSelectedPropertyData}
+                selectedTab={selectedTab}
+              />
               ) : (
                 // <p key={key}>{value.status}</p>
                 ""

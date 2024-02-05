@@ -221,15 +221,15 @@ const ScheduleComponent = ({ id, Data, isAddressSet }) => {
               name="visitTime"
               render={({ field: { onChange, name, value } }) => (
                 <DatePicker
-                  disableDayPicker
-                  currentDate={
-                    new DateObject({ 
-                      hour:10
-                    })
-                  }
+                  // disableDayPicker
+                  // currentDate={
+                  //   new DateObject({ 
+                  //     hour:10
+                  //   })
+                  // }
   
-                  minDate={minDateTime}
-                  maxDate={maxTime}
+                  // minDate={minDateTime}
+                  // maxDate={maxTime}
                   format="HH:mm:A"
                   plugins={[<TimePicker hideSeconds />]}
                   style={{
@@ -336,13 +336,13 @@ const ScheduleComponent = ({ id, Data, isAddressSet }) => {
               name="visitTime"
               render={({ field: { onChange,value } }) => (
                 <DatePicker
-                currentDate={
-                  new DateObject({ 
-                    hour:10
-                  })
-                }
-                minDate={minDateTime}
-                maxDate={maxTime}
+                // currentDate={
+                //   new DateObject({ 
+                //     hour:10
+                //   })
+                // }
+                // minDate={minDateTime}
+                // maxDate={maxTime}
                   disableDayPicker
                   format="HH:mm:A"
                   plugins={[<TimePicker hideSeconds  />]}
@@ -356,6 +356,7 @@ const ScheduleComponent = ({ id, Data, isAddressSet }) => {
                   calendarPosition="bottom-center"
                   value={value}
                   onChange={(date) => {
+                    console.log(date);
                     onChange(date?.isValid ? date : "");
                   }}
                   render={

@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const UserModel = require("../Models/UserModel"); // Import your User model
 const PropertyModel = require("../Models/UserModel"); // Import your Property model
 const VideoConference = require("../Models/VideoConferenceModel");
+const errorThrow = require("../Middleware/ErrorHandler");
 const AddVisit = asyncHandler(async (req, res, next) => {
   try {
     const { visitTime, visitDate, id, userid } = req.body;
@@ -62,7 +63,25 @@ const AddVisit = asyncHandler(async (req, res, next) => {
     next(error);
   }
 });
-
+const get_user_bookings_properties = asyncHandler(async (req, res, next) => {
+  try {
+    const ids = req.body;
+    const property_data = await Promise.all(ids.map(async (data) => {
+      const Bookings = await VideoConference.find({
+        property_id: data,
+      }).populate({
+        path: "user_id",
+        model:"User",
+        select: "-_id firstname lastname avatar",
+      });
+      return { bookings: Bookings };
+    }));
+    res.status(200).json({ success: true, property_data });
+  } catch (error) {
+    next(error);
+  }
+});
 module.exports = {
   AddVisit,
+  get_user_bookings_properties
 };

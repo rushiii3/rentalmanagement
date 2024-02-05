@@ -8,7 +8,8 @@ const videoConferenceSchema = new mongoose.Schema({
     vc_link: { type: String,},
     vc_status: { type: String, required: true },
     user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    property_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Property', required: true }
+    property_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Property', required: true },
+    addedAt: { type: Date, default: Date.now } 
 });
 
 // Create a model based on the schema
