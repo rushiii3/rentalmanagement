@@ -100,8 +100,6 @@ const updateStatus = asyncHandler(async(req,res,next)=>{
     // Handle other errors, e.g., database connection issues
     next(error);
   }
-  
-  
 })
 
 module.exports = {

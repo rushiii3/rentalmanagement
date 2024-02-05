@@ -81,7 +81,22 @@ const get_user_bookings_properties = asyncHandler(async (req, res, next) => {
     next(error);
   }
 });
+const updateStatus = asyncHandler(async(req,res,next)=>{
+  try {
+    const { id, type } = req.body;
+    const update_status = await VideoConference.findByIdAndUpdate(id, { vc_status: type });
+    if (!update_status) {
+      // If update_status is null, the document with the specified ID was not found
+      return errorThrow("Failed to update property status! Booking not found.", 404);
+    }
+    res.status(200).json({ success: true });
+  } catch (error) {
+    // Handle other errors, e.g., database connection issues
+    next(error);
+  }
+})
 module.exports = {
   AddVisit,
-  get_user_bookings_properties
+  get_user_bookings_properties,
+  updateStatus
 };

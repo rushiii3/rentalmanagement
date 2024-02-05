@@ -2,14 +2,18 @@ import { Avatar, Button, Chip } from "@nextui-org/react";
 import React from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { PropertyBookingServer } from "../../../server";
+import {
+  PropertyBookingServer,
+  PhysicalVisitServer,
+  VideoConferenceServer,
+} from "../../../server";
 import toast from "react-hot-toast";
 const formatDateString = (dateString) => {
   const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric'
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
   });
 };
 const PropertyBookingTabCard = ({
@@ -18,21 +22,24 @@ const PropertyBookingTabCard = ({
   setSelectedPropertyData,
   selectedTab,
 }) => {
-  const status = selectedTab === "property_booking"
-  ? value?.status
-  : selectedTab === "video_conference"
-  ? value?.vc_status
-  : selectedTab === "physical_visit"
-  ? value?.pv_status
-  : "";
   console.log(value);
-  const formattedDate = formatDateString(selectedTab === "property_booking"
-  ? value?.booking_date
-  : selectedTab === "video_conference"
-  ? value?.addedAt
-  : selectedTab === "physical_visit"
-  ? value?.addedAt
-  : "");
+  const status =
+    selectedTab === "property_booking"
+      ? value?.status
+      : selectedTab === "video_conference"
+      ? value?.vc_status
+      : selectedTab === "physical_visit"
+      ? value?.pv_status
+      : "";
+  const formattedDate = formatDateString(
+    selectedTab === "property_booking"
+      ? value?.booking_date
+      : selectedTab === "video_conference"
+      ? value?.addedAt
+      : selectedTab === "physical_visit"
+      ? value?.addedAt
+      : ""
+  );
   const timestamp = new Date(
     selectedTab === "property_booking"
       ? value?.booking_date
@@ -42,6 +49,12 @@ const PropertyBookingTabCard = ({
       ? value?.addedAt
       : ""
   );
+  const booking_date = selectedTab === "video_conference"
+  ? value?.vc_date
+  : selectedTab === "physical_visit"
+  ? value?.pv_date
+  : ""
+  console.log(booking_date);
   const currentDate = new Date();
   const timeDifference = currentDate - timestamp;
 
@@ -61,27 +74,50 @@ const PropertyBookingTabCard = ({
     result = `${minutes} min`;
   }
   const handleStatus = async (id, type) => {
+    const toastId = toast.loading('Updating statuss....');
+
     try {
       const Response = await axios.put(
-        `${PropertyBookingServer}/update-status`,
+        `${
+          selectedTab === "property_booking"
+            ? PropertyBookingServer
+            : selectedTab === "video_conference"
+            ? VideoConferenceServer
+            : selectedTab === "physical_visit"
+            ? PhysicalVisitServer
+            : ""
+        }/update-status`,
         {
           id,
           type,
         }
       );
       if (Response.data.success) {
+        toast.success('Status updated successfully!!', {
+          id: toastId,
+        });
         const indexOfObjectToUpdate = FilteredBookings.findIndex(
           (item) => item._id === id
         );
         if (indexOfObjectToUpdate !== -1) {
           const updatedData = [...FilteredBookings];
-          updatedData[indexOfObjectToUpdate].status = type;
+          if(selectedTab === "property_booking"){
+            updatedData[indexOfObjectToUpdate].status = type;
+          }else if(selectedTab === "video_conference"){
+            updatedData[indexOfObjectToUpdate].vc_status = type;
+          }else if(selectedTab === "physical_visit"){
+            updatedData[indexOfObjectToUpdate].pv_status = type;
+          }
           setSelectedPropertyData(updatedData);
         } else {
           console.log("Object not found");
         }
       }
-    } catch (error) {}
+    } catch (error) {
+      toast.error(error.response.data.message, {
+        id: toastId,
+      });
+    }
   };
 
   return (
@@ -103,11 +139,10 @@ const PropertyBookingTabCard = ({
                 {selectedTab === "video_conference" ||
                 selectedTab === "physical_visit" ? (
                   <>
+                    <p>Visiting Date : {formattedDate}</p>
                     <p>
-                      Visiting Date : {formattedDate}
-                    </p>
-                    <p>
-                      Visiting Time : {selectedTab === "video_conference"
+                      Visiting Time :{" "}
+                      {selectedTab === "video_conference"
                         ? value?.vc_time
                         : selectedTab === "physical_visit"
                         ? value?.pv_time
@@ -139,15 +174,31 @@ const PropertyBookingTabCard = ({
                     Reject
                   </Button>
                 </>
-              ) : status === "Accepted" ? (
-                <Chip color="warning" variant="flat">
+              ) : status === "Accepted" && booking_date < currentDate ? (
+                <Chip color="primary" variant="flat">
                   Accepted
                 </Chip>
-              ) : (
+              ) : status === "Rejected" ?  (
                 <Chip color="danger" variant="flat">
                   Rejected
                 </Chip>
-              )}
+              ) : selectedTab !== "property_booking" && booking_date > currentDate && status === "Accepted"  ? (<>
+                <Button
+                  color="success"
+                  variant="bordered"
+                  onClick={() => handleStatus(value?._id, "Completed")}
+                >
+                  Complete
+                </Button>
+                <Button
+                  color="danger"
+                  variant="bordered"
+                  onClick={() => handleStatus(value?._id, "Incomplete")}
+                >
+                  Incomplete
+                </Button>
+              </>):"Completed" ? "hehe" : ""
+            }
             </div>
           </div>
         </div>
