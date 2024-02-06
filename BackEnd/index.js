@@ -13,7 +13,7 @@ const VideoConferenceRouter = require('./Routes/VideoConferenceRoutes');
 const PropertyBooking = require('./Routes/BookingRoutes');
 const port = process.env.PORT || 4000;
 const MongoURL = process.env.MONGO_URL;
-const production = false;
+const production = true;
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
