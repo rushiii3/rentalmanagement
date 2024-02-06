@@ -23,6 +23,7 @@ const SinglePropertyView = () => {
     );
   };
   const isAddressSet = address();
+  console.log(isAddressSet);
   const { id } = useParams();
   const [Data, setData] = useState(null);
   const [imagesVideos, setImagesVideos] = useState({ images: [], videos: [] });

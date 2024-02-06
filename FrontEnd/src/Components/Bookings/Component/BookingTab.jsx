@@ -32,6 +32,7 @@ const BookingTab = ({FilteredBookings,setFilteredBookings,setinput3,input3, Prop
     );
     setFilteredBookings(filtered);
     setSelectedStatus(selectedValue);
+    
   };
   function handleChangeDate(value) {
     setValue(value);
@@ -88,7 +89,6 @@ const BookingTab = ({FilteredBookings,setFilteredBookings,setinput3,input3, Prop
                         </option>
                         <option value="Pending">Pending</option>
                         <option value="Completed">Completed</option>
-                        <option value="Booked">Booked</option>
                         <option value="Accepted">Accepted</option>
                         <option value="Rejected">Rejected</option>
                       </select>

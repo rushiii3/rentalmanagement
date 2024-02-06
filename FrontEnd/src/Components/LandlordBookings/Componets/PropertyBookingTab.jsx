@@ -9,52 +9,49 @@ import {
   PopoverContent,
   Button,
 } from "@nextui-org/react";
-import VideoConferenceVisit from "./VideoConferenceVisit";
-const VideoConfereneceTab = ({
-  setinput2,
-  input2,
-  VideoConference,
-  setFilteredVideoConference,
-  FilteredVideoConference,
-}) => {
+// import PropertyBookingCard from "../../Bookings/Component/PropertyBookingCard";
+import PropertyBookingTabCard from "./PropertyBookingTabCard";
+
+
+const PropertyBookingTab = ({FilteredBookings,setFilteredBookings,setinput3,input3, PropertyBookings,setSelectedPropertyData,selectedTab}) => {
   const [SelectedStatus, setSelectedStatus] = useState("");
   const [Value, setValue] = useState(new Date());
   const onChangeInput = (e) => {
-    setinput2(e.target.value);
+    setinput3(e.target.value);
     const searchValue = e.target.value.toLowerCase();
-    const filtered = VideoConference.filter(
+    const filtered = PropertyBookings.filter(
       (value) =>
-        value.property_id.property_state.toLowerCase().includes(searchValue) ||
-        value.property_id.property_city.toLowerCase().includes(searchValue) ||
-        value.property_id.property_locality.toLowerCase().includes(searchValue)
+        value?.property_id?.property_state?.toLowerCase().includes(searchValue) 
+        // value.property_id.property_city.toLowerCase().includes(searchValue) ||
+        // value.property_id.property_locality.toLowerCase().includes(searchValue)
     );
-    setFilteredVideoConference(filtered);
+    setFilteredBookings(filtered);
   };
   const handleSelectionChange = (e) => {
     const selectedValue = e.target.value;
-    const filtered = VideoConference.filter((value) =>
-      value.vc_status.toLowerCase().includes(selectedValue.toLowerCase())
+    const filtered = PropertyBookings.filter((value) =>
+      value.status.toLowerCase().includes(selectedValue.toLowerCase())
     );
-    setFilteredVideoConference(filtered);
+    setFilteredBookings(filtered);
     setSelectedStatus(selectedValue);
   };
   function handleChangeDate(value) {
     setValue(value);
-    const filtered = VideoConference.filter(
-      (item) => item.vc_date.split("T")[0] === value.format("YYYY-MM-DD")
+    const filtered = PropertyBookings.filter(
+      (item) => item.booking_date.split("T")[0] === value.format("YYYY-MM-DD")
     );
-    setFilteredVideoConference(filtered);
+    setFilteredBookings(filtered);
   }
   return (
     <div>
-      <div className="mb-5 flex justify-center items-center flex-row w-full gap-6">
+      {/* <div className="mb-5 flex justify-center items-center flex-row w-full gap-6">
         <div class=" bg-white w-full md:w-1/2 mx-auto flex flex-row  items-center justify-center border py-2 px-2 rounded-2xl gap-2 shadow-2xl focus-within:border-gray-300">
           <input
             id="search-bar"
             placeholder="your keyword here"
             class="px-6 py-2 w-full rounded-md  outline-none bg-white"
             onInput={onChangeInput}
-            value={input2}
+            value={input3}
           />
         </div>
         <div className="flex items-center justify-center">
@@ -122,8 +119,8 @@ const VideoConfereneceTab = ({
             </PopoverContent>
           </Popover>
         </div>
-      </div>
-      {FilteredVideoConference && FilteredVideoConference.length === 0 ? (
+      </div> */}
+      {FilteredBookings && FilteredBookings.length === 0 ? (
         <NoBookings
           icon={
             <LuCalendarOff className="mx-auto h-56 w-auto text-black sm:h-64 dark:text-white" />
@@ -132,8 +129,9 @@ const VideoConfereneceTab = ({
       ) : (
         <div>
           <div className="flex flex-col gap-y-5 mt-5">
-            {FilteredVideoConference.map((value, key) => (
-              <VideoConferenceVisit key={key} value={value} />
+            {FilteredBookings.map((value, key) => (
+                // <PropertyBookingCard />
+                <PropertyBookingTabCard key={key} value={value} FilteredBookings={FilteredBookings} setSelectedPropertyData={setSelectedPropertyData} selectedTab={selectedTab}/>
             ))}
           </div>
         </div>
@@ -142,7 +140,7 @@ const VideoConfereneceTab = ({
   );
 };
 
-export default VideoConfereneceTab;
+export default PropertyBookingTab;
 
 const NoBookings = ({ icon }) => {
   return (

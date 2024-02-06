@@ -10,6 +10,7 @@ import ProfileUpdatePage from './Pages/ProfileUpdatePage';
 import SinglePropertyViewPage from './Pages/SinglePropertyViewPage';
 import AddProperty from './Pages/AddProperty';
 import Bookings from './Pages/Bookings';
+import BookingsLandlord from './Pages/BookingsLandlord';
 export   {
     LandingPage,
     SignUpPage,
@@ -23,4 +24,5 @@ export   {
     SinglePropertyViewPage,
     AddProperty,
     Bookings,
+    BookingsLandlord
 }

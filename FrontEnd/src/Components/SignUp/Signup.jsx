@@ -104,7 +104,7 @@ const Signup = () => {
       setprofileError(false);
       const data1 = { ...data, profile: imageURL };
       setloading(true);
-      const toastId = toast.loading('Booking your physical visit...');
+      const toastId = toast.loading('Registeringg...');
       try {
         const serverData = await axios.post(`${userServer}/register`, data1);
         if (serverData.data.success) {

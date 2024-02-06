@@ -33,6 +33,7 @@ const Details = ({
   const handleSubmit = async () => {
     if (isAuthenticated) {
       if (isAddressSet) {
+        const toastId = toast.loading('Booking your propertyyyy...');
         try {
           const data = { property_id: id, userid: user?.user?._id };
           const serverResponse = await axios.post(
@@ -40,11 +41,16 @@ const Details = ({
             data
           );
           if (serverResponse.data.success) {
-            toast.success(
-              "Your booking for physical visit has been done successfully!"
-            );
+            toast.success("Your booking for physical visit has been done successfully!", {
+              id: toastId,
+            });
           }
-        } catch (error) {}
+        } catch (error) {
+          console.log();
+          toast.error(error.response.data.message, {
+            id: toastId,
+          });
+        }
       } else {
         navigate("/profile-update", { state: { pathname } });
         toast.error("You need to first add your address!");

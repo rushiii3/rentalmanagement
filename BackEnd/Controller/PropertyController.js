@@ -2,18 +2,17 @@ const asyncHandler = require("express-async-handler");
 const mongoose = require("mongoose");
 const Property = require("../Models/PropertyModel");
 const Review = require('../Models/ReviewModel');
+const User = require("../Models/UserModel");
+const errorThrow = require("../Middleware/ErrorHandler");
 const AddProperty = asyncHandler(async (req, res, next) => {
   try {
     const data = req.body;
-    console.log(data);
     const imagesWithKeys = data?.ImageVideoData
     .filter(item => item.type === 'image')
-    .map(item => ({ url: item.url, key: item.publicKey }));
-  
+    .map(item => ({ url: item.url, publicKey: item.publicKey }));
   const videosWithKeys = data?.ImageVideoData
     .filter(item => item.type === 'video')
-    .map(item => ({ url: item.url, key: item.publicKey }));
-
+    .map(item => ({ url: item.url, publicKey: item.publicKey }));
     // Create a new property document
     const newProperty = new Property({
       building_name: data.buildingName,
@@ -202,10 +201,23 @@ const getSinglePropertyDetail = asyncHandler(async (req, res, next) => {
     next(error);
   }
 });
-
+const get_landlord_properties = asyncHandler(async(req,res,next)=>{
+  try {
+    const {id} = req.params;
+    const {_id} = await User.findOne({email:id});
+    if(!_id){
+      errorThrow('No user exists', 404);
+    }
+    const property = await Property.find({landlord_id:_id});
+    res.status(200).json({property});
+  } catch (error) {
+    next(error);
+  }
+})
 module.exports = {
   AddProperty,
   get_properties,
   properties_landmark,
-  getSinglePropertyDetail
+  getSinglePropertyDetail,
+  get_landlord_properties
 };

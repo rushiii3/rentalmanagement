@@ -6,7 +6,7 @@ const ChatDesign = () => {
         setIsMenuOpen(!isMenuOpen);
       };
   return (
-    <div className="fixed right-6 bottom-6 group z-50">
+    <div className="fixed right-6 bottom-20 group z-50">
       
       <div
         id="speed-dial-menu-click"
@@ -27,9 +27,14 @@ const ChatDesign = () => {
         aria-expanded={isMenuOpen}
         onClick={toggleMenu}
         name='ChatBotButton'
-        className="flex items-center justify-center ms-auto  text-white bg-white rounded-full w-14 h-14 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:focus:ring-blue-800 ring-blue-800"
-      >
-        <img src="https://s3.ap-south-1.amazonaws.com/custpostimages/sb_images/loading.gif" alt=""  className='w-14 h-14'/>
+        class="fixed bottom-4 right-4 inline-flex items-center justify-center text-sm font-medium disabled:pointer-events-none disabled:opacity-50 border rounded-full w-16 h-16 bg-black hover:bg-gray-700 m-0 cursor-pointer border-gray-200 bg-none p-0 normal-case leading-5 hover:text-gray-900"      >
+        {/* <img src="https://s3.ap-south-1.amazonaws.com/custpostimages/sb_images/loading.gif" alt=""  className='w-14 h-14'/> */}
+        <svg xmlns=" http://www.w3.org/2000/svg" width="30" height="40" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="text-white block border-gray-200 align-middle">
+      <path d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z" class="border-gray-200">
+      </path>
+    </svg>
       </button>
     </div>
   )

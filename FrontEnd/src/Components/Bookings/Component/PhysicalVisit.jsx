@@ -93,7 +93,6 @@ const PhysicalVisitTab = ({
                         </option>
                         <option value="Pending">Pending</option>
                         <option value="Completed">Completed</option>
-                        <option value="Booked">Booked</option>
                         <option value="Accepted">Accepted</option>
                         <option value="Rejected">Rejected</option>
                       </select>
