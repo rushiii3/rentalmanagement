@@ -44,7 +44,7 @@ const PropertyBookingTab = ({FilteredBookings,setFilteredBookings,setinput3,inpu
   }
   return (
     <div>
-      <div className="mb-5 flex justify-center items-center flex-row w-full gap-6">
+      {/* <div className="mb-5 flex justify-center items-center flex-row w-full gap-6">
         <div class=" bg-white w-full md:w-1/2 mx-auto flex flex-row  items-center justify-center border py-2 px-2 rounded-2xl gap-2 shadow-2xl focus-within:border-gray-300">
           <input
             id="search-bar"
@@ -119,7 +119,7 @@ const PropertyBookingTab = ({FilteredBookings,setFilteredBookings,setinput3,inpu
             </PopoverContent>
           </Popover>
         </div>
-      </div>
+      </div> */}
       {FilteredBookings && FilteredBookings.length === 0 ? (
         <NoBookings
           icon={

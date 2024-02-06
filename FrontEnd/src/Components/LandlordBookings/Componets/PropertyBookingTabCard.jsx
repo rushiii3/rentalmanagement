@@ -10,19 +10,35 @@ import {
 import toast from "react-hot-toast";
 const formatDateString = (dateString) => {
   const date = new Date(dateString);
-  return date.toLocaleDateString("en-US", {
+  date.setUTCHours(0, 0, 0, 0); // Set hours, minutes, seconds, and milliseconds to zero
+  return date.toLocaleDateString("en-IN", {
     year: "numeric",
     month: "short",
     day: "numeric",
   });
 };
+const convertToUTC = (dateString) => {
+  // Create a Date object from the input string
+  const date = new Date(dateString);
+
+  // Calculate the UTC timestamp by subtracting the timezone offset
+  const utcTimestamp = new Date(
+    date.getTime() - date.getTimezoneOffset() * 60000
+  );
+
+  // Convert the UTC timestamp to ISO 8601 format
+  const isoString = utcTimestamp.toISOString();
+
+  return isoString;
+};
+// Output: 2024-02-04T18:30:00.000Z
+
 const PropertyBookingTabCard = ({
   value,
   FilteredBookings,
   setSelectedPropertyData,
   selectedTab,
 }) => {
-  console.log(value);
   const status =
     selectedTab === "property_booking"
       ? value?.status
@@ -35,9 +51,9 @@ const PropertyBookingTabCard = ({
     selectedTab === "property_booking"
       ? value?.booking_date
       : selectedTab === "video_conference"
-      ? value?.addedAt
+      ? value?.vc_date
       : selectedTab === "physical_visit"
-      ? value?.addedAt
+      ? value?.pv_date
       : ""
   );
   const timestamp = new Date(
@@ -49,12 +65,12 @@ const PropertyBookingTabCard = ({
       ? value?.addedAt
       : ""
   );
-  const booking_date = selectedTab === "video_conference"
-  ? value?.vc_date
-  : selectedTab === "physical_visit"
-  ? value?.pv_date
-  : ""
-  console.log(booking_date);
+  const booking_date =
+    selectedTab === "video_conference"
+      ? value?.vc_date
+      : selectedTab === "physical_visit"
+      ? value?.pv_date
+      : "";
   const currentDate = new Date();
   const timeDifference = currentDate - timestamp;
 
@@ -74,7 +90,7 @@ const PropertyBookingTabCard = ({
     result = `${minutes} min`;
   }
   const handleStatus = async (id, type) => {
-    const toastId = toast.loading('Updating statuss....');
+    const toastId = toast.loading("Updating statuss....");
 
     try {
       const Response = await axios.put(
@@ -93,7 +109,7 @@ const PropertyBookingTabCard = ({
         }
       );
       if (Response.data.success) {
-        toast.success('Status updated successfully!!', {
+        toast.success("Status updated successfully!!", {
           id: toastId,
         });
         const indexOfObjectToUpdate = FilteredBookings.findIndex(
@@ -101,11 +117,11 @@ const PropertyBookingTabCard = ({
         );
         if (indexOfObjectToUpdate !== -1) {
           const updatedData = [...FilteredBookings];
-          if(selectedTab === "property_booking"){
+          if (selectedTab === "property_booking") {
             updatedData[indexOfObjectToUpdate].status = type;
-          }else if(selectedTab === "video_conference"){
+          } else if (selectedTab === "video_conference") {
             updatedData[indexOfObjectToUpdate].vc_status = type;
-          }else if(selectedTab === "physical_visit"){
+          } else if (selectedTab === "physical_visit") {
             updatedData[indexOfObjectToUpdate].pv_status = type;
           }
           setSelectedPropertyData(updatedData);
@@ -119,6 +135,7 @@ const PropertyBookingTabCard = ({
       });
     }
   };
+
 
   return (
     <div class="bg-white rounded-xl border shadow-md overflow-hidden ">
@@ -174,31 +191,40 @@ const PropertyBookingTabCard = ({
                     Reject
                   </Button>
                 </>
-              ) : status === "Accepted" && booking_date < currentDate ? (
-                <Chip color="primary" variant="flat">
-                  Accepted
-                </Chip>
-              ) : status === "Rejected" ?  (
-                <Chip color="danger" variant="flat">
-                  Rejected
-                </Chip>
-              ) : selectedTab !== "property_booking" && booking_date > currentDate && status === "Accepted"  ? (<>
-                <Button
-                  color="success"
-                  variant="bordered"
-                  onClick={() => handleStatus(value?._id, "Completed")}
-                >
-                  Complete
-                </Button>
-                <Button
-                  color="danger"
-                  variant="bordered"
-                  onClick={() => handleStatus(value?._id, "Incomplete")}
-                >
-                  Incomplete
-                </Button>
-              </>):"Completed" ? "hehe" : ""
-            }
+              )  : selectedTab !== "property_booking" &&
+                convertToUTC(currentDate) > booking_date &&
+                status === "Accepted" ? (
+                <>
+                  <Button
+                    color="success"
+                    variant="bordered"
+                    onClick={() => handleStatus(value?._id, "Completed")}
+                  >
+                    Complete
+                  </Button>
+                  <Button
+                    color="danger"
+                    variant="bordered"
+                    onClick={() => handleStatus(value?._id, "Incomplete")}
+                  >
+                    Incomplete
+                  </Button>
+                </>
+              ) :  status === "Accepted"  ? (
+              <Chip color="primary" variant="flat">
+                Accepted
+              </Chip>
+            ) : status === "Rejected" ? (
+              <Chip color="danger" variant="flat">
+                Rejected
+              </Chip>
+            ): status === "Completed" ? (
+              <Chip color="success" variant="flat">
+                Completed
+              </Chip> ): status === "Incomplete" ? (
+              <Chip color="warning" variant="flat">
+                Incomplete
+              </Chip>) : ""}
             </div>
           </div>
         </div>
