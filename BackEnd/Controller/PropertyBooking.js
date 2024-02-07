@@ -3,6 +3,7 @@ const asyncHandler = require("express-async-handler");
 const PropertyModel = require("../Models/UserModel");
 const BookingModel = require("../Models/PropertyBooking");
 const errorThrow = require("../Middleware/ErrorHandler");
+const LeaseAgreement = require("../Models/LeaseAgreement");
 const AddBooking = asyncHandler(async (req, res, next) => {
   try {
     const data = req.body;
@@ -94,8 +95,27 @@ const updateStatus = asyncHandler(async(req,res,next)=>{
       // If update_status is null, the document with the specified ID was not found
       return errorThrow("Failed to update property status! Booking not found.", 404);
     }
-  
-    res.status(200).json({ success: true });
+    if(type==="Accepted"){
+      const {user_id,property_id} = await BookingModel.findById(id);
+      const newLeaseAgreement = await LeaseAgreement.create({
+        user_id: user_id,
+        property_id: property_id,
+        lease_start_date: null,
+      lease_end_date: null,
+      rent_amount: null,
+      security_deposit: null,
+      aadhar_number: null,
+      agreement_doc: null
+      });
+      if(newLeaseAgreement){
+        res.status(200).json({ success: true });
+      }else{
+        errorThrow("Failed to update property status! Booking not found.", 404);
+      }
+    }else{
+      errorThrow("Failed to update property status! Booking not found.", 404);
+    }
+
   } catch (error) {
     // Handle other errors, e.g., database connection issues
     next(error);
