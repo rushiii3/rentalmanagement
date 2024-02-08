@@ -12,8 +12,17 @@ import {
 // import PropertyBookingCard from "../../Bookings/Component/PropertyBookingCard";
 import PropertyBookingTabCard from "./PropertyBookingTabCard";
 
-
-const PropertyBookingTab = ({FilteredBookings,setFilteredBookings,setinput3,input3, PropertyBookings,setSelectedPropertyData,selectedTab}) => {
+const PropertyBookingTab = ({
+  FilteredBookings,
+  setFilteredBookings,
+  setinput3,
+  input3,
+  PropertyBookings,
+  setSelectedPropertyData,
+  selectedTab,
+  PropertyData,
+  setPropertyData,
+}) => {
   const [SelectedStatus, setSelectedStatus] = useState("");
   const [Value, setValue] = useState(new Date());
   const onChangeInput = (e) => {
@@ -21,9 +30,9 @@ const PropertyBookingTab = ({FilteredBookings,setFilteredBookings,setinput3,inpu
     const searchValue = e.target.value.toLowerCase();
     const filtered = PropertyBookings.filter(
       (value) =>
-        value?.property_id?.property_state?.toLowerCase().includes(searchValue) 
-        // value.property_id.property_city.toLowerCase().includes(searchValue) ||
-        // value.property_id.property_locality.toLowerCase().includes(searchValue)
+        value?.property_id?.property_state?.toLowerCase().includes(searchValue)
+      // value.property_id.property_city.toLowerCase().includes(searchValue) ||
+      // value.property_id.property_locality.toLowerCase().includes(searchValue)
     );
     setFilteredBookings(filtered);
   };
@@ -130,8 +139,16 @@ const PropertyBookingTab = ({FilteredBookings,setFilteredBookings,setinput3,inpu
         <div>
           <div className="flex flex-col gap-y-5 mt-5">
             {FilteredBookings.map((value, key) => (
-                // <PropertyBookingCard />
-                <PropertyBookingTabCard key={key} value={value} FilteredBookings={FilteredBookings} setSelectedPropertyData={setSelectedPropertyData} selectedTab={selectedTab}/>
+              // <PropertyBookingCard />
+              <PropertyBookingTabCard
+                key={key}
+                value={value}
+                FilteredBookings={FilteredBookings}
+                setSelectedPropertyData={setSelectedPropertyData}
+                selectedTab={selectedTab}
+                PropertyData={PropertyData}
+                setPropertyData={setPropertyData}
+              />
             ))}
           </div>
         </div>

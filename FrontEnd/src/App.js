@@ -16,7 +16,8 @@ import {
   SinglePropertyViewPage,
   AddProperty,
   Bookings,
-  BookingsLandlord
+  BookingsLandlord,
+  ReportPage
 } from "./Routes";
 import NavbarShow from "./Components/Layouts/Headers/NavBarShow";
 import { Toaster } from "react-hot-toast";
@@ -25,6 +26,7 @@ import { LoadUser } from "./Redux/action/user";
 import Store from "./Redux/store";
 import ProtectedTenant from "./Protected/ProtectedTenant";
 import ProtectedLandlord from "./Protected/ProtectedLandlord";
+import Protected from "./Protected/Protected";
 function App() {
   const { mode } = useSelector((state) => state.mode);
 
@@ -64,7 +66,8 @@ function App() {
             <Route path="/add-property" element={<AddProperty />} />
             <Route path="/bookings" element={<ProtectedTenant><Bookings /></ProtectedTenant>} />
             <Route path="/property-bookings" element={<ProtectedLandlord><BookingsLandlord /></ProtectedLandlord>} />
-            
+            <Route path="/report" element={<Protected><ReportPage /></Protected>} />
+    
           </Routes>
         </BrowserRouter>
         <DarkMode />
