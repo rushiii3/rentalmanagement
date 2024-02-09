@@ -11,6 +11,8 @@ import SinglePropertyViewPage from './Pages/SinglePropertyViewPage';
 import AddProperty from './Pages/AddProperty';
 import Bookings from './Pages/Bookings';
 import BookingsLandlord from './Pages/BookingsLandlord';
+import ReportPage from './Pages/ReportPage.jsx';
+import VideoConferencePage from './Pages/VideoConferencePage.jsx';
 export   {
     LandingPage,
     SignUpPage,
@@ -24,5 +26,7 @@ export   {
     SinglePropertyViewPage,
     AddProperty,
     Bookings,
-    BookingsLandlord
+    BookingsLandlord,
+    ReportPage,
+    VideoConferencePage
 }

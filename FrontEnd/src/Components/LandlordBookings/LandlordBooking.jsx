@@ -41,13 +41,13 @@ const LandlordBooking = () => {
           const index = data.property.findIndex(
             (property) => !property.property_rented
           );
-          let targetId ;
-            console.log(index);
+          let targetId;
+          console.log(index);
           // Set selectedProperty only if there's a property with property_rented as false
           if (index !== -1) {
             targetId = property_ids[index];
             setSelectedProperty(property_ids[index]);
-          }else{
+          } else {
             targetId = property_ids[0];
             setSelectedProperty(property_ids[0]);
           }
@@ -88,18 +88,18 @@ const LandlordBooking = () => {
 
   const get_bookings = async (api) => {
     try {
-      let targetId ;
-        const index = PropertyData.findIndex(
-          (property) => !property.property_rented
-        );
-        console.log(index);
-        if (index !== -1) {
-          targetId = PropertyIDS[index];
-          setSelectedProperty(PropertyIDS[index]);
-        }else{
-          targetId = PropertyIDS[0];
-          setSelectedProperty(PropertyIDS[0]);
-        }
+      let targetId;
+      const index = PropertyData.findIndex(
+        (property) => !property.property_rented
+      );
+      console.log(index);
+      if (index !== -1) {
+        targetId = PropertyIDS[index];
+        setSelectedProperty(PropertyIDS[index]);
+      } else {
+        targetId = PropertyIDS[0];
+        setSelectedProperty(PropertyIDS[0]);
+      }
       const serverResponse = await axios.post(
         `${api}/get-bookings`,
         PropertyIDS
@@ -109,9 +109,7 @@ const LandlordBooking = () => {
         setPropertyBookings(dataResponse);
         if (dataResponse) {
           const targetPropertyBookings = dataResponse.find((item) =>
-            item.bookings.some(
-              (booking) => booking.property_id === targetId
-            )
+            item.bookings.some((booking) => booking.property_id === targetId)
           );
           if (targetPropertyBookings) {
             setSelectedPropertyData(targetPropertyBookings.bookings);
@@ -130,8 +128,7 @@ const LandlordBooking = () => {
       get_bookings(PropertyBookingServer);
     } else if (e === "physical_visit") {
       get_bookings(PhysicalVisitServer);
-    } 
-    else if (e === "video_conference") {
+    } else if (e === "video_conference") {
       get_bookings(VideoConferenceServer);
     }
   };
@@ -211,20 +208,22 @@ const LandlordBooking = () => {
               //     value?.property_rented
               // }
             >
-              { value?.property_rented 
-                  ?  <NotFound />  : SelectedPropertyData ? (
-                    <PropertyBookingTab
-                      PropertyBookings={PropertyData}
-                      setinput3={setinput3}
-                      input3={input3}
-                      FilteredBookings={SelectedPropertyData}
-                      setSelectedPropertyData={setSelectedPropertyData}
-                      selectedTab={selectedTab}
-                    />
-                  ) : (
-                    ""
-                  )
-              }
+              {value?.property_rented ? (
+                <NotFound />
+              ) : SelectedPropertyData ? (
+                <PropertyBookingTab
+                  PropertyBookings={PropertyData}
+                  setinput3={setinput3}
+                  input3={input3}
+                  FilteredBookings={SelectedPropertyData}
+                  setSelectedPropertyData={setSelectedPropertyData}
+                  selectedTab={selectedTab}
+                  PropertyData={PropertyData}
+                  setPropertyData={setPropertyData}
+                />
+              ) : (
+                ""
+              )}
             </Tab>
           ))}
         </Tabs>

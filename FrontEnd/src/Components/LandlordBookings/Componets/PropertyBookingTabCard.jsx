@@ -38,6 +38,8 @@ const PropertyBookingTabCard = ({
   FilteredBookings,
   setSelectedPropertyData,
   selectedTab,
+  PropertyData,
+  setPropertyData,
 }) => {
   const status =
     selectedTab === "property_booking"
@@ -115,10 +117,20 @@ const PropertyBookingTabCard = ({
         const indexOfObjectToUpdate = FilteredBookings.findIndex(
           (item) => item._id === id
         );
+        const indexOfObjectToUpdateProperty = PropertyData.findIndex(
+          (item) => item._id === value.property_id
+        );
         if (indexOfObjectToUpdate !== -1) {
           const updatedData = [...FilteredBookings];
+          const updatePropertyData = [...PropertyData];
           if (selectedTab === "property_booking") {
             updatedData[indexOfObjectToUpdate].status = type;
+            if (type === "Accepted") {
+              updatePropertyData[
+                indexOfObjectToUpdateProperty
+              ].property_rented = true;
+              setPropertyData(updatePropertyData);
+            }
           } else if (selectedTab === "video_conference") {
             updatedData[indexOfObjectToUpdate].vc_status = type;
           } else if (selectedTab === "physical_visit") {
@@ -135,7 +147,6 @@ const PropertyBookingTabCard = ({
       });
     }
   };
-
 
   return (
     <div class="bg-white rounded-xl border shadow-md overflow-hidden ">
@@ -191,7 +202,7 @@ const PropertyBookingTabCard = ({
                     Reject
                   </Button>
                 </>
-              )  : selectedTab !== "property_booking" &&
+              ) : selectedTab !== "property_booking" &&
                 convertToUTC(currentDate) > booking_date &&
                 status === "Accepted" ? (
                 <>
@@ -210,21 +221,25 @@ const PropertyBookingTabCard = ({
                     Incomplete
                   </Button>
                 </>
-              ) :  status === "Accepted"  ? (
-              <Chip color="primary" variant="flat">
-                Accepted
-              </Chip>
-            ) : status === "Rejected" ? (
-              <Chip color="danger" variant="flat">
-                Rejected
-              </Chip>
-            ): status === "Completed" ? (
-              <Chip color="success" variant="flat">
-                Completed
-              </Chip> ): status === "Incomplete" ? (
-              <Chip color="warning" variant="flat">
-                Incomplete
-              </Chip>) : ""}
+              ) : status === "Accepted" ? (
+                <Chip color="primary" variant="flat">
+                  Accepted
+                </Chip>
+              ) : status === "Rejected" ? (
+                <Chip color="danger" variant="flat">
+                  Rejected
+                </Chip>
+              ) : status === "Completed" ? (
+                <Chip color="success" variant="flat">
+                  Completed
+                </Chip>
+              ) : status === "Incomplete" ? (
+                <Chip color="warning" variant="flat">
+                  Incomplete
+                </Chip>
+              ) : (
+                ""
+              )}
             </div>
           </div>
         </div>

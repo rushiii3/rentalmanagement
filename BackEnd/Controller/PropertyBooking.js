@@ -1,8 +1,9 @@
 const UserModel = require("../Models/UserModel");
 const asyncHandler = require("express-async-handler");
-const PropertyModel = require("../Models/UserModel");
+const PropertyModel = require("../Models/PropertyModel");
 const BookingModel = require("../Models/PropertyBooking");
 const errorThrow = require("../Middleware/ErrorHandler");
+const LeaseAgreement = require("../Models/LeaseAgreement");
 const AddBooking = asyncHandler(async (req, res, next) => {
   try {
     const data = req.body;
@@ -30,12 +31,10 @@ const AddBooking = asyncHandler(async (req, res, next) => {
           booking.status === "Completed"
       );
       if (pendingBooking.length > 0) {
-        res
-          .status(400)
-          .json({
-            success: false,
-            message: `You already have a booking that is currently in a ${pendingBooking[0].status.toLocaleLowerCase()} status.`,
-          });
+        res.status(400).json({
+          success: false,
+          message: `You already have a booking that is currently in a ${pendingBooking[0].status.toLocaleLowerCase()} status.`,
+        });
       } else {
         AddData(data);
       }
@@ -69,41 +68,67 @@ const AddBooking = asyncHandler(async (req, res, next) => {
 const get_user_bookings_properties = asyncHandler(async (req, res, next) => {
   try {
     const ids = req.body;
-    const property_data = await Promise.all(ids.map(async (data) => {
-      const Bookings = await BookingModel.find({
-        property_id: data,
-      }).populate({
-        path: "user_id",
-        model:"User",
-        select: "-_id firstname lastname avatar",
-      });
-      return { bookings: Bookings };
-    }));
+    const property_data = await Promise.all(
+      ids.map(async (data) => {
+        const Bookings = await BookingModel.find({
+          property_id: data,
+        }).populate({
+          path: "user_id",
+          model: "User",
+          select: "-_id firstname lastname avatar",
+        });
+        return { bookings: Bookings };
+      })
+    );
     res.status(200).json({ success: true, property_data });
   } catch (error) {
     next(error);
   }
 });
 
-const updateStatus = asyncHandler(async(req,res,next)=>{
+const updateStatus = asyncHandler(async (req, res, next) => {
   try {
     const { id, type } = req.body;
-    const update_status = await BookingModel.findByIdAndUpdate(id, { status: type });
-  
+    const update_status = await BookingModel.findByIdAndUpdate(id, {
+      status: type,
+    });
+
     if (!update_status) {
       // If update_status is null, the document with the specified ID was not found
-      return errorThrow("Failed to update property status! Booking not found.", 404);
+      return errorThrow(
+        "Failed to update property status! Booking not found.",
+        404
+      );
     }
-  
-    res.status(200).json({ success: true });
+    if (type === "Accepted") {
+      const { user_id, property_id } = await BookingModel.findById(id);
+      const newLeaseAgreement = await LeaseAgreement.create({
+        user_id: user_id,
+        property_id: property_id,
+        lease_start_date: null,
+        lease_end_date: null,
+        rent_amount: null,
+        security_deposit: null,
+        aadhar_number: null,
+        agreement_doc: null,
+      });
+      const UpdatePropertyRent = await PropertyModel.findByIdAndUpdate(property_id,{property_rented:true});
+      if (newLeaseAgreement && UpdatePropertyRent) {
+        res.status(200).json({ success: true });
+      } else {
+        errorThrow("Failed to update lease and rent", 404);
+      }
+    } else {
+      res.status(200).json({ success: true });
+        }
   } catch (error) {
     // Handle other errors, e.g., database connection issues
     next(error);
   }
-})
+});
 
 module.exports = {
   AddBooking,
   get_user_bookings_properties,
-  updateStatus
+  updateStatus,
 };

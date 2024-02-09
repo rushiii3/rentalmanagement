@@ -85,6 +85,16 @@ const updateStatus = asyncHandler(async(req,res,next)=>{
   try {
     const { id, type } = req.body;
     const update_status = await VideoConference.findByIdAndUpdate(id, { vc_status: type });
+    if (type==="Accepted") {
+      let meetingId =  'xxxxyxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+    const update_link = await VideoConference.findByIdAndUpdate(id,{vc_link:meetingId});
+    if (update_status && update_link) {
+      res.status(200).json({ success: true });
+    }
+    }
     if (!update_status) {
       // If update_status is null, the document with the specified ID was not found
       return errorThrow("Failed to update property status! Booking not found.", 404);
