@@ -17,7 +17,8 @@ import {
   AddProperty,
   Bookings,
   BookingsLandlord,
-  ReportPage
+  ReportPage,
+  VideoConferencePage
 } from "./Routes";
 import NavbarShow from "./Components/Layouts/Headers/NavBarShow";
 import { Toaster } from "react-hot-toast";
@@ -67,7 +68,9 @@ function App() {
             <Route path="/bookings" element={<ProtectedTenant><Bookings /></ProtectedTenant>} />
             <Route path="/property-bookings" element={<ProtectedLandlord><BookingsLandlord /></ProtectedLandlord>} />
             <Route path="/report" element={<Protected><ReportPage /></Protected>} />
-    
+            <Route path="/video-conference" element={<Protected><VideoConferencePage /></Protected>} />
+
+            
           </Routes>
         </BrowserRouter>
         <DarkMode />

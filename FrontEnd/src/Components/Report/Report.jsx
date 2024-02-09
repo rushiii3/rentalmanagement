@@ -10,7 +10,7 @@ import {
   ModalFooter,
   Button,
   useDisclosure,
-  Textarea
+  Textarea,
 } from "@nextui-org/react";
 import { IoMdAdd } from "react-icons/io";
 import { CiSearch } from "react-icons/ci";
@@ -19,11 +19,14 @@ import { VscIssues } from "react-icons/vsc";
 import { BsFillBugFill } from "react-icons/bs";
 import { GrFan } from "react-icons/gr";
 import { Chip } from "@nextui-org/react";
+import { useSelector } from "react-redux";
 const Report = () => {
+  const { mode } = useSelector((state) => state.mode);
+
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const itemClasses = {
-    base: "py-0 w-full",
+    base: `py-0 w-full`,
     title: "font-normal text-medium  w-full line-clamp-1 hover:line-clamp-none	",
     trigger:
       "px-2 py-3 data-[hover=true]:bg-default-100 rounded-lg flex items-center",
@@ -41,19 +44,42 @@ const Report = () => {
           <Select
             label="Filter"
             // placeholder="Select an animal"
-            className="max-w-[130px]"
+             className={`${mode} max-w-[130px]` }
             radius="none"
+            classNames={
+              {
+                popoverContent:`${mode}`,
+              }
+            }
+            
+            
           >
-            <SelectItem key={2} value="Bug" startContent={<BsFillBugFill className="text-danger text-xl" />}>
+            <SelectItem
+              key={2}
+              value="Bug"
+              startContent={<BsFillBugFill className="text-danger text-xl" />}
+            >
               Bug
             </SelectItem>
-            <SelectItem key={3} value="Fraud" startContent={<SiHackaday className="text-violet-500 text-xl" />}>
+            <SelectItem
+              key={3}
+              value="Fraud"
+              startContent={<SiHackaday className="text-violet-500 text-xl" />}
+            >
               Fraud
             </SelectItem>
-            <SelectItem key={4} value="Issue" startContent={<VscIssues className="text-violet-500 text-xl" />}>
+            <SelectItem
+              key={4}
+              value="Issue"
+              startContent={<VscIssues className="text-violet-500 text-xl" />}
+            >
               Issue
             </SelectItem>
-            <SelectItem key={5} value="Other" startContent={<GrFan className="text-violet-500 text-xl" />}>
+            <SelectItem
+              key={5}
+              value="Other"
+              startContent={<GrFan className="text-violet-500 text-xl" />}
+            >
               Other
             </SelectItem>
           </Select>
@@ -78,11 +104,14 @@ const Report = () => {
           isOpen={isOpen}
           onOpenChange={onOpenChange}
           isDismissable={false}
+
+          className={mode}
+          backdrop="blur"
         >
           <ModalContent>
             {(onClose) => (
               <>
-                <ModalHeader className="flex flex-col gap-1">
+                <ModalHeader className="flex flex-col gap-1 ">
                   New Issue
                 </ModalHeader>
                 <ModalBody>
@@ -93,37 +122,72 @@ const Report = () => {
                         placeholder="Select your cateogry"
                         className="max-w-full items-center"
                         labelPlacement="outside"
+                        classNames={
+                          {
+                            popoverContent:`${mode}`,
+                          }
+                        }
                       >
-                        <SelectItem key={2} value={"h3h3"}>
-                          hehe
+                        <SelectItem
+                          key={2}
+                          value="Bug"
+                          startContent={
+                            <BsFillBugFill className="text-danger text-xl" />
+                          }
+                        >
+                          Bug
+                        </SelectItem>
+                        <SelectItem
+                          key={3}
+                          value="Fraud"
+                          startContent={
+                            <SiHackaday className="text-violet-500 text-xl" />
+                          }
+                        >
+                          Fraud
+                        </SelectItem>
+                        <SelectItem
+                          key={4}
+                          value="Issue"
+                          startContent={
+                            <VscIssues className="text-violet-500 text-xl" />
+                          }
+                        >
+                          Issue
+                        </SelectItem>
+                        <SelectItem
+                          key={5}
+                          value="Other"
+                          startContent={
+                            <GrFan className="text-violet-500 text-xl" />
+                          }
+                        >
+                          Other
                         </SelectItem>
                       </Select>
                     </div>
-              <div className="w-full">
-              <Input
-                      type="text"
-                      labelPlacement="outside"
-                      label="Title"
-                      placeholder="Enter your title"
-                      className="max-w-full items-center"
-                      fullWidth
-                      classNames={
-                        {
-                          mainWrapper:"w-full"
-                        }
-                      }
-                    />
-              </div>
-              <div>
-              <Textarea
-      isRequired
-      label="Description"
-      labelPlacement="outside"
-      placeholder="Enter your description"
-      className="max-w-full"
-    />
-              </div>
-                    
+                    <div className="w-full">
+                      <Input
+                        type="text"
+                        labelPlacement="outside"
+                        label="Title"
+                        placeholder="Enter your title"
+                        className="max-w-full items-center"
+                        fullWidth
+                        classNames={{
+                          mainWrapper: "w-full",
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <Textarea
+                        isRequired
+                        label="Description"
+                        labelPlacement="outside"
+                        placeholder="Enter your description"
+                        className="max-w-full"
+                      />
+                    </div>
                   </div>
                 </ModalBody>
                 <ModalFooter>
