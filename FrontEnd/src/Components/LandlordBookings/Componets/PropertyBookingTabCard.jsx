@@ -73,24 +73,30 @@ const PropertyBookingTabCard = ({
       : selectedTab === "physical_visit"
       ? value?.pv_date
       : "";
-  const currentDate = new Date();
-  const timeDifference = currentDate - timestamp;
-
-  // Calculate days, hours, and minutes
-  const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-  const hours = Math.floor(
-    (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-  );
-  const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
-  let result;
-
-  if (days > 0) {
-    result = `${days} days`;
-  } else if (hours > 0) {
-    result = `${hours} hrs`;
-  } else {
-    result = `${minutes} min`;
-  }
+      const currentDate = new Date();
+      const timeDifference = currentDate - timestamp;
+      
+      // Calculate days, hours, minutes, months, and years
+      const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+      const months = Math.floor(days / 30); // Approximate calculation
+      const years = Math.floor(months / 12); // Approximate calculation
+      
+      let result;
+      
+      if (years > 0) {
+        result = `${years} ${years > 1 ? 'years' : 'year'}`;
+      } else if (months > 0) {
+        result = `${months} ${months > 1 ? 'months' : 'month'}`;
+      } else if (days > 0) {
+        result = `${days} ${days > 1 ? 'days' : 'day'}`;
+      } else if (hours > 0) {
+        result = `${hours} ${hours > 1 ? 'hrs' : 'hr'}`;
+      } else {
+        result = `${minutes} ${minutes > 1 ? 'mins' : 'min'}`;
+      }
+      
   const handleStatus = async (id, type) => {
     const toastId = toast.loading("Updating statuss....");
 

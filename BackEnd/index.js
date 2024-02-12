@@ -11,9 +11,11 @@ const ReviewRouter = require("./Routes/ReviewRoutes");
 const PhysicalVisitRouter = require('./Routes/PhysicalVisitRoutes');
 const VideoConferenceRouter = require('./Routes/VideoConferenceRoutes');
 const PropertyBooking = require('./Routes/BookingRoutes');
+const Admin = require("./Routes/AdminRoute");
+const Report = require("./Routes/Report");
 const port = process.env.PORT || 4000;
 const MongoURL = process.env.MONGO_URL;
-const production = true;
+const production = false;
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -55,6 +57,8 @@ app.use("/api/v2/review", ReviewRouter);
 app.use("/api/v2/physical-visit", PhysicalVisitRouter);
 app.use("/api/v2/video-conference", VideoConferenceRouter);
 app.use("/api/v2/property-booking", PropertyBooking);
+app.use("/api/v2/admin", Admin);
+app.use("/api/v2/report", Report);
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   res
