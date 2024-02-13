@@ -18,7 +18,8 @@ import {
   Bookings,
   BookingsLandlord,
   ReportPage,
-  VideoConferencePage
+  VideoConferencePage,
+  AdminHomePage
 } from "./Routes";
 import NavbarShow from "./Components/Layouts/Headers/NavBarShow";
 import { Toaster } from "react-hot-toast";
@@ -70,6 +71,9 @@ function App() {
             <Route path="/report" element={<Protected><ReportPage /></Protected>} />
             <Route path="/video-conference" element={<Protected><VideoConferencePage /></Protected>} />
 
+            <Route path="/dashboard" element={<Protected><AdminHomePage /></Protected>} />
+
+            
             
           </Routes>
         </BrowserRouter>

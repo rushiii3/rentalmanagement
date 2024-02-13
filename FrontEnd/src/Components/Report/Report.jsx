@@ -52,6 +52,7 @@ const Report = () => {
   const [Loading, setLoading] = useState(false);
   const [SearchInput, setSearchInput] = useState("");
   const [SearchSelect, setSearchSelect] = useState("");
+  const [FilterData, setFilterData] = useState([]);
   const itemClasses = {
     base: `py-0 w-full`,
     title: "font-normal text-medium  w-full line-clamp-1 hover:line-clamp-none	",
@@ -69,24 +70,42 @@ const Report = () => {
       if (data.success) {
         setLoading(false);
         setReportData(data.report);
+        setFilterData(data.report);
       }
     };
     getData();
   }, []);
 
-  const ReportFilter = () => {
-    const filter = ReportData.filter((value) => value.report_title === SearchInput && value.report_type === SearchSelect);
-    console.log(filter);
-  }
-  
-  const handleSelection =(e) => {
-    setSearchSelect(e.target.value);
-    ReportFilter();
-  }
-  const handleInput = (e) => {
-    setSearchInput(e.target.value)
-    ReportFilter();
-  } 
+  const ReportFilter = (searchSelect, searchInput) => {
+    const filteredData = ReportData.filter((value) => {        
+        // Check if the report type matches the specified searchSelect
+        const isMatchingType = value.report_type === searchSelect;
+        
+        // Check if the report title contains the searchInput (case-insensitive)
+        const isMatchingTitle = value.report_title.toLowerCase().includes(searchInput.toLowerCase());
+        
+        // Return true only if both conditions are met
+        return isMatchingType && isMatchingTitle;
+    });
+    setFilterData(filteredData)
+
+}
+
+
+
+const handleSelection = (e) => {
+  const selectedValue = e.target.value;
+  setSearchSelect(prevSearchSelect => selectedValue);
+  ReportFilter(selectedValue, SearchInput);
+}
+
+const handleInput = (e) => {
+  const inputValue = e.target.value;
+  setSearchInput(prevSearchInput => inputValue);
+  ReportFilter(SearchSelect, inputValue);
+}
+
+
   return (
     <>
     {
@@ -127,17 +146,17 @@ const Report = () => {
             
           />
         </div>
-        <ReportForm setReportData={setReportData} ReportData={ReportData} types={types}/>
+        <ReportForm setReportData={setReportData} ReportData={ReportData} types={types} setFilterData={setFilterData} FilterData={FilterData}/>
       </div>
-      {ReportData && ReportData.length !== 0 ? (
+      {FilterData && FilterData.length !== 0 ? (
         <Accordion
           showDivider={false}
           className="p-2 flex flex-col gap-1 w-full mt-5"
           variant="shadow"
           itemClasses={itemClasses}
         >
-          {ReportData && ReportData.length !== 0
-  ? ReportData.map((value, key) => {
+          {FilterData && FilterData.length !== 0
+  ? FilterData.map((value, key) => {
       const timestamp = new Date(value?.report_date);
       const currentDate = new Date();
       const timeDifference = currentDate - timestamp;
@@ -163,8 +182,6 @@ const Report = () => {
         result = `${minutes} ${minutes > 1 ? 'mins' : 'min'}`;
       }
       const icon = typesAccord.find((item) => item.name === value?.report_type)?.icon || null;
-      console.log(icon);
-      console.log(value?.report_title);
       return (
         <AccordionItem
           key={key}

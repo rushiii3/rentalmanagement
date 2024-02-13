@@ -10,7 +10,7 @@ const newAdmin = new Admin({
     email: "admin@gmail.com",
     phoneNumber: "1234567890",
     role: "A", // Assuming "A" is for admin role
-    password: "admin",
+    password: "adminadmin",
     avatar: {
       public_id: "your_public_id",
       url: "your_avatar_url",
