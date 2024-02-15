@@ -1,425 +1,636 @@
-import React from 'react'
+import React from "react";
+import Clients from "./Components/Clients";
 
 const AdminHome = () => {
   return (
-    <div class="antialiased bg-gray-300 dark:bg-zinc-950 w-full min-h-screen text-slate-300 relative py-1">
-    <div class="grid grid-cols-12 mx-auto gap-2 sm:gap-4 md:gap-6 lg:gap-10 xl:gap-14 max-w-7xl my-10 px-2">
-        {/* <div id="menu" class="bg-white/10 col-span-3 rounded-lg p-4 ">
-            <h1 class="font-bold text-lg lg:text-3xl bg-gradient-to-br from-white via-white/50 to-transparent bg-clip-text text-transparent">Dashboard<span class="text-indigo-400">.</span></h1>
-            <p class="text-slate-400 text-sm mb-2">Welcome back,</p>
-            <a href="#" class="flex flex-col space-y-2 md:space-y-0 md:flex-row mb-5 items-center md:space-x-2 hover:bg-white/10 group transition duration-150 ease-linear rounded-lg group w-full py-3 px-2">
+    <>
+      <section class="p-6 dark:bg-zinc-950 bg-gray-50">
+        <section class=" mb-6 flex items-center justify-between">
+          <div class="flex items-center justify-start">
+            <span class="inline-flex justify-center items-center w-12 h-12 rounded-full bg-white text-black dark:bg-slate-900/70 dark:text-white mr-3">
+              <svg
+                viewBox="0 0 24 24"
+                width="24"
+                height="24"
+                class="inline-block"
+              >
+                <path
+                  fill="currentColor"
+                  d="M3,14L3.5,14.07L8.07,9.5C7.89,8.85 8.06,8.11 8.59,7.59C9.37,6.8 10.63,6.8 11.41,7.59C11.94,8.11 12.11,8.85 11.93,9.5L14.5,12.07L15,12C15.18,12 15.35,12 15.5,12.07L19.07,8.5C19,8.35 19,8.18 19,8A2,2 0 0,1 21,6A2,2 0 0,1 23,8A2,2 0 0,1 21,10C20.82,10 20.65,10 20.5,9.93L16.93,13.5C17,13.65 17,13.82 17,14A2,2 0 0,1 15,16A2,2 0 0,1 13,14L13.07,13.5L10.5,10.93C10.18,11 9.82,11 9.5,10.93L4.93,15.5L5,16A2,2 0 0,1 3,18A2,2 0 0,1 1,16A2,2 0 0,1 3,14Z"
+                ></path>
+              </svg>
+            </span>
+            <h1 class="leading-tight text-3xl">Overview</h1>
+          </div>
+          <a
+            target="_blank"
+            class="inline-flex justify-center items-center whitespace-nowrap focus:outline-none transition-colors focus:ring duration-150 border cursor-pointer rounded-full border-gray-800 dark:border-white ring-gray-300 dark:ring-gray-400 bg-gray-800 text-white dark:bg-white dark:text-black hover:bg-gray-700 hover:dark:bg-slate-100  text-sm px-3 py-1"
+            href="https://github.com/justboil/admin-one-react-tailwind"
+          >
+            <span class="inline-flex justify-center items-center w-6 h-6 ">
+              <svg
+                viewBox="0 0 24 24"
+                width="16"
+                height="16"
+                class="inline-block"
+              >
+                <path
+                  fill="currentColor"
+                  d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z"
+                ></path>
+              </svg>
+            </span>
+            <span class="px-1">Star on GitHub</span>
+          </a>
+        </section>
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-3 mb-6">
+          <div class="bg-white flex  rounded-2xl flex-col dark:bg-slate-900/70">
+            <div class="flex-1 p-6 undefined">
+              <div class="flex items-center justify-between mb-3">
+                <div class="inline-flex items-center capitalize leading-none text-xs border rounded-full py-1 px-3 bg-emerald-500 border-emerald-500 text-white ">
+                  <span class="inline-flex justify-center items-center w-4 h-4 mr-1">
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="14"
+                      height="14"
+                      class="inline-block"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M7.41,15.41L12,10.83L16.59,15.41L18,14L12,8L6,14L7.41,15.41Z"
+                      ></path>
+                    </svg>
+                  </span>
+                  <span>12%</span>
+                </div>
+                <button
+                  class="inline-flex justify-center items-center whitespace-nowrap focus:outline-none transition-colors focus:ring duration-150 border cursor-pointer rounded border-gray-100 dark:border-slate-800 ring-gray-200 dark:ring-gray-500 bg-gray-100 text-black dark:bg-slate-800 dark:text-white hover:bg-gray-200 hover:dark:bg-slate-700  p-1"
+                  type="button"
+                >
+                  <span class="inline-flex justify-center items-center w-6 h-6 ">
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="16"
+                      height="16"
+                      class="inline-block"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"
+                      ></path>
+                    </svg>
+                  </span>
+                </button>
+              </div>
+              <div class="flex items-center justify-between">
                 <div>
-                    <img class="rounded-full w-10 h-10 relative object-cover" src="https://img.freepik.com/free-photo/no-problem-concept-bearded-man-makes-okay-gesture-has-everything-control-all-fine-gesture-wears-spectacles-jumper-poses-against-pink-wall-says-i-got-this-guarantees-something_273609-42817.jpg?w=1800&t=st=1669749937~exp=1669750537~hmac=4c5ab249387d44d91df18065e1e33956daab805bee4638c7fdbf83c73d62f125" alt="" />
+                  <h3 class="text-lg leading-tight text-gray-500 dark:text-slate-400">
+                    Clients
+                  </h3>
+                  <h1 class="text-3xl leading-tight font-semibold">
+                    <div>512</div>
+                  </h1>
                 </div>
-                <div>
-                    <p class="font-medium group-hover:text-indigo-400 leading-4">Jim Smith</p>
-                    <span class="text-xs text-slate-400">Pantazi LLC</span>
-                </div>
-            </a>
-            <hr class="my-2 border-slate-700" />
-            <div id="menu" class="flex flex-col space-y-2 my-5">
-                <a href="#" class="hover:bg-white/10 transition duration-150 ease-linear rounded-lg py-3 px-2 group">
-                    <div class="flex flex-col space-y-2 md:flex-row md:space-y-0 space-x-2 items-center">
-                        <div>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 group-hover:text-indigo-400">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
-                              </svg>
-                              
-                        </div>
-                        <div>
-                            <p class="font-bold text-base lg:text-lg text-slate-200 leading-4 group-hover:text-indigo-400">Dashboard</p>
-                        <p class="text-slate-400 text-sm hidden md:block">Data overview</p>
-                        </div>
-                        
-                    </div>
-                </a>
-                <a href="#" class="hover:bg-white/10 transition duration-150 ease-linear rounded-lg py-3 px-2 group">
-                    <div class="relative flex flex-col space-y-2 md:flex-row md:space-y-0 space-x-2 items-center">
-                        <div>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 group-hover:text-indigo-400">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                              </svg>                              
-                        </div>
-                        <div>
-                            <p class="font-bold text-base lg:text-lg text-slate-200 leading-4 group-hover:text-indigo-400">Invoices</p>
-                        <p class="text-slate-400 text-sm hidden md:block">Manage invoices</p>
-                        </div>
-                        <div class="absolute -top-3 -right-3 md:top-0 md:right-0 px-2 py-1.5 rounded-full bg-indigo-800 text-xs font-mono font-bold">23</div>
-                    </div>
-                </a>
-                <a href="#" class="hover:bg-white/10 transition duration-150 ease-linear rounded-lg py-3 px-2 group">
-                    <div class="flex flex-col space-y-2 md:flex-row md:space-y-0 space-x-2 items-center">
-                        <div>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 group-hover:text-indigo-400">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
-                              </svg>                              
-                        </div>
-                        <div>
-                            <p class="font-bold text-base lg:text-lg text-slate-200 leading-4 group-hover:text-indigo-400">Users</p>
-                        <p class="text-slate-400 text-sm hidden md:block">Manage users</p>
-                        </div>
-                        
-                    </div>
-                </a>
-                <a href="#" class="hover:bg-white/10 transition duration-150 ease-linear rounded-lg py-3 px-2 group">
-                    <div class="flex flex-col space-y-2 md:flex-row md:space-y-0 space-x-2 items-center">
-                        <div>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 group-hover:text-indigo-400">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                              </svg>
-                                
-                        </div>
-                        <div>
-                            <p class="font-bold text-base lg:text-lg text-slate-200 leading-4 group-hover:text-indigo-400">Settings</p>
-                        <p class="text-slate-400 text-sm hidden md:block">Edit settings</p>
-                        </div>
-                        
-                    </div>
-                </a>
-            </div>
-            <p class="text-sm text-center text-gray-600">v2.0.0.3 | &copy; 2022 Pantazi Soft</p>
-        </div> */}
-        <div id="content" class="dark:bg-white/10 bg-gray-300 col-span-12 rounded-lg p-6">
-            <div id="24h">
-                <h1 class="font-bold py-4 uppercase">Last 24h Statistics</h1>
-                <div id="stats" class="grid gird-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div class="dark:bg-zinc-950 to-white/5 p-6 rounded-lg">
-                        <div class="flex flex-row space-x-4 items-center">
-                            <div id="stats-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 text-white">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
-                                  </svg>
-                            </div>
-                            <div>
-                                <p class="text-indigo-300 text-sm font-medium uppercase leading-4">Users</p>
-                                <p class="text-white font-bold text-2xl inline-flex items-center space-x-2">
-                                    <span>+28</span>
-                                    <span>
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
-                                          </svg>
-                                          
-                                    </span>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="dark:bg-zinc-950 p-6 rounded-lg">
-                        <div class="flex flex-row space-x-4 items-center">
-                            <div id="stats-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 text-white">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                  </svg>
-                                  
-                            </div>
-                            <div>
-                                <p class="text-teal-300 text-sm font-medium uppercase leading-4">Income</p>
-                                <p class="text-white font-bold text-2xl inline-flex items-center space-x-2">
-                                    <span>$2,873.88</span>
-                                    <span>
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
-                                          </svg>
-                                          
-                                    </span>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="dark:bg-zinc-950 p-6 rounded-lg">
-                        <div class="flex flex-row space-x-4 items-center">
-                            <div id="stats-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 text-white">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                                  </svg>
-                                  
-                            </div>
-                            <div>
-                                <p class="text-blue-300 text-sm font-medium uppercase leading-4">Invoices</p>
-                                <p class="text-white font-bold text-2xl inline-flex items-center space-x-2">
-                                    <span>+79</span>
-                                    <span>
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
-                                          </svg>
-                                          
-                                    </span>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="last-incomes">
-                <h1 class="font-bold py-4 uppercase">Last 24h incomes</h1>
-                <div id="stats" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                    <div class="bg-black/60 to-white/5 rounded-lg">
-                            <div class="flex flex-row items-center">
-                                <div class="text-3xl p-4">💰</div>
-                                <div class="p-2">
-                                    <p class="text-xl font-bold">348$</p>
-                                    <p class="text-gray-500 font-medium">Amber Gates</p>
-                                    <p class="text-gray-500 text-sm">24 Nov 2022</p>
-                                </div>
-                            </div>
-                            <div class="border-t border-white/5 p-4">
-                                <a href="#" class="inline-flex space-x-2 items-center text-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
-                                      </svg>
-                                      <span>Info</span>                                      
-                                </a>
-                            </div>
-                    </div>
-                    <div class="bg-black/60 to-white/5 rounded-lg">
-                        <div class="flex flex-row items-center">
-                            <div class="text-3xl p-4">💰</div>
-                            <div class="p-2">
-                                <p class="text-xl font-bold">68$</p>
-                                <p class="text-gray-500 font-medium">Maia Kipper</p>
-                                <p class="text-gray-500 text-sm">23 Nov 2022</p>
-                            </div>
-                        </div>
-                        <div class="border-t border-white/5 p-4">
-                            <a href="#" class="inline-flex space-x-2 items-center text-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
-                                  </svg>
-                                  <span>Info</span>                                      
-                            </a>
-                        </div>
-                </div>
-                <div class="bg-black/60 to-white/5 rounded-lg">
-                    <div class="flex flex-row items-center">
-                        <div class="text-3xl p-4">💰</div>
-                        <div class="p-2">
-                            <p class="text-xl font-bold">12$</p>
-                            <p class="text-gray-500 font-medium">Oprah Milles</p>
-                            <p class="text-gray-500 text-sm">23 Nov 2022</p>
-                        </div>
-                    </div>
-                    <div class="border-t border-white/5 p-4">
-                        <a href="#" class="inline-flex space-x-2 items-center text-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
-                              </svg>
-                              <span>Info</span>                                      
-                        </a>
-                    </div>
-            </div>
-            <div class="bg-black/60 to-white/5 rounded-lg">
-                <div class="flex flex-row items-center">
-                    <div class="text-3xl p-4">💰</div>
-                    <div class="p-2">
-                        <p class="text-xl font-bold">105$</p>
-                        <p class="text-gray-500 font-medium">Jonny Nite</p>
-                        <p class="text-gray-500 text-sm">23 Nov 2022</p>
-                    </div>
-                </div>
-                <div class="border-t border-white/5 p-4">
-                    <a href="#" class="inline-flex space-x-2 items-center text-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
-                          </svg>
-                          <span>Info</span>                                      
-                    </a>
-                </div>
-        </div>
-        <div class="bg-black/60 to-white/5 rounded-lg">
-            <div class="flex flex-row items-center">
-                <div class="text-3xl p-4">💰</div>
-                <div class="p-2">
-                    <p class="text-xl font-bold">52$</p>
-                    <p class="text-gray-500 font-medium">Megane Baile</p>
-                    <p class="text-gray-500 text-sm">22 Nov 2022</p>
-                </div>
-            </div>
-            <div class="border-t border-white/5 p-4">
-                <a href="#" class="inline-flex space-x-2 items-center text-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
-                      </svg>
-                      <span>Info</span>                                      
-                </a>
-            </div>
-    </div>
-    <div class="bg-black/60 to-white/5 rounded-lg">
-        <div class="flex flex-row items-center">
-            <div class="text-3xl p-4">💰</div>
-            <div class="p-2">
-                <p class="text-xl font-bold">28$</p>
-                <p class="text-gray-500 font-medium">Tony Ankel</p>
-                <p class="text-gray-500 text-sm">22 Nov 2022</p>
-            </div>
-        </div>
-        <div class="border-t border-white/5 p-4">
-            <a href="#" class="inline-flex space-x-2 items-center text-center">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                <span class="inline-flex justify-center items-center  h-16 text-emerald-500">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="48"
+                    height="48"
+                    class="inline-block"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M16 17V19H2V17S2 13 9 13 16 17 16 17M12.5 7.5A3.5 3.5 0 1 0 9 11A3.5 3.5 0 0 0 12.5 7.5M15.94 13A5.32 5.32 0 0 1 18 17V19H22V17S22 13.37 15.94 13M15 4A3.39 3.39 0 0 0 13.07 4.59A5 5 0 0 1 13.07 10.41A3.39 3.39 0 0 0 15 11A3.5 3.5 0 0 0 15 4Z"
+                    ></path>
                   </svg>
-                  <span>Info</span>                                      
-            </a>
-        </div>
-</div>
-                </div>
+                </span>
+              </div>
             </div>
-            <div id="last-users">
-                <h1 class="font-bold py-4 uppercase">Last 24h users</h1>
-                <div class="overflow-x-scroll">
-                    <table class="w-full whitespace-nowrap">
-                        <thead class="bg-black/60">
-                            <th class="text-left py-3 px-2 rounded-l-lg">Name</th>
-                            <th class="text-left py-3 px-2">Email</th>
-                            <th class="text-left py-3 px-2">Group</th>
-                            <th class="text-left py-3 px-2">Status</th>
-                            <th class="text-left py-3 px-2 rounded-r-lg">Actions</th>
-                        </thead>
-                        <tr class="border-b border-gray-700">
-                            <td class="py-3 px-2 font-bold">
-                                <div class="inline-flex space-x-3 items-center">
-                                    <span><img class="rounded-full w-8 h-8" src="https://images.generated.photos/tGiLEDiAbS6NdHAXAjCfpKoW05x2nq70NGmxjxzT5aU/rs:fit:256:256/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/OTM4ODM1LmpwZw.jpg" alt="" /></span>
-                                    <span>Thai Mei</span>
-                                </div>
-                            </td>
-                            <td class="py-3 px-2">thai.mei@abc.com</td>
-                            <td class="py-3 px-2">User</td>
-                            <td class="py-3 px-2">Approved</td>
-                            <td class="py-3 px-2">
-                                <div class="inline-flex items-center space-x-3">
-                                    <a href="" title="Edit" class="hover:text-white"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-                                      </svg>
-                                      </a>
-                                    <a href="" title="Edit password" class="hover:text-white"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-                                      </svg>
-                                      </a>
-                                    <a href="" title="Suspend user" class="hover:text-white"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
-                                      </svg>
-                                      </a>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="border-b border-gray-700">
-                            <td class="py-3 px-2 font-bold">
-                                <div class="inline-flex space-x-3 items-center">
-                                    <span><img class="rounded-full w-8 h-8" src="https://images.generated.photos/tGiLEDiAbS6NdHAXAjCfpKoW05x2nq70NGmxjxzT5aU/rs:fit:256:256/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/OTM4ODM1LmpwZw.jpg" alt="" /></span>
-                                    <span>Thai Mei</span>
-                                </div>
-                            </td>
-                            <td class="py-3 px-2">thai.mei@abc.com</td>
-                            <td class="py-3 px-2">User</td>
-                            <td class="py-3 px-2">Approved</td>
-                            <td class="py-3 px-2">
-                                <div class="inline-flex items-center space-x-3">
-                                    <a href="" title="Edit" class="hover:text-white"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-                                      </svg>
-                                      </a>
-                                    <a href="" title="Edit password" class="hover:text-white"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-                                      </svg>
-                                      </a>
-                                    <a href="" title="Suspend user" class="hover:text-white"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
-                                      </svg>
-                                      </a>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="border-b border-gray-700">
-                            <td class="py-3 px-2 font-bold">
-                                <div class="inline-flex space-x-3 items-center">
-                                    <span><img class="rounded-full w-8 h-8" src="https://images.generated.photos/tGiLEDiAbS6NdHAXAjCfpKoW05x2nq70NGmxjxzT5aU/rs:fit:256:256/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/OTM4ODM1LmpwZw.jpg" alt="" /></span>
-                                    <span>Thai Mei</span>
-                                </div>
-                            </td>
-                            <td class="py-3 px-2">thai.mei@abc.com</td>
-                            <td class="py-3 px-2">User</td>
-                            <td class="py-3 px-2">Approved</td>
-                            <td class="py-3 px-2">
-                                <div class="inline-flex items-center space-x-3">
-                                    <a href="" title="Edit" class="hover:text-white"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-                                      </svg>
-                                      </a>
-                                    <a href="" title="Edit password" class="hover:text-white"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-                                      </svg>
-                                      </a>
-                                    <a href="" title="Suspend user" class="hover:text-white"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
-                                      </svg>
-                                      </a>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="border-b border-gray-700">
-                            <td class="py-3 px-2 font-bold">
-                                <div class="inline-flex space-x-3 items-center">
-                                    <span><img class="rounded-full w-8 h-8" src="https://images.generated.photos/niCVbIBAm4hahzwS83HoEtcVEIactkKohOzgXWYY4lM/rs:fit:256:256/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/NTk4ODczLmpwZw.jpg" alt="" /></span>
-                                    <span>Marquez Spineli</span>
-                                </div>
-                            </td>
-                            <td class="py-3 px-2">marquez.spineli@cba.com</td>
-                            <td class="py-3 px-2">User</td>
-                            <td class="py-3 px-2">Approved</td>
-                            <td class="py-3 px-2">
-                                <div class="inline-flex items-center space-x-3">
-                                    <a href="" title="Edit" class="hover:text-white"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-                                      </svg>
-                                      </a>
-                                    <a href="" title="Edit password" class="hover:text-white"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-                                      </svg>
-                                      </a>
-                                    <a href="" title="Suspend user" class="hover:text-white"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
-                                      </svg>
-                                      </a>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="border-b border-gray-800">
-                            <td class="py-3 px-2 font-bold">
-                                <div class="inline-flex space-x-3 items-center">
-                                    <span><img class="rounded-full w-8 h-8" src="https://images.generated.photos/f_xU7q780YXiKG7IwKVV05eU6Sj2nIodEkN1S8GyM2M/rs:fit:256:256/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/NDk2MTc4LmpwZw.jpg" alt="" /></span>
-                                    <span>Mark Spike</span>
-                                </div>
-                            </td>
-                            <td class="py-3 px-2">mark.spike@abc.com</td>
-                            <td class="py-3 px-2">Administrator</td>
-                            <td class="py-3 px-2">Approved</td>
-                            <td class="py-3 px-2">
-                                <div class="inline-flex items-center space-x-3">
-                                    <a href="" title="Edit" class="hover:text-white"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-                                      </svg>
-                                      </a>
-                                    <a href="" title="Edit password" class="hover:text-white"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-                                      </svg>
-                                      </a>
-                                    <a href="" title="Suspend user" class="hover:text-white"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
-                                      </svg>
-                                      </a>
-                                </div>
-                            </td>
-                        </tr>
+          </div>
+          <div class="bg-white flex  rounded-2xl flex-col dark:bg-slate-900/70">
+            <div class="flex-1 p-6 undefined">
+              <div class="flex items-center justify-between mb-3">
+                <div class="inline-flex items-center capitalize leading-none text-xs border rounded-full py-1 px-3 bg-red-500 border-red-500 text-white ">
+                  <span class="inline-flex justify-center items-center w-4 h-4 mr-1">
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="14"
+                      height="14"
+                      class="inline-block"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"
+                      ></path>
+                    </svg>
+                  </span>
+                  <span>16%</span>
+                </div>
+                <button
+                  class="inline-flex justify-center items-center whitespace-nowrap focus:outline-none transition-colors focus:ring duration-150 border cursor-pointer rounded border-gray-100 dark:border-slate-800 ring-gray-200 dark:ring-gray-500 bg-gray-100 text-black dark:bg-slate-800 dark:text-white hover:bg-gray-200 hover:dark:bg-slate-700  p-1"
+                  type="button"
+                >
+                  <span class="inline-flex justify-center items-center w-6 h-6 ">
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="16"
+                      height="16"
+                      class="inline-block"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"
+                      ></path>
+                    </svg>
+                  </span>
+                </button>
+              </div>
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="text-lg leading-tight text-gray-500 dark:text-slate-400">
+                    Sales
+                  </h3>
+                  <h1 class="text-3xl leading-tight font-semibold">
+                    <div>$7,770</div>
+                  </h1>
+                </div>
+                <span class="inline-flex justify-center items-center  h-16 text-blue-500">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="48"
+                    height="48"
+                    class="inline-block"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M17,18A2,2 0 0,1 19,20A2,2 0 0,1 17,22C15.89,22 15,21.1 15,20C15,18.89 15.89,18 17,18M1,2H4.27L5.21,4H20A1,1 0 0,1 21,5C21,5.17 20.95,5.34 20.88,5.5L17.3,11.97C16.96,12.58 16.3,13 15.55,13H8.1L7.2,14.63L7.17,14.75A0.25,0.25 0 0,0 7.42,15H19V17H7C5.89,17 5,16.1 5,15C5,14.65 5.09,14.32 5.24,14.04L6.6,11.59L3,4H1V2M7,18A2,2 0 0,1 9,20A2,2 0 0,1 7,22C5.89,22 5,21.1 5,20C5,18.89 5.89,18 7,18M16,11L18.78,6H6.14L8.5,11H16Z"
+                    ></path>
+                  </svg>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white flex  rounded-2xl flex-col dark:bg-slate-900/70">
+            <div class="flex-1 p-6 undefined">
+              <div class="flex items-center justify-between mb-3">
+                <div class="inline-flex items-center capitalize leading-none text-xs border rounded-full py-1 px-3 bg-yellow-500 border-yellow-500 text-white ">
+                  <span class="inline-flex justify-center items-center w-4 h-4 mr-1">
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="14"
+                      height="14"
+                      class="inline-block"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M11,15H13V17H11V15M11,7H13V13H11V7M12,2C6.47,2 2,6.5 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20Z"
+                      ></path>
+                    </svg>
+                  </span>
+                  <span>Overflow</span>
+                </div>
+                <button
+                  class="inline-flex justify-center items-center whitespace-nowrap focus:outline-none transition-colors focus:ring duration-150 border cursor-pointer rounded border-gray-100 dark:border-slate-800 ring-gray-200 dark:ring-gray-500 bg-gray-100 text-black dark:bg-slate-800 dark:text-white hover:bg-gray-200 hover:dark:bg-slate-700  p-1"
+                  type="button"
+                >
+                  <span class="inline-flex justify-center items-center w-6 h-6 ">
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="16"
+                      height="16"
+                      class="inline-block"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"
+                      ></path>
+                    </svg>
+                  </span>
+                </button>
+              </div>
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="text-lg leading-tight text-gray-500 dark:text-slate-400">
+                    Performance
+                  </h3>
+                  <h1 class="text-3xl leading-tight font-semibold">
+                    <div>256%</div>
+                  </h1>
+                </div>
+                <span class="inline-flex justify-center items-center  h-16 text-red-500">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="48"
+                    height="48"
+                    class="inline-block"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M3,14L3.5,14.07L8.07,9.5C7.89,8.85 8.06,8.11 8.59,7.59C9.37,6.8 10.63,6.8 11.41,7.59C11.94,8.11 12.11,8.85 11.93,9.5L14.5,12.07L15,12C15.18,12 15.35,12 15.5,12.07L19.07,8.5C19,8.35 19,8.18 19,8A2,2 0 0,1 21,6A2,2 0 0,1 23,8A2,2 0 0,1 21,10C20.82,10 20.65,10 20.5,9.93L16.93,13.5C17,13.65 17,13.82 17,14A2,2 0 0,1 15,16A2,2 0 0,1 13,14L13.07,13.5L10.5,10.93C10.18,11 9.82,11 9.5,10.93L4.93,15.5L5,16A2,2 0 0,1 3,18A2,2 0 0,1 1,16A2,2 0 0,1 3,14Z"
+                    ></path>
+                  </svg>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <div class="flex flex-col justify-between">
+            <div class="bg-white flex mb-6 last:mb-0 rounded-2xl flex-col dark:bg-slate-900/70">
+              <div class="flex-1 p-6 undefined">
+                <div class="flex flex-col md:flex-row items-center justify-between">
+                  <div class="flex flex-col md:flex-row items-center justify-start mb-6 md:mb-0">
+                    <span class="inline-flex justify-center items-center w-12 h-12 rounded-full text-emerald-500 bg-gray-50 dark:bg-slate-800 md:mr-6 mb-6 md:mb-0">
+                      <svg
+                        viewBox="0 0 24 24"
+                        width="24"
+                        height="24"
+                        class="inline-block"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M15 15V17H18V20H20V17H23V15H20V12H18V15M14.97 11.61C14.85 10.28 13.59 8.97 12 9C10.3 9.03 9 10.3 9 12C9 13.7 10.3 14.94 12 15C12.38 15 12.77 14.92 13.14 14.77C13.41 13.67 13.86 12.63 14.97 11.61M13 16H7C7 14.9 6.11 14 5 14V10C6.11 10 7 9.11 7 8H17C17 9.11 17.9 10 19 10V10.06C19.67 10.06 20.34 10.18 21 10.4V6H3V18H13.32C13.1 17.33 13 16.66 13 16Z"
+                        ></path>
+                      </svg>
+                    </span>
+                    <div class="text-center space-y-1 md:text-left md:mr-6">
+                      <h4 class="text-xl">$375.53</h4>
+                      <p class="text-gray-500 dark:text-slate-400">
+                        <b>3 days ago</b> via Turcotte
+                      </p>
+                    </div>
+                  </div>
+                  <div class="text-center md:text-right space-y-2">
+                    <p class="text-sm text-gray-500">Home Loan Account</p>
+                    <div>
+                      <div class="inline-flex items-center capitalize leading-none text-xs border rounded-full py-1 px-3 bg-emerald-500 border-emerald-500 text-white ">
+                        <span>deposit</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="bg-white flex mb-6 last:mb-0 rounded-2xl flex-col dark:bg-slate-900/70">
+              <div class="flex-1 p-6 undefined">
+                <div class="flex flex-col md:flex-row items-center justify-between">
+                  <div class="flex flex-col md:flex-row items-center justify-start mb-6 md:mb-0">
+                    <span class="inline-flex justify-center items-center w-12 h-12 rounded-full text-blue-500 bg-gray-50 dark:bg-slate-800 md:mr-6 mb-6 md:mb-0">
+                      <svg
+                        viewBox="0 0 24 24"
+                        width="24"
+                        height="24"
+                        class="inline-block"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M20 4H4A2 2 0 0 0 2 6V18A2 2 0 0 0 4 20H20A2 2 0 0 0 22 18V6A2 2 0 0 0 20 4M20 11H4V8H20Z"
+                        ></path>
+                      </svg>
+                    </span>
+                    <div class="text-center space-y-1 md:text-left md:mr-6">
+                      <h4 class="text-xl">$470.26</h4>
+                      <p class="text-gray-500 dark:text-slate-400">
+                        <b>3 days ago</b> via Murazik - Graham
+                      </p>
+                    </div>
+                  </div>
+                  <div class="text-center md:text-right space-y-2">
+                    <p class="text-sm text-gray-500">Savings Account</p>
+                    <div>
+                      <div class="inline-flex items-center capitalize leading-none text-xs border rounded-full py-1 px-3 bg-blue-500 border-blue-500 text-white ">
+                        <span>payment</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="bg-white flex mb-6 last:mb-0 rounded-2xl flex-col dark:bg-slate-900/70">
+              <div class="flex-1 p-6 undefined">
+                <div class="flex flex-col md:flex-row items-center justify-between">
+                  <div class="flex flex-col md:flex-row items-center justify-start mb-6 md:mb-0">
+                    <span class="inline-flex justify-center items-center w-12 h-12 rounded-full text-yellow-500 bg-gray-50 dark:bg-slate-800 md:mr-6 mb-6 md:mb-0">
+                      <svg
+                        viewBox="0 0 24 24"
+                        width="24"
+                        height="24"
+                        class="inline-block"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M3 22L4.5 20.5L6 22L7.5 20.5L9 22L10.5 20.5L12 22L13.5 20.5L15 22L16.5 20.5L18 22L19.5 20.5L21 22V2L19.5 3.5L18 2L16.5 3.5L15 2L13.5 3.5L12 2L10.5 3.5L9 2L7.5 3.5L6 2L4.5 3.5L3 2"
+                        ></path>
+                      </svg>
+                    </span>
+                    <div class="text-center space-y-1 md:text-left md:mr-6">
+                      <h4 class="text-xl">$971.34</h4>
+                      <p class="text-gray-500 dark:text-slate-400">
+                        <b>5 days ago</b> via Fahey - Keebler
+                      </p>
+                    </div>
+                  </div>
+                  <div class="text-center md:text-right space-y-2">
+                    <p class="text-sm text-gray-500">Checking Account</p>
+                    <div>
+                      <div class="inline-flex items-center capitalize leading-none text-xs border rounded-full py-1 px-3 bg-yellow-500 border-yellow-500 text-white ">
+                        <span>invoice</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="bg-white flex mb-6 last:mb-0 rounded-2xl flex-col dark:bg-slate-900/70">
+              <div class="flex-1 p-6 undefined">
+                <div class="flex flex-col md:flex-row items-center justify-between">
+                  <div class="flex flex-col md:flex-row items-center justify-start mb-6 md:mb-0">
+                    <span class="inline-flex justify-center items-center w-12 h-12 rounded-full undefined bg-gray-50 dark:bg-slate-800 md:mr-6 mb-6 md:mb-0">
+                      <svg
+                        viewBox="0 0 24 24"
+                        width="24"
+                        height="24"
+                        class="inline-block"
+                      >
+                        <path fill="currentColor"></path>
+                      </svg>
+                    </span>
+                    <div class="text-center space-y-1 md:text-left md:mr-6">
+                      <h4 class="text-xl">$374.63</h4>
+                      <p class="text-gray-500 dark:text-slate-400">
+                        <b>7 days ago</b> via Collier - Hintz
+                      </p>
+                    </div>
+                  </div>
+                  <div class="text-center md:text-right space-y-2">
+                    <p class="text-sm text-gray-500">Auto Loan Account</p>
+                    <div>
+                      <div class="inline-flex items-center capitalize leading-none text-xs border rounded-full py-1 px-3 undefined ">
+                        <span>withdrawal</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-col justify-between">
+            <div class="bg-white flex mb-6 last:mb-0 rounded-2xl flex-col dark:bg-slate-900/70">
+              <div class="flex-1 p-6 undefined">
+                <div class="flex flex-col md:flex-row items-center justify-between">
+                  <div class="flex flex-col md:flex-row items-center justify-start mb-6 md:mb-0">
+                    <div class="w-12 h-12 md:mr-6 mb-6 md:mb-0">
+                      <img
+                        src="https://api.dicebear.com/7.x/avataaars/svg?seed=Howell-Hand"
+                        alt="Howell Hand"
+                        class="rounded-full block h-auto w-full max-w-full bg-gray-100 dark:bg-slate-800"
+                      />
+                    </div>
+                    <div class="text-center md:text-left overflow-hidden">
+                      <h4 class="text-xl text-ellipsis">Howell Hand</h4>
+                      <p class="text-gray-500 dark:text-slate-400">
+                        Mar 3, 2023 @ percy64
+                      </p>
+                    </div>
+                  </div>
+                  <div class="inline-flex items-center capitalize leading-none text-sm border rounded-full py-1.5 px-4 bg-emerald-500 border-emerald-500 text-white ">
+                    <span class="inline-flex justify-center items-center w-4 h-4 mr-2">
+                      <svg
+                        viewBox="0 0 24 24"
+                        width="16"
+                        height="16"
+                        class="inline-block"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M16,6L18.29,8.29L13.41,13.17L9.41,9.17L2,16.59L3.41,18L9.41,12L13.41,16L19.71,9.71L22,12V6H16Z"
+                        ></path>
+                      </svg>
+                    </span>
+                    <span>70%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="bg-white flex mb-6 last:mb-0 rounded-2xl flex-col dark:bg-slate-900/70">
+              <div class="flex-1 p-6 undefined">
+                <div class="flex flex-col md:flex-row items-center justify-between">
+                  <div class="flex flex-col md:flex-row items-center justify-start mb-6 md:mb-0">
+                    <div class="w-12 h-12 md:mr-6 mb-6 md:mb-0">
+                      <img
+                        src="https://api.dicebear.com/7.x/avataaars/svg?seed=Hope-Howe"
+                        alt="Hope Howe"
+                        class="rounded-full block h-auto w-full max-w-full bg-gray-100 dark:bg-slate-800"
+                      />
+                    </div>
+                    <div class="text-center md:text-left overflow-hidden">
+                      <h4 class="text-xl text-ellipsis">Hope Howe</h4>
+                      <p class="text-gray-500 dark:text-slate-400">
+                        Dec 1, 2023 @ dare.concepcion
+                      </p>
+                    </div>
+                  </div>
+                  <div class="inline-flex items-center capitalize leading-none text-sm border rounded-full py-1.5 px-4 bg-emerald-500 border-emerald-500 text-white ">
+                    <span class="inline-flex justify-center items-center w-4 h-4 mr-2">
+                      <svg
+                        viewBox="0 0 24 24"
+                        width="16"
+                        height="16"
+                        class="inline-block"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M16,6L18.29,8.29L13.41,13.17L9.41,9.17L2,16.59L3.41,18L9.41,12L13.41,16L19.71,9.71L22,12V6H16Z"
+                        ></path>
+                      </svg>
+                    </span>
+                    <span>68%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="bg-white flex mb-6 last:mb-0 rounded-2xl flex-col dark:bg-slate-900/70">
+              <div class="flex-1 p-6 undefined">
+                <div class="flex flex-col md:flex-row items-center justify-between">
+                  <div class="flex flex-col md:flex-row items-center justify-start mb-6 md:mb-0">
+                    <div class="w-12 h-12 md:mr-6 mb-6 md:mb-0">
+                      <img
+                        src="https://api.dicebear.com/7.x/avataaars/svg?seed=Nelson-Jerde"
+                        alt="Nelson Jerde"
+                        class="rounded-full block h-auto w-full max-w-full bg-gray-100 dark:bg-slate-800"
+                      />
+                    </div>
+                    <div class="text-center md:text-left overflow-hidden">
+                      <h4 class="text-xl text-ellipsis">Nelson Jerde</h4>
+                      <p class="text-gray-500 dark:text-slate-400">
+                        May 18, 2023 @ geovanni.kessler
+                      </p>
+                    </div>
+                  </div>
+                  <div class="inline-flex items-center capitalize leading-none text-sm border rounded-full py-1.5 px-4 bg-yellow-500 border-yellow-500 text-white ">
+                    <span class="inline-flex justify-center items-center w-4 h-4 mr-2">
+                      <svg
+                        viewBox="0 0 24 24"
+                        width="16"
+                        height="16"
+                        class="inline-block"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M22,12L18,8V11H3V13H18V16L22,12Z"
+                        ></path>
+                      </svg>
+                    </span>
+                    <span>49%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="bg-white flex mb-6 last:mb-0 rounded-2xl flex-col dark:bg-slate-900/70">
+              <div class="flex-1 p-6 undefined">
+                <div class="flex flex-col md:flex-row items-center justify-between">
+                  <div class="flex flex-col md:flex-row items-center justify-start mb-6 md:mb-0">
+                    <div class="w-12 h-12 md:mr-6 mb-6 md:mb-0">
+                      <img
+                        src="https://api.dicebear.com/7.x/avataaars/svg?seed=Kim-Weimann"
+                        alt="Kim Weimann"
+                        class="rounded-full block h-auto w-full max-w-full bg-gray-100 dark:bg-slate-800"
+                      />
+                    </div>
+                    <div class="text-center md:text-left overflow-hidden">
+                      <h4 class="text-xl text-ellipsis">Kim Weimann</h4>
+                      <p class="text-gray-500 dark:text-slate-400">
+                        May 4, 2023 @ macejkovic.dashawn
+                      </p>
+                    </div>
+                  </div>
+                  <div class="inline-flex items-center capitalize leading-none text-sm border rounded-full py-1.5 px-4 bg-red-500 border-red-500 text-white ">
+                    <span class="inline-flex justify-center items-center w-4 h-4 mr-2">
+                      <svg
+                        viewBox="0 0 24 24"
+                        width="16"
+                        height="16"
+                        class="inline-block"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M16,18L18.29,15.71L13.41,10.83L9.41,14.83L2,7.41L3.41,6L9.41,12L13.41,8L19.71,14.29L22,12V18H16Z"
+                        ></path>
+                      </svg>
+                    </span>
+                    <span>38%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white flex mb-6 last:mb-0 rounded-2xl flex-col dark:bg-slate-900/70">
+          <div class="flex-1 p-6 undefined"></div>
+        </div>
 
-                        
-                    </table>
-                </div>
-            </div>
-           
-        </div>
+        {/* <section class="pt-6 mb-6 flex items-center justify-between">
+    <div class="flex items-center justify-start">
+      <span class="inline-flex justify-center items-center w-6 h-6 mr-2">
+        <svg viewBox="0 0 24 24" width="20" height="20" class="inline-block">
+          <path fill="currentColor" d="M11,2V22C5.9,21.5 2,17.2 2,12C2,6.8 5.9,2.5 11,2M13,2V11H22C21.5,6.2 17.8,2.5 13,2M13,13V22C17.7,21.5 21.5,17.8 22,13H13Z"></path>
+        </svg>
+      </span>
+      <h1 class="leading-tight text-2xl">Trends overview</h1>
     </div>
-</div>
-  )
-}
+    <button class="inline-flex justify-center items-center whitespace-nowrap focus:outline-none transition-colors focus:ring duration-150 border cursor-pointer rounded border-white dark:border-slate-900 ring-gray-200 dark:ring-gray-500 bg-white text-black dark:bg-slate-900 dark:text-white hover:bg-gray-100 hover:dark:bg-slate-800  p-1" type="button">
+      <span class="inline-flex justify-center items-center w-6 h-6 ">
+        <svg viewBox="0 0 24 24" width="16" height="16" class="inline-block">
+          <path fill="currentColor" d="M2 12C2 16.97 6.03 21 11 21C13.39 21 15.68 20.06 17.4 18.4L15.9 16.9C14.63 18.25 12.86 19 11 19C4.76 19 1.64 11.46 6.05 7.05C10.46 2.64 18 5.77 18 12H15L19 16H19.1L23 12H20C20 7.03 15.97 3 11 3C6.03 3 2 7.03 2 12Z"></path>
+        </svg>
+      </span>
+    </button>
+  </section> */}
 
-export default AdminHome
+        <section class="pt-6 mb-6 flex items-center justify-between">
+          <div class="flex items-center justify-start">
+            <span class="inline-flex justify-center items-center w-6 h-6 mr-2">
+              <svg
+                viewBox="0 0 24 24"
+                width="20"
+                height="20"
+                class="inline-block"
+              >
+                <path
+                  fill="currentColor"
+                  d="M16 17V19H2V17S2 13 9 13 16 17 16 17M12.5 7.5A3.5 3.5 0 1 0 9 11A3.5 3.5 0 0 0 12.5 7.5M15.94 13A5.32 5.32 0 0 1 18 17V19H22V17S22 13.37 15.94 13M15 4A3.39 3.39 0 0 0 13.07 4.59A5 5 0 0 1 13.07 10.41A3.39 3.39 0 0 0 15 11A3.5 3.5 0 0 0 15 4Z"
+                ></path>
+              </svg>
+            </span>
+            <h1 class="leading-tight text-2xl">Clients</h1>
+          </div>
+          <button
+            class="inline-flex justify-center items-center whitespace-nowrap focus:outline-none transition-colors focus:ring duration-150 border cursor-pointer rounded border-white dark:border-slate-900 ring-gray-200 dark:ring-gray-500 bg-white text-black dark:bg-slate-900 dark:text-white hover:bg-gray-100 hover:dark:bg-slate-800  p-1"
+            type="button"
+          >
+            <span class="inline-flex justify-center items-center w-6 h-6 ">
+              <svg
+                viewBox="0 0 24 24"
+                width="16"
+                height="16"
+                class="inline-block"
+              >
+                <path
+                  fill="currentColor"
+                  d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"
+                ></path>
+              </svg>
+            </span>
+          </button>
+        </section>
+        <div class="bg-white flex  rounded-2xl flex-col dark:bg-slate-900/70 p-4">
+          <Clients />
+        </div>
+
+        <section class="pt-6 mb-6 flex items-center justify-between">
+          <div class="flex items-center justify-start">
+            <span class="inline-flex justify-center items-center w-6 h-6 mr-2">
+              <svg
+                viewBox="0 0 24 24"
+                width="20"
+                height="20"
+                class="inline-block"
+              >
+                <path
+                  fill="currentColor"
+                  d="M16 17V19H2V17S2 13 9 13 16 17 16 17M12.5 7.5A3.5 3.5 0 1 0 9 11A3.5 3.5 0 0 0 12.5 7.5M15.94 13A5.32 5.32 0 0 1 18 17V19H22V17S22 13.37 15.94 13M15 4A3.39 3.39 0 0 0 13.07 4.59A5 5 0 0 1 13.07 10.41A3.39 3.39 0 0 0 15 11A3.5 3.5 0 0 0 15 4Z"
+                ></path>
+              </svg>
+            </span>
+            <h1 class="leading-tight text-2xl">Admins</h1>
+          </div>
+          <button
+            class="inline-flex justify-center items-center whitespace-nowrap focus:outline-none transition-colors focus:ring duration-150 border cursor-pointer rounded border-white dark:border-slate-900 ring-gray-200 dark:ring-gray-500 bg-white text-black dark:bg-slate-900 dark:text-white hover:bg-gray-100 hover:dark:bg-slate-800  p-1"
+            type="button"
+          >
+            <span class="inline-flex justify-center items-center w-6 h-6 ">
+              <svg
+                viewBox="0 0 24 24"
+                width="16"
+                height="16"
+                class="inline-block"
+              >
+                <path
+                  fill="currentColor"
+                  d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"
+                ></path>
+              </svg>
+            </span>
+          </button>
+        </section>
+
+        <div class="bg-white flex  rounded-2xl flex-col dark:bg-slate-900/70 p-4">
+          <Clients />
+        </div>
+
+      </section>
+    </>
+  );
+};
+
+export default AdminHome;
