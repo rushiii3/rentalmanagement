@@ -14,6 +14,7 @@ import BookingsLandlord from './Pages/BookingsLandlord';
 import ReportPage from './Pages/ReportPage.jsx';
 import VideoConferencePage from './Pages/VideoConferencePage.jsx';
 import AdminHomePage from './Pages/AdminHomePage.jsx';
+import AdminReportPage from './Pages/AdminReportPage.jsx';
 export   {
     LandingPage,
     SignUpPage,
@@ -30,5 +31,6 @@ export   {
     BookingsLandlord,
     ReportPage,
     VideoConferencePage,
-    AdminHomePage
+    AdminHomePage,
+    AdminReportPage
 }

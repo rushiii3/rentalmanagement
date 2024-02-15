@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Tabs, Tab, Card, CardBody, CardHeader } from "@nextui-org/react";
+import { Tabs, Tab} from "@nextui-org/react";
 import { FaHouse } from "react-icons/fa6";
 import { IoVideocam } from "react-icons/io5";
 import { FaCalendar } from "react-icons/fa";

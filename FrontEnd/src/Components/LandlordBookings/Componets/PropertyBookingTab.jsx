@@ -1,15 +1,5 @@
 import React, { useState } from "react";
-import { BsFilterCircle } from "react-icons/bs";
-import DatePicker from "react-multi-date-picker";
-import DatePickerHeader from "react-multi-date-picker/plugins/date_picker_header";
 import { LuCalendarOff } from "react-icons/lu";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  Button,
-} from "@nextui-org/react";
-// import PropertyBookingCard from "../../Bookings/Component/PropertyBookingCard";
 import PropertyBookingTabCard from "./PropertyBookingTabCard";
 
 const PropertyBookingTab = ({
