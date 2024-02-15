@@ -15,7 +15,7 @@ const Admin = require("./Routes/AdminRoute");
 const Report = require("./Routes/Report");
 const port = process.env.PORT || 4000;
 const MongoURL = process.env.MONGO_URL;
-const production = true;
+const production = false;
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

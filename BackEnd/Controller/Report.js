@@ -39,7 +39,23 @@ const get_data = asyncHandler(async (req, res, next) => {
   }
 });
 
+const get_report_data_admin = asyncHandler(async(req,res,next)=>{
+  try {
+    const {id,type} = req.params;
+    console.log(type);
+    const reports = await Report.find({admin_email:id,report_type:type}).populate({
+      path: "user_id",
+      model: "User",
+      select: "-_id firstname lastname avatar",
+    });
+    res.status(201).json({ success: true,reports});
+  } catch (error) {
+    next(error)
+  }
+
+})
 module.exports = {
   add,
-  get_data
+  get_data,
+  get_report_data_admin
 };
