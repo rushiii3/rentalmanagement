@@ -55,9 +55,9 @@ const Login = () => {
   });
   const [Loading, setLoading] = useState(false);
   const onSubmit = async (data) => {
+    setLoading(true);
     const toastId = toast.loading('Login...');
     try {
-      setLoading(true);
       const serverData = await axios.post(`${userServer}/login`, data, {
         withCredentials: true,
       });

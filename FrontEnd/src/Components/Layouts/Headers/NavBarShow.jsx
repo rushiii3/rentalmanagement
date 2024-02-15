@@ -7,7 +7,7 @@ const NavbarShow = ({children}) => {
     useEffect(() => {
       if(Location.pathname==="/Login" || Location.pathname==="/login" || Location.pathname==="/register" || Location.pathname==="/Register" ){
         setShow(false);
-      }else if(Location.pathname==="/" || Location.pathname==="/about" || Location.pathname==="/addpost" || Location.pathname==="/property-bookings" ||  Location.pathname==="/chat" || Location.pathname==="/properties" || Location.pathname==="/profile-update" || Location.pathname==="/add-property" || Location.pathname==="/bookings"|| Location.pathname==="/report"){
+      }else if(Location.pathname==="/" || Location.pathname==="/about" || Location.pathname==="/addpost" || Location.pathname==="/property-bookings" ||  Location.pathname==="/chat" || Location.pathname==="/properties" || Location.pathname==="/profile-update" || Location.pathname==="/add-property" || Location.pathname==="/bookings"|| Location.pathname==="/report" || Location.pathname==="/dashboard" || Location.pathname==="/admin-reports"){
         setShow(true);
       }else if (Location.pathname.includes("/properties/")){
         setShow(true);

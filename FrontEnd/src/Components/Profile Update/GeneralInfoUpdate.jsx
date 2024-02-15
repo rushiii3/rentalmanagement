@@ -14,7 +14,7 @@ const GeneralInfoUpdate = ({ userEmail }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const fromBooking = location.state && location.state.pathname;
-  console.log(fromBooking);
+  console.log(userEmail);
   const [userID, setuserID] = useState(null);
   const [loading, setloading] = useState(false);
   const schema = yup.object().shape({

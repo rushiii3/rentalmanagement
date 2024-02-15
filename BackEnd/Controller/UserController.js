@@ -12,6 +12,7 @@ cloudinary.config({
   api_secret: "blcMAs-77T_1t1VGnRIlLia_RqM",
   secure: true,
 });
+ const Admin = require('../Models/Admin');
 const hello = (req, res, next) => {
   res.status(200).json({ msg: true });
 };
@@ -151,19 +152,20 @@ const activation = asyncHandler(async (req, res, next) => {
 const login = asyncHandler(async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    console.log(password);
     if (!email || !password) {
       errorThrow("Email or password should not be empty", 400);
     }
     const user = await UserModel.findOne({ email }).select("+password");
-    if (!user) {
+    const admin = await Admin.findOne({ email }).select("+password");
+    const userlogin = user || admin;
+    if (!userlogin) {
       errorThrow("User doesn't exist!", 404);
     }
-    const isPasswordValid = await user.comparePassword(password);
+    const isPasswordValid = await userlogin.comparePassword(password);
     if (!isPasswordValid) {
       errorThrow("Please provide the correct information", 401);
     }
-    const UserToken = jwt.sign(JSON.stringify(user), process.env.JWT_SECRET);
+    const UserToken = jwt.sign(JSON.stringify(userlogin), process.env.JWT_SECRET);
 
     const token = UserToken;
     const options = {
@@ -174,7 +176,7 @@ const login = asyncHandler(async (req, res, next) => {
     };
     res.status(201).cookie("token", token, options).json({
       success: true,
-      user,
+      userlogin,
       token,
     });
   } catch (error) {
@@ -194,9 +196,13 @@ const getUser = asyncHandler(async (req, res, next) => {
       address,
       phoneNumber,
       _id,
+      isCurrentlyEmployee
     } = await UserModel.findById(req.user).select(
       "email role firstname middlename lastname avatar address phoneNumber _id"
+    ) ||  await Admin.findById(req.user).select(
+      "email role firstname middlename lastname avatar address phoneNumber _id isCurrentlyEmployee"
     );
+    
     const imgurl = avatar.url;
     const user = {
       email,
@@ -208,6 +214,7 @@ const getUser = asyncHandler(async (req, res, next) => {
       imgurl,
       phoneNumber,
       _id,
+      isCurrentlyEmployee
     };
     res.status(200).json({ success: true, user: user });
   } catch (error) {
@@ -294,13 +301,15 @@ const UserProfileImageUpdate = asyncHandler(async (req, res, next) => {
   try {
     const { email, image } = req.body;
     const user = await UserModel.findOne({ email }).select("+password");
+    const admin = await Admin.findOne({ email }).select("+password");
+    const userlogin = user || admin;
 
-    if (!user) {
+    if (!userlogin) {
       errorThrow("User not found", 404);
     }
 
     await cloudinary.uploader
-      .destroy(user.avatar.public_id)
+      .destroy(userlogin.avatar.public_id)
       .then((result) => console.log(result));
 
     const result = await cloudinary.uploader.upload(image).catch((error) => {
@@ -315,7 +324,18 @@ const UserProfileImageUpdate = asyncHandler(async (req, res, next) => {
     const image_link = result.secure_url;
 
     const updatedUser = await UserModel.findByIdAndUpdate(
-      user._id,
+      userlogin._id,
+      {
+        $set: {
+          avatar: {
+            public_id: image_id,
+            url: image_link,
+          },
+        },
+      },
+      { new: true }
+    ) || await Admin.findByIdAndUpdate(
+      userlogin._id,
       {
         $set: {
           avatar: {
@@ -326,6 +346,8 @@ const UserProfileImageUpdate = asyncHandler(async (req, res, next) => {
       },
       { new: true }
     );
+
+
 
     if (!updatedUser) {
       errorThrow("Failed to update user profile", 500);
@@ -340,6 +362,8 @@ const get_user = asyncHandler(async (req, res, next) => {
   const { email } = req.body;
   try {
     const user = await UserModel.findOne({ email }).select(
+      "email firstname middlename lastname  address phoneNumber"
+    ) || await Admin.findOne({ email }).select(
       "email firstname middlename lastname  address phoneNumber"
     );
     res.status(200).json({ success: true, user: user });
@@ -373,7 +397,12 @@ const update_user_info = asyncHandler(async (req, res, next) => {
       "address.pincode": pincode,
       // Add any other fields you want to update
     };
+
     const updatedUser = await UserModel.findOneAndUpdate(
+      { _id: id },
+      { $set: updatedData },
+      { new: true } // Return the updated document
+    ) || await Admin.findOneAndUpdate(
       { _id: id },
       { $set: updatedData },
       { new: true } // Return the updated document
@@ -389,17 +418,18 @@ const update_user_info = asyncHandler(async (req, res, next) => {
 const update_user_password = asyncHandler(async (req, res, next) => {
   try {
     const { oldpassword, password, id } = req.body;
-    const user = await UserModel.findById(id).select("+password");;
-    if(!user){
+    const user = await UserModel.findById(id).select("+password");
+    const admin = await Admin.findById(id).select("+password");
+    const userlogin = user || admin;
+    if(!userlogin){
       errorThrow("User doesn't exist!", 404);
     }
-    const isOldPasswordValid = await user.comparePassword(oldpassword);
-    console.log("4");
+    const isOldPasswordValid = await userlogin.comparePassword(oldpassword);
     if (!isOldPasswordValid) {
       errorThrow("Your old password doesn't match", 401);
     }
-    user.password = password; 
-    await user.save();
+    userlogin.password = password; 
+    await userlogin.save();
     res.status(200).json({ success: true });
   } catch (error) {
     next(error);

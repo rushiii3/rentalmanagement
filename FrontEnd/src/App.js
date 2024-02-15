@@ -18,7 +18,9 @@ import {
   Bookings,
   BookingsLandlord,
   ReportPage,
-  VideoConferencePage
+  VideoConferencePage,
+  AdminHomePage,
+  AdminReportPage
 } from "./Routes";
 import NavbarShow from "./Components/Layouts/Headers/NavBarShow";
 import { Toaster } from "react-hot-toast";
@@ -27,6 +29,7 @@ import { LoadUser } from "./Redux/action/user";
 import Store from "./Redux/store";
 import ProtectedTenant from "./Protected/ProtectedTenant";
 import ProtectedLandlord from "./Protected/ProtectedLandlord";
+import ProtectedAdmin from "./Protected/ProtectedAdmin";
 import Protected from "./Protected/Protected";
 function App() {
   const { mode } = useSelector((state) => state.mode);
@@ -70,6 +73,10 @@ function App() {
             <Route path="/report" element={<Protected><ReportPage /></Protected>} />
             <Route path="/video-conference" element={<Protected><VideoConferencePage /></Protected>} />
 
+            <Route path="/dashboard" element={<ProtectedAdmin><AdminHomePage /></ProtectedAdmin>} />
+            <Route path="/admin-reports" element={<ProtectedAdmin><AdminReportPage /></ProtectedAdmin>} />
+
+            
             
           </Routes>
         </BrowserRouter>
