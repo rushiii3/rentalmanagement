@@ -146,7 +146,7 @@ const handleInput = (e) => {
             
           />
         </div>
-        <ReportForm setReportData={setReportData} ReportData={ReportData} types={types} setFilterData={setFilterData} FilterData={FilterData}/>
+        <ReportForm setReportData={setReportData} ReportData={ReportData} types={types} setFilterData={setFilterData} setSearchInput={setSearchInput} setSearchSelect={setSearchSelect}/>
       </div>
       {FilterData && FilterData.length !== 0 ? (
         <Accordion

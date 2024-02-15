@@ -19,7 +19,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { ReportServer } from "../../server";
-const ReportForm = ({ setReportData, ReportData, types, setFilterData, FilterData }) => {
+const ReportForm = ({ setReportData, ReportData, types, setFilterData, setSearchSelect, setSearchInput }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const { mode } = useSelector((state) => state.mode);
   const { user } = useSelector((state) => state.user);
@@ -67,6 +67,8 @@ const ReportForm = ({ setReportData, ReportData, types, setFilterData, FilterDat
 
         setReportData(insertData);
         setFilterData(insertData);
+        setSearchInput("");
+        setSearchSelect("");
         onOpenChange(isOpen);
         reset();
         toast.success("Report has been added", {

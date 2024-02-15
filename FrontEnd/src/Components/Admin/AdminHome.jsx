@@ -22,31 +22,11 @@ const AdminHome = () => {
             </span>
             <h1 class="leading-tight text-3xl">Overview</h1>
           </div>
-          <a
-            target="_blank"
-            class="inline-flex justify-center items-center whitespace-nowrap focus:outline-none transition-colors focus:ring duration-150 border cursor-pointer rounded-full border-gray-800 dark:border-white ring-gray-300 dark:ring-gray-400 bg-gray-800 text-white dark:bg-white dark:text-black hover:bg-gray-700 hover:dark:bg-slate-100  text-sm px-3 py-1"
-            href="https://github.com/justboil/admin-one-react-tailwind"
-          >
-            <span class="inline-flex justify-center items-center w-6 h-6 ">
-              <svg
-                viewBox="0 0 24 24"
-                width="16"
-                height="16"
-                class="inline-block"
-              >
-                <path
-                  fill="currentColor"
-                  d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z"
-                ></path>
-              </svg>
-            </span>
-            <span class="px-1">Star on GitHub</span>
-          </a>
         </section>
         <div class="grid grid-cols-1 gap-6 lg:grid-cols-3 mb-6">
           <div class="bg-white flex  rounded-2xl flex-col dark:bg-slate-900/70">
             <div class="flex-1 p-6 undefined">
-              <div class="flex items-center justify-between mb-3">
+              {/* <div class="flex items-center justify-between mb-3">
                 <div class="inline-flex items-center capitalize leading-none text-xs border rounded-full py-1 px-3 bg-emerald-500 border-emerald-500 text-white ">
                   <span class="inline-flex justify-center items-center w-4 h-4 mr-1">
                     <svg
@@ -81,7 +61,7 @@ const AdminHome = () => {
                     </svg>
                   </span>
                 </button>
-              </div>
+              </div> */}
               <div class="flex items-center justify-between">
                 <div>
                   <h3 class="text-lg leading-tight text-gray-500 dark:text-slate-400">
@@ -109,7 +89,7 @@ const AdminHome = () => {
           </div>
           <div class="bg-white flex  rounded-2xl flex-col dark:bg-slate-900/70">
             <div class="flex-1 p-6 undefined">
-              <div class="flex items-center justify-between mb-3">
+              {/* <div class="flex items-center justify-between mb-3">
                 <div class="inline-flex items-center capitalize leading-none text-xs border rounded-full py-1 px-3 bg-red-500 border-red-500 text-white ">
                   <span class="inline-flex justify-center items-center w-4 h-4 mr-1">
                     <svg
@@ -144,7 +124,7 @@ const AdminHome = () => {
                     </svg>
                   </span>
                 </button>
-              </div>
+              </div> */}
               <div class="flex items-center justify-between">
                 <div>
                   <h3 class="text-lg leading-tight text-gray-500 dark:text-slate-400">
@@ -172,7 +152,7 @@ const AdminHome = () => {
           </div>
           <div class="bg-white flex  rounded-2xl flex-col dark:bg-slate-900/70">
             <div class="flex-1 p-6 undefined">
-              <div class="flex items-center justify-between mb-3">
+              {/* <div class="flex items-center justify-between mb-3">
                 <div class="inline-flex items-center capitalize leading-none text-xs border rounded-full py-1 px-3 bg-yellow-500 border-yellow-500 text-white ">
                   <span class="inline-flex justify-center items-center w-4 h-4 mr-1">
                     <svg
@@ -207,7 +187,7 @@ const AdminHome = () => {
                     </svg>
                   </span>
                 </button>
-              </div>
+              </div> */}
               <div class="flex items-center justify-between">
                 <div>
                   <h3 class="text-lg leading-tight text-gray-500 dark:text-slate-400">
