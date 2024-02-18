@@ -20,7 +20,6 @@ const Login = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const fromBooking = location.state && location.state.pathname;
-  console.log(fromBooking);
   useEffect(() => {
     document.title = "Login";
   }, []);

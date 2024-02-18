@@ -1,11 +1,12 @@
 import {configureStore} from '@reduxjs/toolkit';
-import { chatReducer } from './reducer/darkmode';
+import { DarkModeReducer } from './reducer/darkmode';
 import { userReducer } from './reducer/user';
-
+import { chatReducer } from './reducer/chat';
 const store = configureStore({
     reducer:{
-        mode : chatReducer,
+        mode : DarkModeReducer,
         user : userReducer,
+        chat:chatReducer,
     }
 })
 

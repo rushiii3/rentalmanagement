@@ -1,118 +1,201 @@
 import React, { useEffect, useState } from "react";
-import io from "socket.io-client";
-
+import Chat from "./Chat";
+import { useDispatch, useSelector } from "react-redux";
+import { io } from "socket.io-client";
+import axios from "axios";
+import { ChatServer } from "../../server";
+// import { server } from "../../server";
 const ChatLayout = () => {
-  const [message, setMessage] = useState("");
-  const [receivedMessage, setReceivedMessage] = useState("");
+    const { user } = useSelector((state) => state.user);
   const [socket, setSocket] = useState(null);
+  const [selectedUser, setSelectedUser] = useState("");
+  const [SelectedUserName, setSelectedUserName] = useState("");
+  const [SelectedUserProfile, setSelectedUserProfile] = useState("");
+  const chat = useSelector((state) => state.chat);
+  const dispatch = useDispatch();
 
+
+
+  const [DisplayUsers, setDisplayUsers] = useState([]);
   useEffect(() => {
-    const newSocket = io("https://socketio-rental.onrender.com");
-
-    newSocket.on("connect", () => {
-      console.log("Connected to server");
-    });
-
-    newSocket.on("message", (data) => {
-      setReceivedMessage(data);
-    });
-
+    const newSocket = io("http://localhost:3500");
     setSocket(newSocket);
-
+    console.log(newSocket);
     return () => {
       newSocket.disconnect();
     };
   }, []);
-
-  const sendMessage = () => {
-    if (socket) {
-      socket.emit("message", message);
-      setMessage("");
-    } else {
-      console.error("Socket connection not available");
+  const getChatUser = async() => {
+    console.log(user);
+    if(user?.user?._id)
+    {
+      try {
+        const { data } = await axios.get(
+          `${ChatServer}/getChat/${user?.user?._id}`
+        );
+        setDisplayUsers(data);
+        console.log(data)
+      } catch (error) {
+          console.log(error);
+      }
     }
+    
+  };
+
+  useEffect(() => {
+    getChatUser();
+  }, [user]);
+
+
+
+  const handleUserClick = (parameters) => {
+    console.log(parameters);
+    const { userId, profile, username } = parameters;
+    console.log(user.user._id);
+    if (user) {
+      console.log("Authenticating with username:", user.user._id);
+      socket.emit("authenticate", user.user._id);
+    }
+    setSelectedUser(userId);
+    setSelectedUserName(username);
+    setSelectedUserProfile(profile);
+  };
+  const handleRemoveChat = () => {
+    setSelectedUser("");
+    dispatch({ type: "RemoveSelectedUser" });
   };
 
   return (
-    <div>
-      {/* <h1>Socket.IO Example</h1>
-      <input
-        type="text"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        placeholder="Type a message"
-      />
-      <button onClick={sendMessage}>Send</button>
-      <p>Received message: {receivedMessage}</p> */}
-      <div className="flex flex-col h-screen">
-      <div className="fixed top-16 w-full bg-green-400 h-16 pt-2 text-white flex justify-between shadow-md">
-        <a href="/chat" className="ml-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            className="w-12 h-12 my-1 text-green-100"
+    <div className="h-screen w-screen flex flex-row fixed top-16  bottom-1">
+    {/* person selector */}
+
+    <div
+      className={`w-screen md:w-[20%] md:block   bg-white border-r border-gray-300 ${
+        selectedUser === "" ? "block" : "hidden"
+      }`}
+    >
+      <header className="p-4 border-b border-gray-300 flex justify-between items-center bg-indigo-600 text-white">
+        <h1 className="text-2xl font-semibold">Chat Web</h1>
+      </header>
+
+      <div className="overflow-y-auto h-screen p-3 mb-12 pb-32">
+        {/* {chat?.selectedUser !== null || DisplayUsers.length === 0 ? (
+          <p className="text-2xl font-semibold text-center my-40">
+            No users
+          </p>
+        ) : (
+          ""
+        )} */}
+        {chat?.selectedUser !== null ? (
+          <div
+            className={` ${
+              chat?.selectedUser?.id === selectedUser
+                ? "bg-indigo-600 text-white"
+                : "hover:bg-gray-100 "
+            }  flex  items-center mb-4 cursor-pointer  p-2 rounded-md `}
+            onClick={() =>
+                
+              handleUserClick({
+                userId: chat?.selectedUser?.id,
+                profile: chat?.selectedUser?.profile,
+                username: chat?.selectedUser?.username,
+              })
+            }
           >
-            <path
-              className="text-green-100 fill-current"
-              d="M9.41 11H17a1 1 0 0 1 0 2H9.41l2.3 2.3a1 1 0 1 1-1.42 1.4l-4-4a1 1 0 0 1 0-1.4l4-4a1 1 0 0 1 1.42 1.4L9.4 11z"
-            />
-          </svg>
-        </a>
-        <div className="my-3 text-green-100 font-bold text-lg tracking-wide">@rallipi</div>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          className="icon-dots-vertical w-8 h-8 mt-2 mr-2"
-        >
-          <path
-            className="text-green-100 fill-current"
-            fillRule="evenodd"
-            d="M12 7a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 7a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 7a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"
-          />
-        </svg>
-      </div>
-
-      <div className="mt-20 mb-16">
-        <div className="clearfix">
-          <div className="bg-gray-300 w-3/4 mx-4 my-2 p-2 rounded-lg">
-            this is a basic mobile chat layout, build with tailwind css
+            <div className="w-12 h-12 bg-gray-300 rounded-full mr-3">
+              <img
+                src={
+                  chat?.selectedUser?.profile === null
+                    ? chat?.selectedUser?.profile
+                    : "https://media.tenor.com/HQx-ClEH6lYAAAAd/anime-demon-slayer.gif"
+                }
+                alt="User Avatar"
+                className="w-12 h-12 rounded-full object-cover"
+                loading="lazy"
+              />
+            </div>
+            <div className="flex-1">
+              <h2 className="text-lg font-semibold">
+                {chat?.selectedUser?.username}
+              </h2>
+              {/* <p className={`${chat?.selectedUser===selectedUser?' text-white':'text-gray-600 '}`}>I just finished reading a great book! It was so captivating. </p> */}
+            </div>
           </div>
-        </div>
-
-        <div className="clearfix">
-          <div className="bg-gray-300 w-3/4 mx-4 my-2 p-2 rounded-lg clearfix">
-            It will be used for a full tutorial about building a chat app with
-            vue, tailwind and firebase.
-          </div>
-        </div>
-        <div className="clearfix">
-          <div className="bg-green-300 float-right w-3/4 mx-4 my-2 p-2 rounded-lg clearfix">
-            check my twitter to see when it will be released.
-          </div>
-        </div>
-      </div>
-
-      <div className="fixed bottom-0 w-full flex justify-between bg-green-100">
-        <textarea
-          className="flex-grow m-2 py-2 px-4 mr-1 rounded-full border border-gray-300 bg-gray-200 resize-none outline-none"
-          rows="1"
-          placeholder="Message..."
-        ></textarea>
-        <button className="m-2 outline-none">
-          <svg
-            className="w-12 h-12 py-2 mr-2 text-green-400"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 512 512"
-          >
-            <path
-              fill="currentColor"
-              d="M476 3.2L12.5 270.6c-18.1 10.4-15.8 35.6 2.2 43.2L121 358.4l287.3-253.2c5.5-4.9 13.3 2.6 8.6 8.3L176 407v80.5c0 23.6 28.5 32.9 42.5 15.8L282 426l124.6 52.2c14.2 6 30.4-2.9 33-18.2l72-432C515 7.8 493.3-6.8 476 3.2z"
-            />
-          </svg>
-        </button>
+        ) : (
+          ""
+        )}
+        {DisplayUsers.map((values, keys) => {
+          return (
+            <div
+              className={` ${
+                values._id === selectedUser
+                  ? "bg-indigo-600 text-white"
+                  : "hover:bg-gray-100 "
+              }  flex  items-center mb-4 cursor-pointer  p-2 rounded-md `}
+              onClick={() =>
+                handleUserClick({
+                  userId: values?._id,
+                  profile: values?.avatar?.url,
+                  username: `${values?.firstname} ${values?.lastname}`,
+                })
+              }
+              key={keys}
+            >
+              <div className="w-12 h-12 bg-gray-300 rounded-full mr-3">
+                <img
+                  src={
+                    values?.avatar?.url
+                  }
+                  alt={values?.avatar?.url}
+                  className="w-12 h-12 rounded-full object-cover"
+                  loading="lazy"
+                />
+              </div>
+              <div className="flex-1">
+                <h2 className="text-lg font-semibold">{values?.firstname} {values?.lastname}</h2>
+                {/* <p
+                  className={`${
+                    values._id === selectedUser ? " text-white" : "text-gray-600 "
+                  }`}
+                >
+                  I just finished reading a great book! It was so captivating.{" "}
+                </p> */}
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
+    {/* chatting */}
+    <div
+      className={`md:block md:w-full w-screen ${
+        selectedUser === "" ? "hidden" : "block"
+      }`}
+    >
+      {selectedUser ? (
+        <Chat
+          user={selectedUser}
+          userName={SelectedUserName}
+          userProfile={SelectedUserProfile}
+          removeChat={handleRemoveChat}
+          socket={socket}
+        />
+      ) : (
+        <div className="hidden md:block">
+          <div className="flex  justify-center content-center items-center">
+            <img
+              className="h-auto max-w-lg mx-auto"
+              src="https://img.freepik.com/free-vector/woman-boy-with-smartphone-chat-profile_24877-53913.jpg?w=1060&t=st=1698570000~exp=1698570600~hmac=423e7df0bcb24190e598f71d62c27868ec0fffdaad032f558592170fbad9a663"
+              alt=""
+            />
+          </div>
+          <p className="text-2xl font-semibold text-center">
+            Select a user to start chatting.
+          </p>
+        </div>
+      )}
     </div>
+  </div>
   );
 };
 

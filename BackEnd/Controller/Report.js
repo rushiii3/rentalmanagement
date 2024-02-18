@@ -6,7 +6,6 @@ const Report = require("../Models/Report");
 const errorThrow = require("../Middleware/ErrorHandler");
 const add = asyncHandler(async (req, res, next) => {
   try {
-    console.log(req.body);
     const { title, description, filter, user_id } = req.body;
     const newReport = new Report({
       report_title: title,
@@ -43,19 +42,31 @@ const get_report_data_admin = asyncHandler(async(req,res,next)=>{
   try {
     const {id,type} = req.params;
     console.log(type);
-    const reports = await Report.find({admin_email:id,report_type:type}).populate({
+    const reports = await Report.find({admin_email:id,report_type:type},{admin_email:0}).populate({
       path: "user_id",
       model: "User",
-      select: "-_id firstname lastname avatar",
+      select: "-_id firstname lastname avatar email",
     });
     res.status(201).json({ success: true,reports});
   } catch (error) {
     next(error)
   }
-
+})
+const update_status_user = asyncHandler(async(req,res,next)=>{
+  try {
+    const {id,status} = req.body;
+    const ReportStatus = await Report.findByIdAndUpdate(id,{report_status:status});
+    if (ReportStatus) {
+      res.status(201).json({ success: true});
+    }
+    errorThrow(500, "Failed to update status");
+  } catch (error) {
+    next(error)
+  }
 })
 module.exports = {
   add,
   get_data,
-  get_report_data_admin
+  get_report_data_admin,
+  update_status_user
 };

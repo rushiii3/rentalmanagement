@@ -3,6 +3,8 @@ const UserModel = require("../Models/UserModel"); // Import your User model
 const PropertyModel = require("../Models/UserModel"); // Import your Property model
 const VideoConference = require("../Models/VideoConferenceModel");
 const errorThrow = require("../Middleware/ErrorHandler");
+var mongoose = require('mongoose');
+
 const AddVisit = asyncHandler(async (req, res, next) => {
   try {
     const { visitTime, visitDate, id, userid } = req.body;
@@ -85,16 +87,6 @@ const updateStatus = asyncHandler(async(req,res,next)=>{
   try {
     const { id, type } = req.body;
     const update_status = await VideoConference.findByIdAndUpdate(id, { vc_status: type });
-    if (type==="Accepted") {
-      let meetingId =  'xxxxyxxx'.replace(/[xy]/g, function(c) {
-        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-    });
-    const update_link = await VideoConference.findByIdAndUpdate(id,{vc_link:meetingId});
-    if (update_status && update_link) {
-      res.status(200).json({ success: true });
-    }
-    }
     if (!update_status) {
       // If update_status is null, the document with the specified ID was not found
       return errorThrow("Failed to update property status! Booking not found.", 404);
@@ -105,8 +97,34 @@ const updateStatus = asyncHandler(async(req,res,next)=>{
     next(error);
   }
 })
+const GetVideoConferenceData = asyncHandler(async(req,res,next)=>{
+  try {
+    const {id} = req.params;
+    console.log("hehe");
+    
+    if(!mongoose.Types.ObjectId.isValid(id)){
+      errorThrow("Invalid Meeting ID", 404);
+    }
+    const verify = await VideoConference.findById(id).populate({
+      path: "property_id",
+      select:
+        "_id", // Select necessary fields
+      populate: {
+        path: "landlord_id",
+        model: "User",
+        select: "_id firstname lastname",
+      },
+    })
+    .exec();
+    
+    res.status(200).json({ success: true, verify });
+  } catch (error) {
+    next(error);
+  }
+})
 module.exports = {
   AddVisit,
   get_user_bookings_properties,
-  updateStatus
+  updateStatus,
+  GetVideoConferenceData
 };

@@ -15,6 +15,7 @@ import ReportPage from './Pages/ReportPage.jsx';
 import VideoConferencePage from './Pages/VideoConferencePage.jsx';
 import AdminHomePage from './Pages/AdminHomePage.jsx';
 import AdminReportPage from './Pages/AdminReportPage.jsx';
+import TenantGroupChatPage from './Pages/TenantGroupChatPage.jsx';
 export   {
     LandingPage,
     SignUpPage,
@@ -32,5 +33,6 @@ export   {
     ReportPage,
     VideoConferencePage,
     AdminHomePage,
-    AdminReportPage
+    AdminReportPage,
+    TenantGroupChatPage
 }

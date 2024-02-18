@@ -52,7 +52,6 @@ const ReportForm = ({ setReportData, ReportData, types, setFilterData, setSearch
     try {
       const data1 = { ...data, user_id: user?.user?._id };
       const response = await axios.post(`${ReportServer}/add`, data1);
-      console.log(data);
       if (response.data.success) {
         const insertData = [
           ...ReportData,
