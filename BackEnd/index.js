@@ -17,7 +17,7 @@ const ChatRoutes = require('./Routes/ChatRoutes');
 const LeaseRoutes = require('./Routes/LeaseRoute');
 const port = process.env.PORT || 4000;
 const MongoURL = process.env.MONGO_URL;
-const production = false;
+const production = true;
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
