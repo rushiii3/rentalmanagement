@@ -107,8 +107,7 @@ const GetVideoConferenceData = asyncHandler(async(req,res,next)=>{
     }
     const verify = await VideoConference.findById(id).populate({
       path: "property_id",
-      select:
-        "_id", // Select necessary fields
+      select: "_id", // Select necessary fields
       populate: {
         path: "landlord_id",
         model: "User",

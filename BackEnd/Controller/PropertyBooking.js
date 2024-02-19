@@ -112,6 +112,7 @@ const updateStatus = asyncHandler(async (req, res, next) => {
         security_deposit: property_security_deposit,
         aadhar_number: null,
         agreement_doc: null,
+        lease_status:"Pending"
       });
       const UpdatePropertyRent = await PropertyModel.findByIdAndUpdate(property_id,{property_rented:true});
       if (newLeaseAgreement && UpdatePropertyRent) {

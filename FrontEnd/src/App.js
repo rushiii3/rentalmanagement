@@ -23,6 +23,7 @@ import {
   AdminReportPage,
   TenantGroupChatPage,
   LandlordLeasePage,
+  TenantLeasePage
 } from "./Routes";
 import NavbarShow from "./Components/Layouts/Headers/NavBarShow";
 import { Toaster } from "react-hot-toast";
@@ -123,6 +124,9 @@ function App() {
             />
             <Route path="/group-chat" element={<TenantGroupChatPage />} />
             <Route path="/landlord-lease" element={<LandlordLeasePage />} />
+            <Route path="/tenant-lease" element={<TenantLeasePage />} />
+
+            
           </Routes>
         </BrowserRouter>
         <DarkMode />

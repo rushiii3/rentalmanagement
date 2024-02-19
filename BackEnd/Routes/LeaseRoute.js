@@ -3,18 +3,11 @@ const router = express.Router();
 const {
   get_lease_gata,
   Update_lease,
+  delete_terminate,
+  get_tenant_leases,
 } = require("../Controller/LeaseController");
 const multer = require("multer");
-// Configure multer for file uploads
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, "uploads/"); // Specify the directory where uploaded files will be stored
-//   },
-//   filename: function (req, file, cb) {
-//     const timestamp = Date.now(); // Add a timestamp to the filename to make it unique
-//     cb(null, timestamp + "_" + file.originalname); // Define the filename format
-//   },
-// });
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads/");
@@ -38,4 +31,6 @@ router.post(
   },
   Update_lease
 );
+router.put('/delete-terminate',delete_terminate);
+router.get("/tenant-lease/:id",get_tenant_leases);
 module.exports = router;

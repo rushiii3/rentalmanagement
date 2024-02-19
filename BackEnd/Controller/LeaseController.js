@@ -1,6 +1,7 @@
 const errorThrow = require("../Middleware/ErrorHandler");
 const asyncHandler = require("express-async-handler");
 const LeaseModel = require("../Models/LeaseAgreement");
+const PropertyBooking = require("../Models/PropertyModel");
 var mongoose = require("mongoose");
 const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
@@ -49,24 +50,97 @@ const Update_lease = asyncHandler(async (req, res, next) => {
       console.log("removed file");
       //file removed
     });
-    const UpdatedLease = await LeaseModel.findByIdAndUpdate(data.id,{
-        lease_start_date: data.startDate,
-        lease_end_date: data.endDate,
-        rent_amount: data.rentAmount,
-        security_deposit: data.securityAmount,
-        aadhar_number: data.tenantAadharCard,
-        agreement_doc: result.secure_url, 
+    const UpdatedLease = await LeaseModel.findByIdAndUpdate(data.id, {
+      lease_start_date: data.startDate,
+      lease_end_date: data.endDate,
+      rent_amount: data.rentAmount,
+      security_deposit: data.securityAmount,
+      aadhar_number: data.tenantAadharCard,
+      agreement_doc: result.secure_url,
+      lease_status: "InAgreement",
     });
-    if(!UpdatedLease){
-        errorThrow("Failed to upadte lease data", 500);
+    if (!UpdatedLease) {
+      errorThrow("Failed to upadte lease data", 500);
     }
-    res.status(200).json({ success: true, doc:result.secure_url });
-
+    res.status(200).json({ success: true, doc: result.secure_url });
   } catch (error) {
     next(error);
   }
 });
+const delete_terminate = asyncHandler(async (req, res, next) => {
+  try {
+    const { action, action_id } = req.body;
+    const { property_id } = await LeaseModel.findById(action_id);
+    const update_property_rent = await PropertyBooking.findByIdAndUpdate(
+      property_id,
+      {
+        property_rented: false,
+      }
+    );
+    if (!update_property_rent) {
+      errorThrow("Failed to update property status", 500);
+    }
+    if (action === "Terminate") {
+      const update_lease_status = await LeaseModel.findByIdAndUpdate(
+        action_id,
+        { lease_status: action }
+      );
+      if (!update_lease_status) {
+        errorThrow("Failed to terminate lease", 500);
+      }
+      res.status(200).json({ success: true });
+    }
+    if (action === "Delete") {
+      const Delete_Lease = await LeaseModel.findByIdAndDelete(action_id);
+      if (!Delete_Lease) {
+        errorThrow("Failed to delete lease", 500);
+      }
+      res.status(200).json({ success: true });
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+const get_tenant_leases = asyncHandler(async(req,res,next)=>{
+  try {
+    const {id} = req.params;
+    console.log(id);
+    const lease = await LeaseModel.find({user_id:id},{aadhar_number:0}).populate({
+      path: "property_id",
+      model: "Property",
+      select: "_id property_no_of_bhk property_type building_name property_locality building_number property_streetname property_city property_state property_pincode images",
+      populate: {
+        path: "landlord_id",
+        model: "User",
+        select: "-_id firstname lastname",
+      },
+    });
+    const finallease = lease.map((leases) => {
+      if (
+        leases.property_id &&
+        leases.property_id.images &&
+        leases.property_id.images.length > 0
+      ) {
+        const { images, ...propertyWithoutImages } =
+          leases.property_id.toObject(); // Destructure 'images' from 'property_id'
+        return {
+          ...leases.toObject(), // Convert Mongoose object to plain JavaScript object
+          property_id: {
+            ...propertyWithoutImages, // Exclude 'images' from 'property_id'
+            image: leases.property_id.images[0].url, // Retain only the URL of the first image
+          },
+        };
+      }
+      return leases;
+    });
+    res.status(200).json({ success: true ,finallease });
+  } catch (error) {
+    
+  }
+})
 module.exports = {
   get_lease_gata,
   Update_lease,
+  delete_terminate,
+  get_tenant_leases
 };

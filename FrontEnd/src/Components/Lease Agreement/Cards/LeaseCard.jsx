@@ -1,19 +1,20 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import LeaseViewModal from "./LeaseViewModal";
 const formatDateString = (dateString) => {
   const date = new Date(dateString);
   const options = {
     year: "numeric",
-    month: "short",
+    month: "long",
     day: "numeric",
     timeZone: "UTC", // Set the desired time zone here
   };
   const formatter = new Intl.DateTimeFormat("en-US", options);
   return formatter.format(date);
 };
+const LeaseCard = ({ value }) => {
+//   const formattedDate = formatDateString(value?.booking_date);
 
-const PropertyBookingCard = ({ value }) => {
-  const formattedDate = formatDateString(value?.booking_date);
   return (
     <div class="bg-white rounded-xl border shadow-md overflow-hidden ">
       <div class="md:flex max-w-full">
@@ -25,11 +26,9 @@ const PropertyBookingCard = ({ value }) => {
           />
         </div>
         <div class="p-8">
-          <div class="flex flex-row lg:justify-start justify-center">
-            <div class="text-gray-700 font-medium text-sm text-center lg:text-left px-2">
-              {formattedDate}
-            </div>
-            <div class="text-gray-700 font-medium text-sm text-center lg:text-left px-2">
+          <div class="flex flex-col lg:justify-start justify-center">
+            
+            <div class="text-gray-700 text-center font-medium text-sm  lg:text-left px-2">
               Landlord : {value?.property_id?.landlord_id?.firstname}{" "}
               {value?.property_id?.landlord_id?.lastname}
             </div>
@@ -51,13 +50,20 @@ const PropertyBookingCard = ({ value }) => {
             {value?.property_id?.property_state},{" "}
             {value?.property_id?.property_pincode}
           </div>
+          <div class="text-gray-600 text-sm pt-1 text-center lg:text-left px-2 font-bold">
+            {value?.lease_status==="Pending" ? "Agreement not yet started!" : value?.lease_status==="Terminate" ? "Agreement has been terminated" :  value?.lease_status==="InAgreement" ? "You are in an Agreement" : null}
+          </div>
+          <div class="text-gray-600 text-sm pt-1 text-center lg:text-left px-2 font-bold">
+            {value?.lease_status==="Pending" ? "Agreement not yet started!" : value?.lease_status==="Terminate" ? "Agreement has been terminated" :  value?.lease_status==="InAgreement" ? (`${formatDateString(value?.lease_start_date)} to ${formatDateString(value?.lease_end_date)}`) : null}
+          </div>
         </div>
         <div className="flex justify-center items-center px-3 ml-auto py-2 font-semibold">
-          {value?.status}
+        {value?.lease_status==="Pending" ? "Agreement not yet started!" : value?.lease_status==="Terminate" ? "Agreement has been terminated" :  value?.lease_status==="InAgreement" ? <LeaseViewModal value={value}/> : null}
+
         </div>
       </div>
     </div>
   );
 };
 
-export default PropertyBookingCard;
+export default LeaseCard;

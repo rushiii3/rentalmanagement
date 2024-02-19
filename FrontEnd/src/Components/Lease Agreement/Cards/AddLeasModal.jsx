@@ -183,7 +183,7 @@ const AddLeasModal = ({ value, setLeaseData, LeaseData }) => {
         className="w-full"
         onPress={onOpen}
       >
-        {value?.tenantAadharCard === null && value?.agreement_doc === null
+        {value?.lease_status==="Pending"
           ? "Update"
           : "View"}
       </Button>
@@ -198,14 +198,13 @@ const AddLeasModal = ({ value, setLeaseData, LeaseData }) => {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-              {value?.tenantAadharCard === null && value?.agreement_doc === null
+              {value?.lease_status==="Pending"
           ? "Update "
           : "View "}
           Agreement
               </ModalHeader>
               <ModalBody>
-                {value?.tenantAadharCard === null &&
-                value?.agreement_doc === null ? (
+                {value?.lease_status==="Pending"? (
                   <form
                     onSubmit={handleSubmit(onSubmit)}
                     encType="multipart/form-data"

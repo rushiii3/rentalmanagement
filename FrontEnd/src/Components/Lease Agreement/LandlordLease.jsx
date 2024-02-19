@@ -6,8 +6,8 @@ import { LeaseServer, propertServer } from '../../server';
 import LeaseCards from './Cards/LeaseCards';
 const LandlordLease = () => {
     const { user } = useSelector((state) => state.user);
-    const [SelectedProperty, setSelectedProperty] = useState(null);
     const userid = user?.user?.email;
+    const [SelectedProperty, setSelectedProperty] = useState(null);
     const [LeaseData, setLeaseData] = useState([]);
     const [PropertyData, setPropertyData] = useState([]);
     useEffect(() => {
@@ -36,8 +36,16 @@ const LandlordLease = () => {
         }
         
       }, [userid]);
+      const SetLeaseData = async(property_id) =>{
+        const LeaseData = await axios.get(`${LeaseServer}/get-lease/${property_id}`);
+                    if(LeaseData.data.msg){
+                        setLeaseData(LeaseData.data.LeaseData)
+                        // console.log(LeaseData.data.LeaseData);
+                    }
+      }
       const handlePropertyChange = async (e) => {
         setSelectedProperty(e);
+        SetLeaseData(e);
         // const targetPropertyBookings = PropertyBookings.find((item) =>
         //   item.bookings.some((booking) => booking.property_id === e)
         // );
@@ -48,8 +56,10 @@ const LandlordLease = () => {
         // }
       };
   return (
-    <div className='p-3 min-h-screen'>
-
+    <div className="lg:mx-16 mt-5 mx-3 min-h-screen">
+            <h5 class="mb-5 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                Your Aggrements
+            </h5>
         <Tabs
           color="secondary"
           aria-label="Tabs sizes"
