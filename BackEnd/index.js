@@ -14,6 +14,7 @@ const PropertyBooking = require('./Routes/BookingRoutes');
 const Admin = require("./Routes/AdminRoute");
 const Report = require("./Routes/Report");
 const ChatRoutes = require('./Routes/ChatRoutes');
+const LeaseRoutes = require('./Routes/LeaseRoute');
 const port = process.env.PORT || 4000;
 const MongoURL = process.env.MONGO_URL;
 const production = false;
@@ -61,6 +62,7 @@ app.use("/api/v2/property-booking", PropertyBooking);
 app.use("/api/v2/admin", Admin);
 app.use("/api/v2/report", Report);
 app.use("/api/v2/chat", ChatRoutes);
+app.use("/api/v2/lease", LeaseRoutes);
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   res

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { motion as m } from "framer-motion";
 import { useFormContext } from "react-hook-form";
-import Select from 'react-select'
-import makeAnimated from 'react-select/animated';
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
 
 const Details = () => {
   const options = [
@@ -29,12 +29,9 @@ const Details = () => {
     },
   };
   const handleSelect = (e) => {
-    const selectedOptions = e.map(
-      (option) => option.value
-    );
+    const selectedOptions = e.map((option) => option.value);
     setValue("prefferedTenant", selectedOptions);
     trigger("prefferedTenant");
-
   };
   return (
     <m.div
@@ -52,18 +49,24 @@ const Details = () => {
 
       <div className="w-full mt-5">
         <div className="mt-5 gap-3 flex flex-col lg:flex-row">
-        <div className="w-full">
+          <div className="w-full">
             <label
               for="username-error"
               className={`block mb-2 text-sm font-medium ${
-                errors.prefferedTenant?.message ? "text-red-700 dark:text-red-500" : ""
+                errors.prefferedTenant?.message
+                  ? "text-red-700 dark:text-red-500"
+                  : ""
               } `}
             >
               Tenant Preferences
             </label>
-            
-        <Select options={options} makeAnimated={makeAnimated} isMulti={true} onChange={handleSelect}/>
 
+            <Select
+              options={options}
+              makeAnimated={makeAnimated}
+              isMulti={true}
+              onChange={handleSelect}
+            />
 
             <p class="mt-2 text-sm text-red-600 dark:text-red-500">
               {errors.prefferedTenant?.message}
@@ -73,7 +76,9 @@ const Details = () => {
             <label
               for="username-error"
               className={`block mb-2 text-sm font-medium ${
-                errors.propertyType?.message ? "text-red-700 dark:text-red-500" : ""
+                errors.propertyType?.message
+                  ? "text-red-700 dark:text-red-500"
+                  : ""
               } `}
             >
               Property Type
@@ -96,14 +101,16 @@ const Details = () => {
             <p class="mt-2 text-sm text-red-600 dark:text-red-500">
               {errors.propertyType?.message}
             </p>
-          </div>          
+          </div>
         </div>
         <div className="mt-5 gap-3 flex flex-col lg:flex-row">
-        <div className="w-full">
+          <div className="w-full">
             <label
               for="username-error"
               className={`block mb-2 text-sm font-medium ${
-                errors.numberOfBHKRK?.message ? "text-red-700 dark:text-red-500" : ""
+                errors.numberOfBHKRK?.message
+                  ? "text-red-700 dark:text-red-500"
+                  : ""
               } `}
             >
               Number of BHK/RK
@@ -128,7 +135,9 @@ const Details = () => {
             <label
               for="username-error"
               className={`block mb-2 text-sm font-medium ${
-                errors.numberOfBathrooms?.message ? "text-red-700 dark:text-red-500" : ""
+                errors.numberOfBathrooms?.message
+                  ? "text-red-700 dark:text-red-500"
+                  : ""
               } `}
             >
               Number of Bathrooms
@@ -149,14 +158,15 @@ const Details = () => {
               {errors.numberOfBathrooms?.message}
             </p>
           </div>
-          
         </div>
         <div className="mt-5 gap-3 flex flex-col lg:flex-row">
-        <div className="w-full">
+          <div className="w-full">
             <label
               for="username-error"
               className={`block mb-2 text-sm font-medium ${
-                errors.furnishing?.message ? "text-red-700 dark:text-red-500" : ""
+                errors.furnishing?.message
+                  ? "text-red-700 dark:text-red-500"
+                  : ""
               } `}
             >
               Furnishing
@@ -208,20 +218,22 @@ const Details = () => {
             <p class="mt-2 text-sm text-red-600 dark:text-red-500">
               {errors.parking?.message}
             </p>
-          </div>          
+          </div>
         </div>
         <div className="mt-5 gap-3 flex flex-col lg:flex-row">
-        <div className="w-full">
+          <div className="w-full">
             <label
               for="username-error"
               className={`block mb-2 text-sm font-medium ${
-                errors.yearBuilt?.message ? "text-red-700 dark:text-red-500" : ""
+                errors.yearBuilt?.message
+                  ? "text-red-700 dark:text-red-500"
+                  : ""
               } `}
             >
               Year built
             </label>
             <input
-            maxLength={4}
+              maxLength={4}
               {...register("yearBuilt")}
               type="number"
               id="username-error"
@@ -241,7 +253,9 @@ const Details = () => {
             <label
               for="username-error"
               className={`block mb-2 text-sm font-medium ${
-                errors.propertySize?.message ? "text-red-700 dark:text-red-500" : ""
+                errors.propertySize?.message
+                  ? "text-red-700 dark:text-red-500"
+                  : ""
               } `}
             >
               Property size in sq/ft
@@ -262,7 +276,6 @@ const Details = () => {
               {errors.propertySize?.message}
             </p>
           </div>
-          
         </div>
       </div>
     </m.div>

@@ -21,7 +21,8 @@ import {
   VideoConferencePage,
   AdminHomePage,
   AdminReportPage,
-  TenantGroupChatPage
+  TenantGroupChatPage,
+  LandlordLeasePage,
 } from "./Routes";
 import NavbarShow from "./Components/Layouts/Headers/NavBarShow";
 import { Toaster } from "react-hot-toast";
@@ -71,17 +72,57 @@ function App() {
               element={<SinglePropertyViewPage />}
             />
             <Route path="/add-property" element={<AddProperty />} />
-            <Route path="/bookings" element={<ProtectedTenant><Bookings /></ProtectedTenant>} />
-            <Route path="/property-bookings" element={<ProtectedLandlord><BookingsLandlord /></ProtectedLandlord>} />
-            <Route path="/report" element={<Protected><ReportPage /></Protected>} />
-            <Route path="/video-conference/:id" element={<Protected><VideoConferencePage /></Protected>} />
+            <Route
+              path="/bookings"
+              element={
+                <ProtectedTenant>
+                  <Bookings />
+                </ProtectedTenant>
+              }
+            />
+            <Route
+              path="/property-bookings"
+              element={
+                <ProtectedLandlord>
+                  <BookingsLandlord />
+                </ProtectedLandlord>
+              }
+            />
+            <Route
+              path="/report"
+              element={
+                <Protected>
+                  <ReportPage />
+                </Protected>
+              }
+            />
+            <Route
+              path="/video-conference/:id"
+              element={
+                <Protected>
+                  <VideoConferencePage />
+                </Protected>
+              }
+            />
 
-            <Route path="/dashboard" element={<ProtectedAdmin><AdminHomePage /></ProtectedAdmin>} />
-            <Route path="/admin-reports" element={<ProtectedAdmin><AdminReportPage /></ProtectedAdmin>} />
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedAdmin>
+                  <AdminHomePage />
+                </ProtectedAdmin>
+              }
+            />
+            <Route
+              path="/admin-reports"
+              element={
+                <ProtectedAdmin>
+                  <AdminReportPage />
+                </ProtectedAdmin>
+              }
+            />
             <Route path="/group-chat" element={<TenantGroupChatPage />} />
-            
-            
-            
+            <Route path="/landlord-lease" element={<LandlordLeasePage />} />
           </Routes>
         </BrowserRouter>
         <DarkMode />
