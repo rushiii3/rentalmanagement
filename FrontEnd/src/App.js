@@ -20,7 +20,10 @@ import {
   ReportPage,
   VideoConferencePage,
   AdminHomePage,
-  AdminReportPage
+  AdminReportPage,
+  TenantGroupChatPage,
+  LandlordLeasePage,
+  TenantLeasePage
 } from "./Routes";
 import NavbarShow from "./Components/Layouts/Headers/NavBarShow";
 import { Toaster } from "react-hot-toast";
@@ -31,6 +34,7 @@ import ProtectedTenant from "./Protected/ProtectedTenant";
 import ProtectedLandlord from "./Protected/ProtectedLandlord";
 import ProtectedAdmin from "./Protected/ProtectedAdmin";
 import Protected from "./Protected/Protected";
+import ChatLayout2 from "./Components/Chat/Chatlayout2";
 function App() {
   const { mode } = useSelector((state) => state.mode);
 
@@ -55,6 +59,7 @@ function App() {
             <Route path="/register" element={<SignUpPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/chat" element={<ChatPage />} />
+            <Route path="/chat2" element={<ChatLayout2 />} />
             <Route
               path="/activate/:activation_token"
               element={<Activation />}
@@ -68,15 +73,59 @@ function App() {
               element={<SinglePropertyViewPage />}
             />
             <Route path="/add-property" element={<AddProperty />} />
-            <Route path="/bookings" element={<ProtectedTenant><Bookings /></ProtectedTenant>} />
-            <Route path="/property-bookings" element={<ProtectedLandlord><BookingsLandlord /></ProtectedLandlord>} />
-            <Route path="/report" element={<Protected><ReportPage /></Protected>} />
-            <Route path="/video-conference" element={<Protected><VideoConferencePage /></Protected>} />
+            <Route
+              path="/bookings"
+              element={
+                <ProtectedTenant>
+                  <Bookings />
+                </ProtectedTenant>
+              }
+            />
+            <Route
+              path="/property-bookings"
+              element={
+                <ProtectedLandlord>
+                  <BookingsLandlord />
+                </ProtectedLandlord>
+              }
+            />
+            <Route
+              path="/report"
+              element={
+                <Protected>
+                  <ReportPage />
+                </Protected>
+              }
+            />
+            <Route
+              path="/video-conference/:id"
+              element={
+                <Protected>
+                  <VideoConferencePage />
+                </Protected>
+              }
+            />
 
-            <Route path="/dashboard" element={<ProtectedAdmin><AdminHomePage /></ProtectedAdmin>} />
-            <Route path="/admin-reports" element={<ProtectedAdmin><AdminReportPage /></ProtectedAdmin>} />
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedAdmin>
+                  <AdminHomePage />
+                </ProtectedAdmin>
+              }
+            />
+            <Route
+              path="/admin-reports"
+              element={
+                <ProtectedAdmin>
+                  <AdminReportPage />
+                </ProtectedAdmin>
+              }
+            />
+            <Route path="/group-chat" element={<TenantGroupChatPage />} />
+            <Route path="/landlord-lease" element={<LandlordLeasePage />} />
+            <Route path="/tenant-lease" element={<TenantLeasePage />} />
 
-            
             
           </Routes>
         </BrowserRouter>

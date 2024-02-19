@@ -15,6 +15,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import { PropertyBookingServer } from "../../../server";
+import { useDispatch, useSelector } from 'react-redux';
 const Details = ({
   Data,
   combinedMedia,
@@ -26,6 +27,8 @@ const Details = ({
   id,
   isAddressSet,
 }) => {
+  const chat = useSelector((state) => state.chat);
+  const dispatch = useDispatch();
   const [toggler, setToggler] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -60,7 +63,15 @@ const Details = ({
       navigate("/login", { state: { pathname } });
     }
   };
-
+  const sendChatuser = {
+    "id": Data?.landlord_id?._id,
+    "username" : `${Data?.landlord_id?.firstname} ${Data?.landlord_id?.lastname}`,
+    "profile":Data?.landlord_id?.avatar?.url,
+  }
+  const handleChat = () => {
+    dispatch({ type: 'AddSelectedUser', payload: sendChatuser });
+    navigate('/chat');
+  }
   return (
     <div className="lg:col-gap-12 xl:col-gap-16 mt-8 grid grid-cols-1 gap-12 lg:mt-12 lg:grid-cols-5 lg:gap-16">
       {/* image */}
@@ -259,7 +270,7 @@ const Details = ({
               {/* <p class="text-slate-500 font-medium">Product Engineer</p> */}
             </div>
             {Data?.landlord_id?._id !== user?.user?._id ? (
-              <button class="px-10 py-2 text-sm text-purple-600 font-semibold rounded-full border border-purple-200 hover:text-white hover:bg-purple-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2">
+              <button onClick={ handleChat} class="px-10 py-2 text-sm text-purple-600 font-semibold rounded-full border border-purple-200 hover:text-white hover:bg-purple-600 hover:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2">
                 Message
               </button>
             ) : (

@@ -1,6 +1,5 @@
 import { Avatar, Button, Chip } from "@nextui-org/react";
 import React from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import {
   PropertyBookingServer,
@@ -8,6 +7,9 @@ import {
   VideoConferenceServer,
 } from "../../../server";
 import toast from "react-hot-toast";
+import { BsCameraVideo } from "react-icons/bs";
+import {useNavigate } from "react-router-dom";
+
 const formatDateString = (dateString) => {
   const date = new Date(dateString);
   date.setUTCHours(0, 0, 0, 0); // Set hours, minutes, seconds, and milliseconds to zero
@@ -41,6 +43,8 @@ const PropertyBookingTabCard = ({
   PropertyData,
   setPropertyData,
 }) => {
+  const navigate = useNavigate();
+  console.log(value);
   const status =
     selectedTab === "property_booking"
       ? value?.status
@@ -73,30 +77,32 @@ const PropertyBookingTabCard = ({
       : selectedTab === "physical_visit"
       ? value?.pv_date
       : "";
-      const currentDate = new Date();
-      const timeDifference = currentDate - timestamp;
-      
-      // Calculate days, hours, minutes, months, and years
-      const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
-      const months = Math.floor(days / 30); // Approximate calculation
-      const years = Math.floor(months / 12); // Approximate calculation
-      
-      let result;
-      
-      if (years > 0) {
-        result = `${years} ${years > 1 ? 'years' : 'year'}`;
-      } else if (months > 0) {
-        result = `${months} ${months > 1 ? 'months' : 'month'}`;
-      } else if (days > 0) {
-        result = `${days} ${days > 1 ? 'days' : 'day'}`;
-      } else if (hours > 0) {
-        result = `${hours} ${hours > 1 ? 'hrs' : 'hr'}`;
-      } else {
-        result = `${minutes} ${minutes > 1 ? 'mins' : 'min'}`;
-      }
-      
+  const currentDate = new Date();
+  const timeDifference = currentDate - timestamp;
+
+  // Calculate days, hours, minutes, months, and years
+  const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+  const hours = Math.floor(
+    (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+  );
+  const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+  const months = Math.floor(days / 30); // Approximate calculation
+  const years = Math.floor(months / 12); // Approximate calculation
+
+  let result;
+
+  if (years > 0) {
+    result = `${years} ${years > 1 ? "years" : "year"}`;
+  } else if (months > 0) {
+    result = `${months} ${months > 1 ? "months" : "month"}`;
+  } else if (days > 0) {
+    result = `${days} ${days > 1 ? "days" : "day"}`;
+  } else if (hours > 0) {
+    result = `${hours} ${hours > 1 ? "hrs" : "hr"}`;
+  } else {
+    result = `${minutes} ${minutes > 1 ? "mins" : "min"}`;
+  }
+
   const handleStatus = async (id, type) => {
     const toastId = toast.loading("Updating statuss....");
 
@@ -212,36 +218,57 @@ const PropertyBookingTabCard = ({
                 convertToUTC(currentDate) > booking_date &&
                 status === "Accepted" ? (
                 <>
-                  <Button
-                    color="success"
-                    variant="bordered"
-                    onClick={() => handleStatus(value?._id, "Completed")}
-                  >
-                    Complete
-                  </Button>
-                  <Button
-                    color="danger"
-                    variant="bordered"
-                    onClick={() => handleStatus(value?._id, "Incomplete")}
-                  >
-                    Incomplete
-                  </Button>
+                  <div className="flex flex-col w-full">
+                    
+                    <div className="mb-4 w-full flex flex-row space-x-3">
+                      <Button
+                        color="success"
+                        variant="bordered"
+                        onClick={() => handleStatus(value?._id, "Completed")}
+                        className="w-full"
+                        
+                      >
+                        Complete
+                      </Button>
+                      <Button
+                        color="danger"
+                        variant="bordered"
+                        onClick={() => handleStatus(value?._id, "Incomplete")}
+                        className="w-full"
+                      >
+                        Incomplete
+                      </Button>
+                    </div>
+                    <Button
+                      startContent={<BsCameraVideo size={25} />}
+                      color="primary"
+                      variant="solid"
+                      onClick={() => navigate(`/video-conference/${value?._id}`)}
+                      
+                    >
+                      Start Conference
+                    </Button>
+                  </div>
                 </>
-              ) : status === "Accepted" ? (
-                <Chip color="primary" variant="flat">
-                  Accepted
-                </Chip>
-              ) : status === "Rejected" ? (
-                <Chip color="danger" variant="flat">
-                  Rejected
-                </Chip>
-              ) : status === "Completed" ? (
-                <Chip color="success" variant="flat">
-                  Completed
-                </Chip>
-              ) : status === "Incomplete" ? (
-                <Chip color="warning" variant="flat">
-                  Incomplete
+              ) : status === "Accepted" ||
+                status === "Rejected" ||
+                status === "Completed" ||
+                status === "Incomplete" ? (
+                <Chip
+                  color={
+                    status === "Accepted"
+                      ? "primary"
+                      : status === "Rejected"
+                      ? "danger"
+                      : status === "Completed"
+                      ? "success"
+                      : status === "Incomplete"
+                      ? "warning"
+                      : ""
+                  }
+                  variant="flat"
+                >
+                  {status}
                 </Chip>
               ) : (
                 ""

@@ -5,3 +5,6 @@ export const PhysicalVisitServer = !production ? ('http://localhost:4000/api/v2/
 export const VideoConferenceServer = !production ? ('http://localhost:4000/api/v2/video-conference') : ("https://rentalmanagement-cvrc.vercel.app/api/v2/video-conference");
 export const PropertyBookingServer = !production ? ('http://localhost:4000/api/v2/property-booking') : ("https://rentalmanagement-cvrc.vercel.app/api/v2/property-booking");
 export const ReportServer = !production ? ('http://localhost:4000/api/v2/report') : ("https://rentalmanagement-cvrc.vercel.app/api/v2/report");
+export const ChatServer = !production ? ('http://localhost:4000/api/v2/chat') : ("https://rentalmanagement-cvrc.vercel.app/api/v2/chat");
+export const LeaseServer = !production ? ('http://localhost:4000/api/v2/lease') : ("https://rentalmanagement-cvrc.vercel.app/api/v2/lease");
+

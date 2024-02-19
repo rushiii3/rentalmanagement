@@ -8,26 +8,70 @@ const serverLink = "https://rentalmanagement-omega.vercel.app";
 const localhostLink = "http://localhost:3000";
 const io = socketIO(server, {
   cors: {
-    origin: serverLink
+    origin:  "http://localhost:3000"
   }
 });
 
-app.get('/api/send-message', (req, res) => {
-     res.status(200).json({ success: true, message: 'Message sent to all clients' });
+const users = {};
+
+io.on('connection', (socket) => {
+  // Handle user authentication (replace with your actual authentication logic)
+  socket.on('authenticate', (username) => {
+    console.log('Received authentication request with username:', username);
+    users[username] = socket;
+    console.log(`${username} authenticated.`);
   });
 
-  io.on('connection', (socket) => {
-    console.log('A user connected');
-  
-    socket.on('message', (data) => {
-      console.log('Message from client:', data);
-      io.emit('message', data);
-    });
-  
-    socket.on('disconnect', () => {
-      console.log('A user disconnected');
-    });
+  // Handle chat messages
+  socket.on('chat-message', (msg, recipientUsername) => {
+    console.log(`Message from ${msg.username}: ${msg.message} to ${msg.recipient}`);
+
+    // If recipientUsername is not provided, it means it's a group message
+    if (!recipientUsername) {
+      // Emit the message to all connected clients (group chat)
+      console.log(msg);
+      io.emit('group-message', {
+        sender: msg.username,
+        message: msg.message,
+        profile: msg.profile,
+        id:msg.id,
+        time:msg.time
+      });
+    } else {
+      // Otherwise, it's a one-to-one message
+      // Check if the recipient is online
+      const recipientSocket = users[recipientUsername];
+      if (recipientSocket) {
+        // Generate a unique private room name based on usernames
+        const roomName = [msg.username, recipientUsername].sort().join('-');
+        console.log(roomName);
+        // Join the private room
+        socket.join(roomName);
+        recipientSocket.join(roomName);
+
+        // Emit the message to the private room
+        io.to(roomName).emit('private-message', {
+          sender: msg.username,
+          message: msg.message
+        });
+      } else {
+        console.log(`${recipientUsername} is not online.`);
+      }
+    }
   });
+
+  socket.on('disconnect', (reason) => {
+    console.log(`Client disconnected: ${socket.id}, reason: ${reason}`);
+    // Remove the user from the users object when they disconnect
+    for (const [username, userSocket] of Object.entries(users)) {
+      if (userSocket === socket) {
+        delete users[username];
+        break;
+      }
+    }
+  });
+});
+
 
 const PORT =  3500;
 

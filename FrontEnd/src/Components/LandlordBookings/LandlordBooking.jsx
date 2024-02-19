@@ -22,8 +22,6 @@ const LandlordBooking = () => {
   const [SelectedPropertyData, setSelectedPropertyData] = useState([]);
   const { user } = useSelector((state) => state.user);
   const userid = user?.user?.email;
-  const [input, setinput] = useState("");
-  const [input2, setinput2] = useState("");
   const [input3, setinput3] = useState("");
   const [PropertyBookings, setPropertyBookings] = useState([]);
   useEffect(() => {

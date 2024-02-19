@@ -8,6 +8,7 @@ const leaseAgreementSchema = new mongoose.Schema({
     security_deposit: { type: Number },
     aadhar_number: { type: String },
     agreement_doc: { type: String },
+    lease_status : {type:String},
     user_id: { type: String, required: true },
     property_id: { type: String, required: true }
 });

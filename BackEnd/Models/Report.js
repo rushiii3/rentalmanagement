@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
-
+const User = require('./UserModel');
+const Admin = require('./Admin');
 const reportSchema = new mongoose.Schema({
   report_title: {
     type: String,
@@ -23,11 +24,13 @@ const reportSchema = new mongoose.Schema({
     default: "Pending"
   },
   user_id: {
-    type: mongoose.Schema.Types.ObjectId, // Assuming it references user collection
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User", // Assuming it references user collection
     required: true
   },
   admin_email: {
-    type: mongoose.Schema.Types.ObjectId, // Assuming it references admin collection
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Admin", // Assuming it references admin collection
     required: true
   }
 });

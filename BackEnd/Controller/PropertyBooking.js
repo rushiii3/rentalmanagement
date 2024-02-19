@@ -102,15 +102,17 @@ const updateStatus = asyncHandler(async (req, res, next) => {
     }
     if (type === "Accepted") {
       const { user_id, property_id } = await BookingModel.findById(id);
+      const {property_security_deposit,property_rent_price} = await PropertyModel.findById(property_id);
       const newLeaseAgreement = await LeaseAgreement.create({
         user_id: user_id,
         property_id: property_id,
         lease_start_date: null,
         lease_end_date: null,
-        rent_amount: null,
-        security_deposit: null,
+        rent_amount: property_rent_price,
+        security_deposit: property_security_deposit,
         aadhar_number: null,
         agreement_doc: null,
+        lease_status:"Pending"
       });
       const UpdatePropertyRent = await PropertyModel.findByIdAndUpdate(property_id,{property_rented:true});
       if (newLeaseAgreement && UpdatePropertyRent) {
