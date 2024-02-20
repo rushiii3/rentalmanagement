@@ -2,6 +2,7 @@ const errorThrow = require("../Middleware/ErrorHandler");
 const asyncHandler = require("express-async-handler");
 const LeaseModel = require("../Models/LeaseAgreement");
 const PropertyBooking = require("../Models/PropertyModel");
+const MaintenaceModel = require('../Models/MaintenanceModel');
 var mongoose = require("mongoose");
 const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
@@ -138,9 +139,62 @@ const get_tenant_leases = asyncHandler(async(req,res,next)=>{
     
   }
 })
+const tenant_in_agreement = asyncHandler(async(req,res,next)=>{
+try {
+  const {id} = req.params;
+  const InAgreementDetails = await LeaseModel.find({user_id:id,lease_status:"InAgreement"}).populate({
+    path: "property_id",
+    model: "Property",
+    select: "_id property_no_of_bhk property_type building_name property_locality building_number property_streetname property_city property_state property_pincode "}).limit(1);
+    const Maintenances = await MaintenaceModel.find({user_id:id}).populate({
+      path: "property_id",
+      model: "Property",
+      select: "_id property_no_of_bhk property_type building_name property_locality building_number property_streetname property_city property_state property_pincode images"});
+      const InAgreement = InAgreementDetails.map((visit) => {
+        if (
+          visit.property_id &&
+          visit.property_id.images &&
+          visit.property_id.images.length > 0
+        ) {
+          const { images, ...propertyWithoutImages } =
+            visit.property_id.toObject(); // Destructure 'images' from 'property_id'
+          return {
+            ...visit.toObject(), // Convert Mongoose object to plain JavaScript object
+            property_id: {
+              ...propertyWithoutImages, // Exclude 'images' from 'property_id'
+              image: visit.property_id.images[0].url, // Retain only the URL of the first image
+            },
+          };
+        }
+        return visit;
+      });
+      const finalMaintenances = Maintenances.map((visit) => {
+        if (
+          visit.property_id &&
+          visit.property_id.images &&
+          visit.property_id.images.length > 0
+        ) {
+          const { images, ...propertyWithoutImages } =
+            visit.property_id.toObject(); // Destructure 'images' from 'property_id'
+          return {
+            ...visit.toObject(), // Convert Mongoose object to plain JavaScript object
+            property_id: {
+              ...propertyWithoutImages, // Exclude 'images' from 'property_id'
+              image: visit.property_id.images[0].url, // Retain only the URL of the first image
+            },
+          };
+        }
+        return visit;
+      });
+  res.status(200).json({ success: true,InAgreement,finalMaintenances });
+} catch (error) {
+  
+}
+})
 module.exports = {
   get_lease_gata,
   Update_lease,
   delete_terminate,
-  get_tenant_leases
+  get_tenant_leases,
+  tenant_in_agreement
 };
