@@ -35,14 +35,14 @@ const TenantMaintenace = () => {
         Your Maintenance
       </h5>
       <div className="flex justify-end ">
-      <AddModalMaintenace LeaseAgrrement={LeaseAgrrement} userid={userid}/>
+      <AddModalMaintenace LeaseAgrrement={LeaseAgrrement} userid={userid} MaintenaceData={MaintenaceData} setMaintenaceData={setMaintenaceData}/>
 
       </div>
       <div className="flex flex-col space-y-3 mt-4">
        {
         MaintenaceData ? (
           MaintenaceData.map((value,key)=>(
-            <TenantMaintenanceCard value={value} key={key}/>
+            <TenantMaintenanceCard value={value} key={key} />
           ))
         )  : ""
        }

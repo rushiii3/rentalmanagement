@@ -145,7 +145,7 @@ try {
   const InAgreementDetails = await LeaseModel.find({user_id:id,lease_status:"InAgreement"}).populate({
     path: "property_id",
     model: "Property",
-    select: "_id property_no_of_bhk property_type building_name property_locality building_number property_streetname property_city property_state property_pincode "}).limit(1);
+    select: "_id property_no_of_bhk property_type building_name property_locality building_number property_streetname property_city property_state property_pincode images"}).limit(1);
     const Maintenances = await MaintenaceModel.find({user_id:id}).populate({
       path: "property_id",
       model: "Property",

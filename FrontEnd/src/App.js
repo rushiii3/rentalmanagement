@@ -24,7 +24,8 @@ import {
   TenantGroupChatPage,
   LandlordLeasePage,
   TenantLeasePage,
-  MaintenaceTenantPage
+  MaintenaceTenantPage,
+  LandlordMaintenancePage
 } from "./Routes";
 import NavbarShow from "./Components/Layouts/Headers/NavBarShow";
 import { Toaster } from "react-hot-toast";
@@ -127,6 +128,9 @@ function App() {
             <Route path="/landlord-lease" element={<LandlordLeasePage />} />
             <Route path="/tenant-lease" element={<TenantLeasePage />} />
             <Route path="/tenant-maintenance" element={<MaintenaceTenantPage />} />
+            <Route path="/landlord-maintenance" element={<LandlordMaintenancePage />} />
+            
+
             
             
           </Routes>

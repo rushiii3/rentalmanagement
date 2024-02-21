@@ -21,11 +21,11 @@ import { useSelector } from "react-redux";
 import ErrorPage from "../../Loader/ErrorPage";
 import { MaintenaceServer } from "../../../server";
 
-const AddModalMaintenace = ({ LeaseAgrrement,userid }) => {
-    console.log(LeaseAgrrement?.property_id?._id);
+const AddModalMaintenace = ({ LeaseAgrrement,userid,MaintenaceData,setMaintenaceData }) => {
+
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const { mode } = useSelector((state) => state.mode);
-
+  console.log(MaintenaceData);
   const schema = yup.object().shape({
     emergency: yup.boolean().required('Emergency field is required'),
     description: yup
@@ -50,22 +50,33 @@ const AddModalMaintenace = ({ LeaseAgrrement,userid }) => {
       try {
         const data1 = { ...data, user_id: userid,property_id:LeaseAgrrement?.property_id?._id};
         const response = await axios.post(`${MaintenaceServer}/add-maintenance`, data1);
+        console.log(response);
         if (response.data.success) {
-        //   const insertData = [
-        //     ...ReportData,
-        //     {
-        //       report_title: data.title,
-        //       report_type: data.filter,
-        //       report_description: data.description,
-        //       report_status: "Pending",
-        //       report_date: Date.now(), // Replace with current date/time
-        //     },
-        //   ];
-
-        //   setReportData(insertData);
-        //   setFilterData(insertData);
-        //   setSearchInput("");
-        //   setSearchSelect("");
+          console.log(data1);
+          const insertData = [
+            ...MaintenaceData,
+            {
+              user_id:userid,
+              emergency: data1.emergency,
+              request_description: data1.description,
+              request_status: "Pending",
+              date_of_request: Date.now(),
+              property_id:{
+                _id: LeaseAgrrement?.property_id?._id,
+                building_name: LeaseAgrrement?.property_id?.building_name,
+                building_number: LeaseAgrrement?.property_id?.building_number,
+                property_streetname: LeaseAgrrement?.property_id,
+                property_city: LeaseAgrrement?.property_id?.property_city,
+                property_state: LeaseAgrrement?.property_id?.property_streetname,
+                property_locality: LeaseAgrrement?.property_id?.property_locality,
+                property_type: LeaseAgrrement?.property_id?.property_type,
+                property_no_of_bhk: LeaseAgrrement?.property_id?.property_no_of_bhk,
+                property_pincode: LeaseAgrrement?.property_id?.property_pincode,
+                image: LeaseAgrrement?.property_id?.image
+            }
+            },
+          ];
+          setMaintenaceData(insertData)
           onOpenChange(isOpen);
           reset();
           toast.success("Maintenance has been added", {
@@ -73,7 +84,7 @@ const AddModalMaintenace = ({ LeaseAgrrement,userid }) => {
           });
         }
       } catch (error) {
-        toast.error(error.response.data.message, {
+        toast.error(error.message, {
           id: toastId,
         });
       }
@@ -108,7 +119,9 @@ const AddModalMaintenace = ({ LeaseAgrrement,userid }) => {
                   <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="w-full flex flex-col space-y-4">
                         <div>
+                          <p>
 
+                          </p>
                         </div>
                       <div>
                         <Select

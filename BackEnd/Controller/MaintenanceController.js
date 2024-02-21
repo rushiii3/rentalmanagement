@@ -22,13 +22,40 @@ const add_maintenance = asyncHandler(async (req, res, next) => {
         errorThrow("Error inserting maintenance",500);
       }
       // Send a success response
-      res.status(200).json({ success: true });
+      res.status(200).json({ success: true,id:savedRequest._id });
     } catch (error) {
       // Pass the error to the error handling middleware
       next(error);
     }
   });
-  
+
+  const get_maintenance_data = asyncHandler(async(req,res,next)=>{
+    try {
+      const {id} = req.params;
+      const maintenance = await MaintenaceModel.find({property_id:id}).
+      populate({
+        path: 'user_id',
+        select: 'firstname lastname avatar.url',
+      });
+      res.status(200).json({ success: true,maintenance });
+    } catch (error) {
+      next(error)
+    }
+  })
+  const update_status = asyncHandler(async(req,res,next)=>{
+    try {
+      const { action, action_id } = req.body;
+      const updated_maintenance_status  = await MaintenaceModel.findByIdAndUpdate(action_id,{request_status:action});
+      if (!updated_maintenance_status) {
+        errorThrow("Failed to update property status", 500);
+      }
+      res.status(200).json({ success: true });
+    } catch (error) {
+      
+    }
+  })
 module.exports = {
-    add_maintenance
+    add_maintenance,
+    get_maintenance_data,
+    update_status
 }

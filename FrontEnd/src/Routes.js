@@ -19,6 +19,7 @@ import TenantGroupChatPage from './Pages/TenantGroupChatPage.jsx';
 import LandlordLeasePage from './Pages/LandlordLeasePage.jsx';
 import TenantLeasePage from './Pages/TenantLeasePage.jsx';
 import MaintenaceTenantPage from './Pages/MaintenaceTenantPage.jsx';
+import LandlordMaintenancePage from './Pages/LandlordMaintenancePage'
 export   {
     LandingPage,
     SignUpPage,
@@ -40,5 +41,6 @@ export   {
     TenantGroupChatPage,
     LandlordLeasePage,
     TenantLeasePage,
-    MaintenaceTenantPage
+    MaintenaceTenantPage,
+    LandlordMaintenancePage
 }
