@@ -29,7 +29,10 @@ const NavbarShow = ({ children }) => {
       Location.pathname === "/landlord-lease" ||
       Location.pathname === "/tenant-lease" ||
       Location.pathname === "/tenant-maintenance" ||
-      Location.pathname === "/landlord-maintenance"
+      Location.pathname === "/landlord-maintenance" ||
+      Location.pathname === "/tenant-monthly-rent" ||
+      Location.pathname === "/landlord-monthly-rent" ||
+      Location.pathname === "/tenant-review"
     ) {
       setShow(true);
     } else if (

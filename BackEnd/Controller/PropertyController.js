@@ -1,57 +1,69 @@
 const asyncHandler = require("express-async-handler");
 const mongoose = require("mongoose");
 const Property = require("../Models/PropertyModel");
-const Review = require('../Models/ReviewModel');
+const Review = require("../Models/ReviewModel");
 const User = require("../Models/UserModel");
 const errorThrow = require("../Middleware/ErrorHandler");
+const cloudinary = require("cloudinary").v2;
+cloudinary.config({
+  cloud_name: "dmuhioahv",
+  api_key: "166273865775784",
+  api_secret: "blcMAs-77T_1t1VGnRIlLia_RqM",
+  secure: true,
+});
 const AddProperty = asyncHandler(async (req, res, next) => {
   try {
     const data = req.body;
-    const imagesWithKeys = data?.ImageVideoData
-    .filter(item => item.type === 'image')
-    .map(item => ({ url: item.url, publicKey: item.publicKey }));
-  const videosWithKeys = data?.ImageVideoData
-    .filter(item => item.type === 'video')
-    .map(item => ({ url: item.url, publicKey: item.publicKey }));
+    const imagesWithKeys = data?.ImageVideoData.filter(
+      (item) => item.type === "image"
+    ).map((item) => ({ url: item.url, publicKey: item.publicKey }));
+    const videosWithKeys = data?.ImageVideoData.filter(
+      (item) => item.type === "video"
+    ).map((item) => ({ url: item.url, publicKey: item.publicKey }));
     // Create a new property document
-    const newProperty = new Property({
+    const newProperty = new Property(
+      {
       building_name: data.buildingName,
-    building_number: data.buildingNumber,
-    property_streetname: data.streetAddress,
-    property_city: data.city,
-    property_state: data.state,
-    property_locality: data.locality,
-    property_pincode: data.pincode,
-    property_size: data.propertySize,
-    property_bathrooms: data.numberOfBathrooms,
-    property_year_built: data.yearBuilt,
-    property_type_of_house: data.category,
-    property_type: data.propertyType,
-    property_no_of_bhk: data.numberOfBHKRK,
-    property_furnishing: data.furnishing,
-    property_parking: data.parking,
-    property_description: data.description,
-    property_rent_price: data.price,
-    property_availability: data.status,
-    property_rented: false,
-    property_security_deposit: data.deposit,
-    property_coordinates: {
-      latitude: data.latitude,
-      longitude: data.longitude,
-    },
-    landlord_id: data.id,
-    images: imagesWithKeys,
-    videos: videosWithKeys,
-    preferred_tenants:data.prefferedTenant,
-    });
+      building_number: data.buildingNumber,
+      property_streetname: data.streetAddress,
+      property_city: data.city,
+      property_state: data.state,
+      property_locality: data.locality,
+      property_pincode: data.pincode,
+      property_size: data.propertySize,
+      property_bathrooms: data.numberOfBathrooms,
+      property_year_built: data.yearBuilt,
+      property_type_of_house: data.category,
+      property_type: data.propertyType,
+      property_no_of_bhk: data.numberOfBHKRK,
+      property_furnishing: data.furnishing,
+      property_parking: data.parking,
+      property_description: data.description,
+      property_rent_price: data.price,
+      property_availability: data.status,
+      property_rented: false,
+      property_security_deposit: data.deposit,
+      property_coordinates: {
+        latitude: data.latitude,
+        longitude: data.longitude,
+      },
+      landlord_id: data.id,
+      images: imagesWithKeys,
+      videos: videosWithKeys,
+      preferred_tenants: data.prefferedTenant,
+    }
+    );
     // Save the new property document
     const savedProperty = await newProperty.save();
     console.log(savedProperty);
     if (savedProperty) {
       res.status(200).json({ success: true });
     } else {
-      console.error('Failed to save property due to validation errors:', newProperty.errors);
-      errorThrow('Failed to save property due to validation errors.', 500);
+      console.error(
+        "Failed to save property due to validation errors:",
+        newProperty.errors
+      );
+      errorThrow("Failed to save property due to validation errors.", 500);
     }
   } catch (error) {
     next(error);
@@ -146,7 +158,7 @@ const get_properties = async (req, res, next) => {
       image: property.images[0].url, // Only include the first image value
       property_type: property.property_type,
       property_bhks: property.property_no_of_bhk,
-      id : property._id,
+      id: property._id,
     }));
 
     res.json(transformedProperties);
@@ -180,36 +192,110 @@ const properties_landmark = asyncHandler(async (req, res, next) => {
 const getSinglePropertyDetail = asyncHandler(async (req, res, next) => {
   try {
     const { id } = req.params;
-    const property = await Property.findById(id)
-      .populate({
-        path: 'landlord_id',
-        select: 'firstname lastname avatar.url',
-      })
-    const review = await Review.find({ property_id: id }).
-    populate({
-      path: 'user_id',
-      select: 'firstname lastname avatar.url',
+    const property = await Property.findById(id).populate({
+      path: "landlord_id",
+      select: "firstname lastname avatar.url",
     });
-   
+    const review = await Review.find({ property_id: id }).populate({
+      path: "user_id",
+      select: "firstname lastname avatar.url",
+    });
 
     if (!property) {
-      errorThrow('No property available', 404);
+      errorThrow("No property available", 404);
     }
 
-    res.status(200).json({property,review});
+    res.status(200).json({ property, review });
   } catch (error) {
     next(error);
   }
 });
-const get_landlord_properties = asyncHandler(async(req,res,next)=>{
+const get_landlord_properties = asyncHandler(async (req, res, next) => {
   try {
-    const {id} = req.params;
-    const {_id} = await User.findOne({email:id});
-    if(!_id){
-      errorThrow('No user exists', 404);
+    const { id } = req.params;
+    const { _id } = await User.findOne({ email: id });
+    if (!_id) {
+      errorThrow("No user exists", 404);
     }
-    const property = await Property.find({landlord_id:_id});
-    res.status(200).json({property});
+    const property = await Property.find({ landlord_id: _id });
+    res.status(200).json({ property });
+  } catch (error) {
+    next(error);
+  }
+});
+const get_properties_info = asyncHandler(async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      errorThrow("Invalid Property Id", 404);
+    }
+    const PropertyInfo = await Property.findById(id);
+    res.status(200).json({ success: true, PropertyInfo });
+  } catch (error) {
+    next(error);
+  }
+});
+const delete_image = asyncHandler(async(req,res,next)=>{
+  try {
+    const {token}  = req.body;
+    const {result} = await cloudinary.uploader
+      .destroy(token);
+      if(result==="not found"){
+        errorThrow("No image ID not found", 404);
+      }else{
+        res.status(200).json({ success: true });
+      }
+    console.log(result);
+
+  } catch (error) {
+    next(error);
+  }
+})
+const update_property = asyncHandler(async(req,res,next)=>{
+  try {
+    const data = req.body;
+    if(!data){
+      errorThrow("No data found to update", 404);
+    }
+    const imagesWithKeys = data?.ImageVideoData.filter(
+      (item) => item.type === "image"
+    ).map((item) => ({ url: item.url, publicKey: item.publicKey }));
+    const videosWithKeys = data?.ImageVideoData.filter(
+      (item) => item.type === "video"
+    ).map((item) => ({ url: item.url, publicKey: item.publicKey }));
+    const update_property = await Property.findByIdAndUpdate(data.id,
+      {
+        building_name: data.buildingName,
+        building_number: data.buildingNumber,
+        property_streetname: data.streetAddress,
+        property_city: data.city,
+        property_state: data.state,
+        property_locality: data.locality,
+        property_pincode: data.pincode,
+        property_size: data.propertySize,
+        property_bathrooms: data.numberOfBathrooms,
+        property_year_built: data.yearBuilt,
+        property_type_of_house: data.category,
+        property_type: data.propertyType,
+        property_no_of_bhk: data.numberOfBHKRK,
+        property_furnishing: data.furnishing,
+        property_parking: data.parking,
+        property_description: data.description,
+        property_rent_price: data.price,
+        property_availability: data.status,
+        property_security_deposit: data.deposit,
+        property_coordinates: {
+          latitude: data.latitude,
+          longitude: data.longitude,
+        },
+        images: imagesWithKeys,
+        videos: videosWithKeys,
+        preferred_tenants: data.prefferedTenant,
+      })
+      if(!update_property){
+        errorThrow("Failed to update property", 404);
+      }
+    res.status(200).json({ success: true });
   } catch (error) {
     next(error);
   }
@@ -219,5 +305,8 @@ module.exports = {
   get_properties,
   properties_landmark,
   getSinglePropertyDetail,
-  get_landlord_properties
+  get_landlord_properties,
+  get_properties_info,
+  delete_image,
+  update_property
 };

@@ -1,10 +1,17 @@
 // framer motion
 import { motion as m } from "framer-motion";
 import { useFormContext } from "react-hook-form";
+import { AppContext } from "../../../UpdateProperty";
+import { useContext, useEffect } from "react";
 export default function Description() {
+
+  
+  const { PropertyData } = useContext(AppContext);
+  console.log(PropertyData);
   const {
     register,
     formState: { errors },
+    setValue
   } = useFormContext();
   const container = {
     hidden: {
@@ -17,6 +24,15 @@ export default function Description() {
       },
     },
   };
+  useEffect(() => {
+    if(PropertyData){
+      setValue("description",PropertyData?.property_description);
+      setValue("category",PropertyData?.property_type_of_house);
+      setValue("status",PropertyData?.property_availability);
+      setValue("price",PropertyData?.property_rent_price);
+      setValue("deposit",PropertyData?.property_security_deposit);
+    }
+  }, [PropertyData])
   const typesOfHouses = [
     "Haveli",
     "Bungalow",

@@ -25,7 +25,10 @@ import {
   LandlordLeasePage,
   TenantLeasePage,
   MaintenaceTenantPage,
-  LandlordMaintenancePage
+  LandlordMaintenancePage,
+  TenantMonthlyRentPage,
+  TenantReviewPage,
+  UpdatePropertyPage
 } from "./Routes";
 import NavbarShow from "./Components/Layouts/Headers/NavBarShow";
 import { Toaster } from "react-hot-toast";
@@ -129,9 +132,10 @@ function App() {
             <Route path="/tenant-lease" element={<TenantLeasePage />} />
             <Route path="/tenant-maintenance" element={<MaintenaceTenantPage />} />
             <Route path="/landlord-maintenance" element={<LandlordMaintenancePage />} />
+            <Route path="/tenant-monthly-rent" element={<TenantMonthlyRentPage />} />
+            <Route path="/tenant-review" element={<TenantReviewPage />} />
             
-
-            
+            <Route path="/update-property/:id" element={<UpdatePropertyPage />} />
             
           </Routes>
         </BrowserRouter>

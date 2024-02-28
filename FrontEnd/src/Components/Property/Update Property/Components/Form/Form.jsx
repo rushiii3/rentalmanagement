@@ -10,13 +10,11 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import { propertServer } from "../../../../../server";
-import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
-const Form = ({ step, next, prev, goto }) => {
-  const {user } = useSelector((state) => state.user);
+const Form = ({ step, next, prev, goto, id }) => {
   const currentYear = new Date().getFullYear();
   const [ImageVideoData, setImageVideoData] = useState([]);
-  const preferredTenants = ['Family', 'Working professionals'];
+  const preferredTenants = ["Family", "Working professionals"];
 
   const schema = yup.object().shape({
     description: yup
@@ -74,12 +72,15 @@ const Form = ({ step, next, prev, goto }) => {
     latitude: yup.number().required("Latitude is required"),
     longitude: yup.string().required("Longitude is required"),
     prefferedTenant: yup
-    .array()
-    .of(
-      yup.string().oneOf(preferredTenants).required('At least one tenant preference is required')
-    )
-    .min(1, 'At least one tenant preference is required')
-    .required('Tenant preference is required'),
+      .array()
+      .of(
+        yup
+          .string()
+          .oneOf(preferredTenants)
+          .required("At least one tenant preference is required")
+      )
+      .min(1, "At least one tenant preference is required")
+      .required("Tenant preference is required"),
     propertyType: yup
       .string()
       .required("Property Type is requried")
@@ -107,11 +108,11 @@ const Form = ({ step, next, prev, goto }) => {
       .required("Parking is required")
       .notOneOf(["Select parking"], "Please select parking!"),
     yearBuilt: yup
-    .number()
-    .required('Year built is required')
-    .typeError('Enter a valid number')
-    .min(1900, 'Year should be a 4-digit number')
-    .max(currentYear, `Year should not be greater than ${currentYear}`),
+      .number()
+      .required("Year built is required")
+      .typeError("Enter a valid number")
+      .min(1900, "Year should be a 4-digit number")
+      .max(currentYear, `Year should not be greater than ${currentYear}`),
     propertySize: yup
       .number()
       .typeError("Enter a valid size")
@@ -138,22 +139,22 @@ const Form = ({ step, next, prev, goto }) => {
     resolver: yupResolver(schema),
     mode: "all",
   });
-  const onSubmit = async(data) => {
+  const onSubmit = async (data) => {
     try {
-      const Data = {...data,ImageVideoData,id:user?.user?._id};
-    console.log(Data);
-    const responseData = await axios.post(`${propertServer}/add-property`,Data);
-    console.log(responseData);
-    if(responseData?.data?.success){
-      methods.reset();
-      next();
-    }else{
-      toast.error("Something went wrong!");
-    }
+      const Data = { ...data, ImageVideoData, id: id };
+      const responseData = await axios.put(
+        `${propertServer}/update-property`,
+        Data
+      );
+      console.log(responseData);
+      if (responseData?.data?.success) {
+        next();
+      } else {
+        toast.error("Something went wrong!");
+      }
     } catch (error) {
       toast.error("Something went wrong!");
     }
-    
   };
   const handleClick = async () => {
     if (step === 0) {
@@ -219,7 +220,12 @@ const Form = ({ step, next, prev, goto }) => {
           {step === 0 && <Description />}
           {step === 1 && <Location />}
           {step === 2 && <Details />}
-          {step === 3 && <Media ImageVideoData={ImageVideoData} setImageVideoData={setImageVideoData}/>}
+          {step === 3 && (
+            <Media
+              ImageVideoData={ImageVideoData}
+              setImageVideoData={setImageVideoData}
+            />
+          )}
           <m.div
             className="flex gap-5 justify-end transform -translate-y-10 lg:transform-none "
             initial={{ opacity: 0 }}
@@ -243,7 +249,7 @@ const Form = ({ step, next, prev, goto }) => {
             {step !== 4 && (
               <m.button
                 className="py-2.5 px-6 rounded-lg text-sm font-medium text-white bg-teal-600"
-                type={step===3?"submit":"button"}
+                type={step >= 3 ? "submit" : "button"}
                 variants={btnVariants}
                 whileHover="hover"
                 whileTap="tap"

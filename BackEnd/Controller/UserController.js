@@ -134,6 +134,7 @@ const activation = asyncHandler(async (req, res, next) => {
         state: "N/A",
         pincode: 0,
       },
+      creditPoint:0
     });
 
     if (!user) {
@@ -196,9 +197,10 @@ const getUser = asyncHandler(async (req, res, next) => {
       address,
       phoneNumber,
       _id,
-      isCurrentlyEmployee
+      isCurrentlyEmployee,
+      creditPoint
     } = await UserModel.findById(req.user).select(
-      "email role firstname middlename lastname avatar address phoneNumber _id"
+      "email role firstname middlename lastname avatar address phoneNumber _id creditPoint"
     ) ||  await Admin.findById(req.user).select(
       "email role firstname middlename lastname avatar address phoneNumber _id isCurrentlyEmployee"
     );
@@ -214,7 +216,8 @@ const getUser = asyncHandler(async (req, res, next) => {
       imgurl,
       phoneNumber,
       _id,
-      isCurrentlyEmployee
+      isCurrentlyEmployee,
+      creditPoint
     };
     res.status(200).json({ success: true, user: user });
   } catch (error) {

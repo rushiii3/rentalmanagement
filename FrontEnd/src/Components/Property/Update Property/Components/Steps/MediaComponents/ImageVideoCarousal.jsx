@@ -8,6 +8,7 @@ const ImageVideoCarousal = ({
   setModalViewer,
   setModelOpen,
 }) => {
+  
   const handleView = (type, url) => {
     setModalViewer({ type: type, url: url });
     setModelOpen(true);
@@ -16,6 +17,7 @@ const ImageVideoCarousal = ({
     <div className="flex flex-row overflow-x-scroll gap-x-10 no-scrollbar mt-5 max-w-2xl">
       {ImageVideoData && ImageVideoData.length !== 0 ? (
         ImageVideoData.map((value, key) => (
+          
           <div
             className="flex-shrink-0 aspect-square h-20  overflow-hidden rounded-lg text-center"
             key={key}
@@ -54,7 +56,7 @@ const ImageVideoCarousal = ({
                   <p className="p-1 size text-xs"></p>
                   <button
                     type="button"
-                    onClick={() => deleteImage(value.deleteToken)}
+                    onClick={() => deleteImage(value.publicKey)}
                     className="delete ml-auto focus:outline-none hover:bg-gray-300 hover:text-black p-1 rounded-lg"
                   >
                     <MdDelete size={20} />

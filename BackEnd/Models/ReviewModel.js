@@ -21,6 +21,10 @@ const reviewSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Property', // This refers to the 'Property' model
     required: true
+  },
+  added:{
+    type:Date,
+    default: Date.now
   }
 });
 
