@@ -2,7 +2,6 @@ import React, { useEffect, useState,createContext } from "react";
 import { motion } from "framer-motion";
 import { useHandleForm } from "./Add Property/Hook/useHandleForm";
 import Info from "./Update Property/Components/Info/Info";
-// import './AddProperty.css'
 import Form from "./Update Property/Components/Form/Form";
 import { useParams } from "react-router-dom";
 import axios from "axios";

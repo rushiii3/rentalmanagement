@@ -11,15 +11,14 @@ import {
 import { useSelector } from "react-redux";
 import { RentServer } from "../../../server";
 import axios from "axios";
-import useRazorpay from "react-razorpay";
+import ConfirmModal from "./ConfirmModal";
 
 const TenantMontlyRent = () => {
-  const [Razorpay] = useRazorpay();
-
   const { user } = useSelector((state) => state.user);
   const userid = user?.user?._id;
   const [columns, setColumns] = useState([]);
-  const [DisabledDays, setDisabledDays] = useState([]);
+  let pay_months = [];
+  var count = 1;
   useEffect(() => {
     if (userid) {
       const getMonthlyData = async () => {
@@ -28,12 +27,13 @@ const TenantMontlyRent = () => {
             `${RentServer}/tenant-rent/${userid}`
           );
           if (data.success) {
+            console.log(data.InAgreement[0].rent_amount);
             const startDate = new Date(data.InAgreement[0].lease_start_date);
             const endDate = new Date(data.InAgreement[0].lease_end_date);
             const monthPairs = getMonthPairs(startDate, endDate);
             const newColumns = monthPairs.map((value) => ({
               Month: value,
-              Amount: "4220",
+              Amount: data.InAgreement[0].rent_amount,
               Date: "",
               Method: "",
               Status: "",
@@ -72,49 +72,6 @@ const TenantMontlyRent = () => {
   const handlePay = (amount, key) => {
     console.log(amount);
     console.log(key);
-    // const order = await createOrder(params); //  Create order on your backend
-
-    const options = {
-      key: "rzp_test_cA6wZvVTsahL8l", // Enter the Key ID generated from the Dashboard
-      amount: amount*100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-      currency: "INR",
-      name: "Rent Me",
-      description: "Test Transaction",
-      image: "https://example.com/your_logo",
-      // order_id: "order_9A33XWu170gUtm", //This is a sample Order ID. Pass the `id` obtained in the response of createOrder().
-      handler: function (response) {
-        console.log(response);
-        alert(response.razorpay_payment_id);
-        alert(response.razorpay_order_id);
-        alert(response.razorpay_signature);
-      },
-      prefill: {
-        name: "Piyush Garg",
-        email: "youremail@example.com",
-        contact: "9999999999",
-      },
-      notes: {
-        address: "Razorpay Corporate Office",
-      },
-      theme: {
-        color: "#3399cc",
-      },
-    };
-  
-    const rzp1 = new Razorpay(options);
-  
-    rzp1.on("payment.failed", function (response) {
-      console.log(response);
-      alert(response.error.code);
-      alert(response.error.description);
-      alert(response.error.source);
-      alert(response.error.step);
-      alert(response.error.reason);
-      alert(response.error.metadata.order_id);
-      alert(response.error.metadata.payment_id);
-    });
-  
-    rzp1.open();
   };
   return (
     <div className="lg:mx-16 mt-5 mx-3 min-h-screen">
@@ -130,7 +87,6 @@ const TenantMontlyRent = () => {
           align="center"
           fullWidth
           isStriped
-          disabledKeys={DisabledDays}
         >
           <TableHeader>
             <TableColumn>Month</TableColumn>
@@ -151,13 +107,24 @@ const TenantMontlyRent = () => {
                 <TableCell>{value?.Status}</TableCell>
                 <TableCell>
                   {value?.Status !== "Paid" ? (
-                    <Button
-                      color="success"
-                      variant="flat"
-                      onClick={() => handlePay(value.Amount * (key + 1), key)}
-                    >
-                      Pay Now
-                    </Button>
+                    <React.Fragment>
+                      <p>{
+                        pay_months =  columns.map((value, keymonth) => {
+                          if(keymonth === key)
+                          {
+                            return value
+                          }
+                        })
+                      }</p>
+                      <ConfirmModal
+                        amount={value.Amount * count}
+                        id={key}
+                        month={pay_months}
+                      />
+                      <p className="hidden">{(count = count + 1)}</p>
+                    </React.Fragment>
+                  ) : value?.Status === "Paid" ? (
+                    "Paid"
                   ) : (
                     "N/A"
                   )}

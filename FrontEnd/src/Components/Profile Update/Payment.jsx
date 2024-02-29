@@ -1,8 +1,8 @@
 import { Button } from "@nextui-org/react";
 import React, { useRef, useState } from "react";
-import { useCallback } from "react";
 import useRazorpay from "react-razorpay";
-
+import Store from "../../Redux/store";
+import { LoadUser } from "../../Redux/action/user";
 import {
   Modal,
   ModalContent,
@@ -12,16 +12,17 @@ import {
   useDisclosure,
   Input,
 } from "@nextui-org/react";
-import axios from 'axios'
+import toast from "react-hot-toast";
+import axios from "axios";
 import { TransactionServer } from "../../server";
-const Payment = ({ points,userEmail }) => {
+const Payment = ({ points, userEmail }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [price, setprice] = useState(0);
   const [Error, setError] = useState(false);
+  const [errorMessage, seterrorMessage] = useState("");
   const [Razorpay] = useRazorpay();
-  const handlePay = async() => {
-
-    onOpenChange(isOpen)
+  const handlePay = async () => {
+    onOpenChange(isOpen);
     const options = {
       key: "rzp_test_cA6wZvVTsahL8l", // Enter the Key ID generated from the Dashboard
       amount: price * 100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
@@ -32,7 +33,7 @@ const Payment = ({ points,userEmail }) => {
       handler: function (response) {
         console.log(response);
         alert(response.razorpay_payment_id);
-        sendPayment(response.razorpay_payment_id,price)
+        sendPayment(response.razorpay_payment_id, price);
       },
       prefill: {
         name: "Piyush Garg",
@@ -56,21 +57,31 @@ const Payment = ({ points,userEmail }) => {
     //   alert(response.error.metadata.order_id);
     //   alert(response.error.metadata.payment_id);
     // });
-
-        rzp1.open();
-    
-    console.log("hellp");
+    if (price > 1000 && price<=100000) {
+      rzp1.open();
+    }
   };
- 
-const sendPayment = async(pay_id,amount) => {
-  try {
-      const {data} = await axios.post(`${TransactionServer}/add-transaction`,{pay_id,amount,userEmail});
-      console.log(data);
-  } catch (error) {
-    
-  }
 
-}
+  const sendPayment = async (pay_id, amount) => {
+    const toastId = toast.loading("Adding funds to your account...");
+    try {
+      
+      const { data } = await axios.post(
+        `${TransactionServer}/add-transaction`,
+        { pay_id, amount, userEmail }
+      );
+      if (data.success) {
+        toast.success("Funds Added successfully", {
+          id: toastId,
+        });
+        Store.dispatch(LoadUser());
+      }
+    } catch (error) {
+      toast.error(error.message, {
+        id: toastId,
+      });
+    }
+  };
 
   const handlePrice = async (e) => {
     setprice(parseInt(e));
@@ -80,15 +91,20 @@ const sendPayment = async(pay_id,amount) => {
     setprice(inputValue);
     if (inputValue < 1000) {
       setError(true);
+      seterrorMessage("Amount should be greater than ₹1000");
     } else {
       setError(false);
+      seterrorMessage("");
+    }
+    if(inputValue>100000){
+      setError(true);
+      seterrorMessage("Amount should be less than ₹100000");
+    }else{
+      setError(false);
+      seterrorMessage("");
     }
   };
-  
 
- 
-  
-  
   return (
     <div className="w-full">
       <div class="w-full p-8 bg-white text-center rounded-3xl pr-16 shadow-2xl">
@@ -126,14 +142,14 @@ const sendPayment = async(pay_id,amount) => {
                         onInput={(e) => handlePriceInput(e)}
                       />
                     </div>
-                    {
-                        Error ? (<div>
-                            <p className="text-red-500">
-                              Price should be greater than ₹1000
-                            </p>
-                          </div>) : null
-                    }
-                    
+                    {Error ? (
+                      <div>
+                        <p className="text-red-500">
+                          {errorMessage}
+                        </p>
+                      </div>
+                    ) : null}
+
                     <div class="flex justify-between">
                       <div
                         className={`mt-[14px] cursor-pointer truncate rounded-[4px] border p-3 text-[#191D23] ${
@@ -182,11 +198,10 @@ const sendPayment = async(pay_id,amount) => {
                     <Button color="danger" variant="light" onPress={onClose}>
                       Cancel
                     </Button>
-                    <Button color="primary"  onClick={handlePay}>
+                    <Button color="primary" onClick={handlePay}>
                       Add Funds
                     </Button>
                   </div>
-                  
                 </ModalBody>
               </>
             )}

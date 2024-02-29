@@ -25,8 +25,9 @@ const add_transaction = asyncHandler(async(req, res, next) => {
     if (!insert_data) {
       errorThrow("Failed to add transaction data", 500);
     }
+    const sum = user.creditPoint + amount;
     const udpdate_user_credits = await UserModel.findByIdAndUpdate(user._id,{
-        creditPoint : amount,
+        creditPoint : sum,
     })
     if(!udpdate_user_credits){
         errorThrow("Failed to add transaction data", 500);
