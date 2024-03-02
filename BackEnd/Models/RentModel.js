@@ -14,7 +14,7 @@ const rentSchema = new mongoose.Schema({
     required: true,
   },
   rent_status: {
-    type: String,
+    type: Boolean,
     required: true,
   },
   user_id: {

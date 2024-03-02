@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const User = require("./UserModel");
-const rentSchema = new mongoose.Schema({
+const CreditSchema = new mongoose.Schema({
   creditPoints: {
     type: Number,
     required: true,
@@ -10,7 +10,7 @@ const rentSchema = new mongoose.Schema({
     ref: "User", // Assuming it references user collection
     required: true,
   },
-  reciver_id: {
+  receiver_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User", // Assuming it references admin collection
     required: true,
@@ -21,4 +21,4 @@ const rentSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Rent", rentSchema);
+module.exports = mongoose.model("Credit", CreditSchema);
