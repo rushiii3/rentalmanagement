@@ -18,7 +18,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Avatar } from "@nextui-org/react";
 import Resizer from "react-image-file-resizer";
 import axios from "axios";
-import { userServer } from "../../../server";
+import { AdminServer, userServer } from "../../../server";
 const AddUserModal = ({ type, method }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const resizeFile = (file) =>
@@ -85,7 +85,7 @@ const AddUserModal = ({ type, method }) => {
       .max(32, "Password must be less than 32")
       .required("Please provide a password"),
     role: yup.string().required("Please select your role!"),
-
+  
     streetname: yup.string().required("Please provide your street name"),
     state: yup.string().required("Please provide your state"),
     city: yup.string().required("Please provide your city"),
@@ -95,7 +95,21 @@ const AddUserModal = ({ type, method }) => {
       .required("Please provide your pincode")
       .min(6, "Pincode must be at least 6 digits")
       .max(6, "Pincode must be at most 6 digits"),
+      ...(type === "admin" && {
+        joiningDate: yup
+          .date()
+          .required('Date of Joining is required')
+          .min(new Date(), 'Date of Joining must be today or later')
+          .test('is-within-one-month', 'Date of Joining cannot be more than one month from today', function(value) {
+            const maxDate = new Date();
+            maxDate.setMonth(maxDate.getMonth() + 1);
+            return value <= maxDate;
+          }),
+      }),
   });
+  
+
+  
 
   const {
     register,
@@ -113,7 +127,13 @@ const AddUserModal = ({ type, method }) => {
       setloading(true);
       const toastId = toast.loading("Registeringg...");
       try {
-        const serverData = await axios.post(``, data1);
+        var serverData ;
+        if (type === "admin") {
+            serverData = await axios.post(`${AdminServer}/${method}-${type}`, data1);
+        }
+        if (type === "user") {
+            serverData = await axios.post(`${userServer}/${method}-${type}`, data1);
+        }
         if (serverData.data.success) {
           reset();
           setimageURL("");
@@ -143,7 +163,7 @@ const AddUserModal = ({ type, method }) => {
       <Button
         className="bg-foreground text-background"
         endContent={<GoPlus />}
-        size="sm"
+        size="md"
         onPress={onOpen}
       >
         Add New
@@ -380,6 +400,36 @@ const AddUserModal = ({ type, method }) => {
                         {errors.role?.message}
                       </p>
                     </div>
+                    {
+                        type==="admin" && (<div className="w-full">
+                        <label
+                          for="username-error"
+                          className={`block mb-2 text-sm font-medium ${
+                            errors.joiningDate?.message
+                              ? "text-red-700 dark:text-red-500"
+                              : ""
+                          } `}
+                        >
+                          Date of Joining
+                        </label>
+                        <input
+                          {...register("joiningDate")}
+                          type="date"
+                          id="username-error"
+                          class={`block p-2.5 w-full text-sm  rounded-lg border ${
+                            errors.joiningDate?.message
+                              ? "dark:bg-red-100 dark:border-red-400 border-red-500 text-red-500 placeholder-red-700 focus:ring-red-500 focus:border-red-500 bg-red-50"
+                              : "text-gray-900 bg-gray-50 border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          }  
+              `}
+                          placeholder="Enter your property price"
+                        />
+                        <p class="mt-2 text-sm text-red-600 dark:text-red-500">
+                          {errors.joiningDate?.message}
+                        </p>
+                      </div>)
+                    }
+                    
                     <div className="w-full relative">
                       <label
                         for="username-error"
@@ -569,6 +619,7 @@ const AddUserModal = ({ type, method }) => {
                         {errors.pincode?.message}
                       </p>
                     </div>
+                    
 
                     <Button
                       type="submit"

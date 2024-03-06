@@ -476,7 +476,7 @@ const get_all_user_details = asyncHandler(async (req, res, next) => {
     } 
     if (type === "admin") {
       const users = await Admin.find({}).select(
-        "email role firstname middlename lastname avatar address phoneNumber _id isCurrentlyEmployee"
+        "email role firstname middlename lastname avatar address phoneNumber _id isCurrentlyEmployee joiningDate"
       );
       res.status(200).json({ success: true, users });
       return; // Return to exit the handler
@@ -486,6 +486,78 @@ const get_all_user_details = asyncHandler(async (req, res, next) => {
     next(error);
   }
 });
+
+const add_users = asyncHandler(async(req,res,next)=>{
+  try {
+    const {email,firstname,middlename,lastname,phoneno,role,password,streetname,state,city,pincode,profile} = req.body;
+    const userExists = await UserModel.findOne({ email });
+    if (userExists) {
+      errorThrow("User email already exists!", 400);
+    }
+  
+    const options = {
+      use_filename: true,
+      unique_filename: true,
+      overwrite: true,
+    };
+    const image = profile;
+  
+    const result = await cloudinary.uploader.upload(image).catch((error) => {
+      errorThrow(error.message, 500);
+    });
+  
+    if (!result) {
+      errorThrow("Failed to upload the image", 500);
+    }
+  
+    const image_id = result.public_id;
+    const image_link = result.secure_url;
+
+    const user = await UserModel.create({
+      firstname,
+      middlename,
+      lastname,
+      email,
+      phoneNumber: phoneno,
+      role,
+      password,
+      avatar: {
+        public_id: image_id,
+        url: image_link,
+      },
+      address: {
+        streetname: streetname,
+        city: city,
+        state: state,
+        pincode: pincode,
+      },
+      creditPoint: 0,
+    });
+    if (!user) {
+      errorThrow("Internal error while creating user", 500);
+    }
+
+     res.status(201).json({ success:true, message: "User Added Successfully" });
+  } catch (error) {
+    next(error);
+  }
+})
+const deleteuser = asyncHandler(async(req,res,next)=>{
+  try {
+    const {id} = req.params;
+    const user = await UserModel.findById(id);
+    if(!user){
+      errorThrow("No user found", 404);
+    }
+    const delete_user = await UserModel.findByIdAndDelete(id);
+    if (!delete_user) {
+      errorThrow("Failed to delete user", 500);
+    }
+    res.status(201).json({ success: true});
+  } catch (error) {
+    next(error)
+  }
+})
 
 module.exports = {
   hello,
@@ -502,4 +574,6 @@ module.exports = {
   update_user_password,
   logout,
   get_all_user_details,
+  add_users,
+  deleteuser
 };

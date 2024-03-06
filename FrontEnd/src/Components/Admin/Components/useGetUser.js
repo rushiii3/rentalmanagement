@@ -9,20 +9,30 @@ const useGetUser = (apiEndpoint) => {
       if (apiEndpoint) {
         try {
           const { data } = await axios.get(`${userServer}/get-details/${apiEndpoint}`);
-          console.log();
-          const usermap = data.users.map((value)=>({
-            id: value?._id,
-            name: `${value?.firstname} ${value?.middlename} ${value?.lastname} `,
-            role: value?.role,
-            phonenumber: value?.phoneNumber,
-            avatar: `${value?.avatar?.url}`,
-            email: value?.email,
-            streetname: value?.address?.streetname,
-            city: value?.address?.city,
-            state: value?.address?.state,
-            pincode: value?.address?.pincode,
-            creditpoint: value?.creditPoint
-          }))
+          const usermap = data.users.map((value) => {
+            const userObject = {
+              id: value?._id,
+              name: `${value?.firstname} ${value?.middlename} ${value?.lastname}`,
+              role: value?.role,
+              phonenumber: value?.phoneNumber,
+              avatar: `${value?.avatar?.url}`,
+              email: value?.email,
+              streetname: value?.address?.streetname,
+              city: value?.address?.city,
+              state: value?.address?.state,
+              pincode: value?.address?.pincode,
+            };
+          
+            if (apiEndpoint === "user") {
+              userObject.creditpoint = value?.creditPoint;
+            }
+            if (apiEndpoint === "admin") {
+                userObject.currentEmployee =  value?.isCurrentlyEmployee ? "Yes" : "No" ;
+                userObject.dateJoining = value?.joiningDate;
+              }
+            return userObject;
+          });
+          
           console.log(usermap);
           setUsers(usermap);
           setLoading(false);

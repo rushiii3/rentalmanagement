@@ -16,24 +16,50 @@ import {
   User,
   Pagination,
   Tooltip,
+  Spinner,
 } from "@nextui-org/react";
 import { IoSearchOutline } from "react-icons/io5";
 import { FaChevronDown } from "react-icons/fa6";
-import { columns, users } from "./data";
+// import { columns } from "./data";
 import { IoEyeOutline } from "react-icons/io5";
 import { FiEdit3 } from "react-icons/fi";
-import { MdOutlineDelete } from "react-icons/md";
 import useGetUser from "./useGetUser";
 import AddUserModal from "./AddUserModal";
-
+import ConfirmationDeleteuser from "./ConfirmationDeleteuser";
 
 const capitalize = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 const INITIAL_VISIBLE_COLUMNS = ["name", "role", "actions"];
 
-const Clients = ({type}) => {
-  const {users, loading} = useGetUser(type);
+const Clients = ({ type }) => {
+  const { users, loading } = useGetUser(type);
+  const columns = [
+    { name: "ID", uid: "id", sortable: true },
+    { name: "NAME", uid: "name", sortable: true },
+    { name: "ROLE", uid: "role", sortable: true },
+    { name: "PHONE NUMBER", uid: "phonenumber" },
+    { name: "EMAIL", uid: "email" },
+    { name: "STREETNAME", uid: "streetname" },
+    { name: "CITY", uid: "city" },
+    { name: "STATE", uid: "state" },
+    { name: "PINCODE", uid: "pincode", sortable: true },
+    ...(type === "admin"
+      ? [
+          {
+            name: "CURRENTLY EMPLOYEED",
+            uid: "currentEmployee",
+            sortable: true,
+          },
+          { name: "DATE OF JOINING", uid: "dateJoining", sortable: true },
+        ]
+      : []),
+    ...(type === "user"
+      ? [{ name: "CREDITPOINT", uid: "creditpoint", sortable: true }]
+      : []),
+    { name: "ACTIONS", uid: "actions" },
+  ];
+
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
   const [visibleColumns, setVisibleColumns] = React.useState(
@@ -98,7 +124,8 @@ const Clients = ({type}) => {
 
   const renderCell = React.useCallback((user, columnKey) => {
     const cellValue = user[columnKey];
-
+    console.log();
+    const id = user["id"];
     switch (columnKey) {
       case "name":
         return (
@@ -117,28 +144,26 @@ const Clients = ({type}) => {
         return (
           <div className="flex flex-col">
             <p className="text-bold text-small capitalize">{cellValue}</p>
-            {/* <p className="text-bold text-tiny capitalize text-default-500">
-              {user.team}
-            </p> */}
           </div>
         );
 
       case "actions":
         return (
           <div className="relative flex items-center gap-2">
-            <Tooltip content="Details">
+            {/* <Tooltip content="Details">
               <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
                 <IoEyeOutline />
               </span>
-            </Tooltip>
+            </Tooltip> */}
             <Tooltip content="Edit user">
-              <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+              <span className="text-lg text-default-400  active:opacity-50">
                 <FiEdit3 />
               </span>
             </Tooltip>
             <Tooltip color="danger" content="Delete user">
-              <span className="text-lg text-danger cursor-pointer active:opacity-50">
-                <MdOutlineDelete />
+              <span className="text-lg text-danger  active:opacity-50">
+                <ConfirmationDeleteuser type={type} id={id}/>
+                
               </span>
             </Tooltip>
           </div>
@@ -180,37 +205,12 @@ const Clients = ({type}) => {
             onClear={() => setFilterValue("")}
             onValueChange={onSearchChange}
           />
-          <div className="flex gap-3">
-            {/* <Dropdown>
-              <DropdownTrigger className="hidden sm:flex">
-                <Button
-                  endContent={<FaChevronDown className="text-small" />}
-                  size="sm"
-                  variant="flat"
-                >
-                  Status
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu
-                disallowEmptySelection
-                aria-label="Table Columns"
-                closeOnSelect={false}
-                selectedKeys={statusFilter}
-                selectionMode="multiple"
-                onSelectionChange={setStatusFilter}
-              >
-                {statusOptions.map((status) => (
-                  <DropdownItem key={status.uid} className="capitalize">
-                    {capitalize(status.name)}
-                  </DropdownItem>
-                ))}
-              </DropdownMenu>
-            </Dropdown> */}
+          <div className="flex flex-col md:flex-row gap-3">
             <Dropdown>
-              <DropdownTrigger className="hidden sm:flex">
+              <DropdownTrigger className=" sm:flex">
                 <Button
                   endContent={<FaChevronDown className="text-small" />}
-                  size="sm"
+                  size="md"
                   variant="flat"
                 >
                   Columns
@@ -231,7 +231,7 @@ const Clients = ({type}) => {
                 ))}
               </DropdownMenu>
             </Dropdown>
-            
+
             <AddUserModal type={type} method="add" />
           </div>
         </div>
@@ -321,7 +321,12 @@ const Clients = ({type}) => {
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody emptyContent={"No users found"} items={sortedItems}>
+      <TableBody
+        emptyContent={"No users found"}
+        items={sortedItems}
+        isLoading={loading}
+        loadingContent={<Spinner label="Loading..." />}
+      >
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => (

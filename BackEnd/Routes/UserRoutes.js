@@ -15,7 +15,9 @@ const {
   update_user_info,
   update_user_password,
   logout,
-  get_all_user_details
+  get_all_user_details,
+  add_users,
+  deleteuser
 } = require("../Controller/UserController");
 const { isAuthenticated } = require("../Middleware/auth");
 router.get("/hehe", hello);
@@ -32,4 +34,7 @@ router.put("/update-user-info", update_user_info);
 router.put("/update-user-password", update_user_password);
 router.get("/logout", logout);
 router.get("/get-details/:type", get_all_user_details);
+router.post("/add-user", add_users);
+router.delete('/delete-user/:id',deleteuser);
+
 module.exports = router;
