@@ -38,9 +38,9 @@ const GetRentData = asyncHandler(async (req, res, next) => {
       }
       return visit;
     });
-    const Rent = await RentModel.find({user_id:id});
+    const Rent = await RentModel.find({ user_id: id });
 
-    res.status(200).json({ success: true, InAgreement, Rent});
+    res.status(200).json({ success: true, InAgreement, Rent });
   } catch (error) {
     next(error);
   }
@@ -64,7 +64,22 @@ const add_rent = asyncHandler(async (req, res, next) => {
       errorThrow("Failed to update user credits", 500);
     }
     const { landlord_id } = await Property.findById(property_id);
+    const landlord = await UserModel.findById(landlord_id);
+    if (!landlord) {
+      errorThrow("User email does not exist!", 400);
+    }
+    const sum = landlord.creditPoint + amounts;
 
+    const update_user_credits_landlord = await UserModel.findByIdAndUpdate(
+      landlord_id,
+      {
+        creditPoint: sum,
+      }
+    );
+
+    if (!update_user_credits_landlord) {
+      errorThrow("Failed to update user credits", 500);
+    }
     // Save transaction
     const newCredit = new Credit({
       creditPoints: amounts,
@@ -105,7 +120,53 @@ const add_rent = asyncHandler(async (req, res, next) => {
     res.status(500).json({ success: false, error: "Internal Server Error" });
   }
 });
+
+const get_rents_for_property = asyncHandler(async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const lease = await LeaseModel.find({
+      property_id: id,
+      lease_status: "InAgreement",
+    });
+    const Rents = await RentModel.find({ property_id: id });
+    res.status(200).json({ success: true, lease, Rents });
+  } catch (error) {
+    next(error);
+  }
+});
+
+const add_rent_landlord = asyncHandler(async (req, res, next) => {
+  try {
+    const { amounts, months, user_id, property_id } = req.body;
+    const data = {
+      amounts: amounts,
+      months: months,
+      user_id: user_id,
+      property_id: property_id,
+    };
+    const rent = data.months.map((month) => {
+      return new RentModel({
+        payment_type: false,
+        rent_status: true,
+        rent_amount: data.amounts,
+        rent_month: month,
+        user_id: data.user_id,
+        property_id: data.property_id,
+      });
+    });
+    const inserted_rents = await RentModel.insertMany(rent);
+    if (!inserted_rents) {
+      errorThrow("Failed to insert rents", 404);
+    }
+
+    res.status(200).json({ success: true });
+  } catch (error) {
+    next(error);
+  }
+});
 module.exports = {
   GetRentData,
   add_rent,
+  get_rents_for_property,
+  add_rent_landlord
 };

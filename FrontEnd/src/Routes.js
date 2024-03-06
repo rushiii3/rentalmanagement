@@ -23,6 +23,7 @@ import LandlordMaintenancePage from './Pages/LandlordMaintenancePage';
 import TenantMonthlyRentPage from './Pages/TenantMonthlyRentPage.jsx';
 import TenantReviewPage from './Pages/TenantReviewPage.jsx';
 import UpdatePropertyPage from './Pages/UpdatePropertyPage.jsx';
+import LandlordMontlyRent from './Pages/LandlordMonthlyRentPage.jsx'
 export   {
     LandingPage,
     SignUpPage,
@@ -48,5 +49,6 @@ export   {
     LandlordMaintenancePage,
     TenantMonthlyRentPage,
     TenantReviewPage,
-    UpdatePropertyPage
+    UpdatePropertyPage,
+    LandlordMontlyRent
 }

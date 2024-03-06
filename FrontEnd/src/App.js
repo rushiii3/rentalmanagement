@@ -28,7 +28,8 @@ import {
   LandlordMaintenancePage,
   TenantMonthlyRentPage,
   TenantReviewPage,
-  UpdatePropertyPage
+  UpdatePropertyPage,
+  LandlordMontlyRent,
 } from "./Routes";
 import NavbarShow from "./Components/Layouts/Headers/NavBarShow";
 import { Toaster } from "react-hot-toast";
@@ -130,13 +131,29 @@ function App() {
             <Route path="/group-chat" element={<TenantGroupChatPage />} />
             <Route path="/landlord-lease" element={<LandlordLeasePage />} />
             <Route path="/tenant-lease" element={<TenantLeasePage />} />
-            <Route path="/tenant-maintenance" element={<MaintenaceTenantPage />} />
-            <Route path="/landlord-maintenance" element={<LandlordMaintenancePage />} />
-            <Route path="/tenant-monthly-rent" element={<TenantMonthlyRentPage />} />
+            <Route
+              path="/tenant-maintenance"
+              element={<MaintenaceTenantPage />}
+            />
+            <Route
+              path="/landlord-maintenance"
+              element={<LandlordMaintenancePage />}
+            />
+            <Route
+              path="/tenant-monthly-rent"
+              element={<TenantMonthlyRentPage />}
+            />
+            <Route
+              path="/landlord-monthly-rent"
+              element={<LandlordMontlyRent />}
+            />
+
             <Route path="/tenant-review" element={<TenantReviewPage />} />
-            
-            <Route path="/update-property/:id" element={<UpdatePropertyPage />} />
-            
+
+            <Route
+              path="/update-property/:id"
+              element={<UpdatePropertyPage />}
+            />
           </Routes>
         </BrowserRouter>
         <DarkMode />

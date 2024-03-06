@@ -115,7 +115,7 @@ const ConfirmModal = ({
                     </div>
                     <div class="mt-4 md:mt-0 md:ml-6 text-center md:text-left">
                       <p class="font-bold">Confirmation!</p>
-                      <p class="text-sm text-gray-700 mt-1">
+                      <p class="text-sm text-gray-700 mt-1 dark:text-white">
                         You are paying for {PayingMonthPairs.length} months of
                         amount <b>₹{amount}</b>. Your credits will be deducted
                         from your account. This action cannot be undone.

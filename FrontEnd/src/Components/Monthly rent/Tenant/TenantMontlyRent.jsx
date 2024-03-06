@@ -36,7 +36,7 @@ const TenantMontlyRent = () => {
   const [NotPaidMonths, setNotPaidMonths] = useState([]);
   const [LeaseData, setLeaseData] = useState();
   var count = 1;
- /* The `useEffect` hook in the provided code snippet is responsible for fetching monthly rent data for
+  /* The `useEffect` hook in the provided code snippet is responsible for fetching monthly rent data for
  a specific tenant when the `userid` state variable changes. Here's a breakdown of what the
  `useEffect` is doing: */
   useEffect(() => {
@@ -84,12 +84,12 @@ const TenantMontlyRent = () => {
       getMonthlyData();
     }
   }, [userid]);
-/**
- * The function `getMonthPairs` generates pairs of short month names and years between a given start
- * and end date.
- * @returns The function `getMonthPairs` returns an array of month pairs in the format "startMonth -
- * endMonth" based on the input startDate and endDate.
- */
+  /**
+   * The function `getMonthPairs` generates pairs of short month names and years between a given start
+   * and end date.
+   * @returns The function `getMonthPairs` returns an array of month pairs in the format "startMonth -
+   * endMonth" based on the input startDate and endDate.
+   */
   function getMonthPairs(startDate, endDate) {
     const monthPairs = [];
     let currentDate = new Date(startDate);
@@ -110,10 +110,10 @@ const TenantMontlyRent = () => {
 
     return monthPairs;
   }
-/**
- * The function `get_not_paid_months` filters out months where the `Status` property is not true from
- * an array of objects and sets the result in state.
- */
+  /**
+   * The function `get_not_paid_months` filters out months where the `Status` property is not true from
+   * an array of objects and sets the result in state.
+   */
   const get_not_paid_months = (mergedObjects) => {
     const not_paid_months = mergedObjects
       .map((value, key) => {
@@ -137,77 +137,81 @@ const TenantMontlyRent = () => {
         2 BHK House in Ramchandra Builiding, svd svd, Along, Arunachal Pradesh
       </p>
       <div className="py-10">
-        <Table
-          aria-label="Example static collection table"
-          align="center"
-          fullWidth
-          isStriped
-        >
-          <TableHeader>
-            <TableColumn>Month</TableColumn>
-            <TableColumn>Amount</TableColumn>
-            <TableColumn>Date Paid</TableColumn>
-            <TableColumn>Method</TableColumn>
-            <TableColumn>Status</TableColumn>
-            <TableColumn>Action</TableColumn>
-          </TableHeader>
-          <TableBody>
-            {columns.map((value, key) => (
-              <TableRow key={key}>
-                <TableCell>{value?.Month}</TableCell>
-                {/* Use the correct way to access the Amount property */}
-                <TableCell>{value && `₹${value.Amount}`}</TableCell>
-                <TableCell>
-                  {value?.Date === "" ? "" : formatDateString(value?.Date)}
-                </TableCell>
-                <TableCell>
-                  {value?.Method === ""
-                    ? ""
-                    : value?.Method === true
-                    ? "Online"
-                    : "Offline"}
-                </TableCell>
-                <TableCell>{value?.Status && "Paid"}</TableCell>
-                <TableCell>
-                  {value?.Status === "" ? (
-                    <React.Fragment>
-                      <ConfirmModal
-                        amount={value.Amount * count}
-                        id={key}
-                        month={NotPaidMonths}
-                        count={count}
-                        columns={columns}
-                        CreditPoints={user?.user?.creditPoint}
-                        user_id={user?.user?._id}
-                        property_id={LeaseData?.property_id._id}
-                        setColumns={setColumns}
-                        get_not_paid_months={get_not_paid_months}
-                      />
-                      <p className="hidden">{(count = count + 1)}</p>
-                    </React.Fragment>
-                  ) : value?.Status ? (
-                    "Paid"
-                  ) : (
-                    <React.Fragment>
-                      <ConfirmModal
-                        amount={value.Amount * count}
-                        id={key}
-                        month={NotPaidMonths}
-                        count={count}
-                        columns={columns}
-                        CreditPoints={user?.user?.creditPoint}
-                        user_id={user?.user?._id}
-                        property_id={LeaseData?.property_id._id}
-                        setColumns={setColumns}
-                      />
-                      <p className="hidden">{(count = count + 1)}</p>
-                    </React.Fragment>
-                  )}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        {columns ? (
+          <Table
+            aria-label="Example static collection table"
+            align="center"
+            fullWidth
+            isStriped
+          >
+            <TableHeader>
+              <TableColumn>Month</TableColumn>
+              <TableColumn>Amount</TableColumn>
+              <TableColumn>Date Paid</TableColumn>
+              <TableColumn>Method</TableColumn>
+              <TableColumn>Status</TableColumn>
+              <TableColumn>Action</TableColumn>
+            </TableHeader>
+            <TableBody>
+              {columns.map((value, key) => (
+                <TableRow key={key}>
+                  <TableCell>{value?.Month}</TableCell>
+                  {/* Use the correct way to access the Amount property */}
+                  <TableCell>{value && `₹${value.Amount}`}</TableCell>
+                  <TableCell>
+                    {value?.Date === "" ? "" : formatDateString(value?.Date)}
+                  </TableCell>
+                  <TableCell>
+                    {value?.Method === ""
+                      ? ""
+                      : value?.Method === true
+                      ? "Online"
+                      : "Offline"}
+                  </TableCell>
+                  <TableCell>{value?.Status && "Paid"}</TableCell>
+                  <TableCell>
+                    {value?.Status === "" ? (
+                      <React.Fragment>
+                        <ConfirmModal
+                          amount={value.Amount * count}
+                          id={key}
+                          month={NotPaidMonths}
+                          count={count}
+                          columns={columns}
+                          CreditPoints={user?.user?.creditPoint}
+                          user_id={user?.user?._id}
+                          property_id={LeaseData?.property_id._id}
+                          setColumns={setColumns}
+                          get_not_paid_months={get_not_paid_months}
+                        />
+                        <p className="hidden">{(count = count + 1)}</p>
+                      </React.Fragment>
+                    ) : value?.Status ? (
+                      "Paid"
+                    ) : (
+                      <React.Fragment>
+                        <ConfirmModal
+                          amount={value.Amount * count}
+                          id={key}
+                          month={NotPaidMonths}
+                          count={count}
+                          columns={columns}
+                          CreditPoints={user?.user?.creditPoint}
+                          user_id={user?.user?._id}
+                          property_id={LeaseData?.property_id._id}
+                          setColumns={setColumns}
+                        />
+                        <p className="hidden">{(count = count + 1)}</p>
+                      </React.Fragment>
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        ) : (
+          "no"
+        )}
       </div>
     </div>
   );

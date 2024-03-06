@@ -15,31 +15,30 @@ import {
   Chip,
   User,
   Pagination,
-  Tooltip
+  Tooltip,
 } from "@nextui-org/react";
 import { IoSearchOutline } from "react-icons/io5";
 import { FaChevronDown } from "react-icons/fa6";
-import {columns, users, statusOptions} from "./data";
-import { GoPlus } from "react-icons/go";
+import { columns, users } from "./data";
 import { IoEyeOutline } from "react-icons/io5";
 import { FiEdit3 } from "react-icons/fi";
 import { MdOutlineDelete } from "react-icons/md";
-const statusColorMap = {
-  active: "success",
-  paused: "danger",
-  vacation: "warning",
-};
+import useGetUser from "./useGetUser";
+import AddUserModal from "./AddUserModal";
 
 
 const capitalize = (str) => {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  }
-const INITIAL_VISIBLE_COLUMNS = ["name", "role" , "actions"];
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
+const INITIAL_VISIBLE_COLUMNS = ["name", "role", "actions"];
 
-const Clients = () => {
+const Clients = ({type}) => {
+  const {users, loading} = useGetUser(type);
   const [filterValue, setFilterValue] = React.useState("");
-   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
-  const [visibleColumns, setVisibleColumns] = React.useState(new Set(INITIAL_VISIBLE_COLUMNS));
+  const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
+  const [visibleColumns, setVisibleColumns] = React.useState(
+    new Set(INITIAL_VISIBLE_COLUMNS)
+  );
   const [statusFilter, setStatusFilter] = React.useState("all");
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [sortDescriptor, setSortDescriptor] = React.useState({
@@ -55,7 +54,9 @@ const Clients = () => {
   const headerColumns = React.useMemo(() => {
     if (visibleColumns === "all") return columns;
 
-    return columns.filter((column) => Array.from(visibleColumns).includes(column.uid));
+    return columns.filter((column) =>
+      Array.from(visibleColumns).includes(column.uid)
+    );
   }, [visibleColumns]);
 
   const filteredItems = React.useMemo(() => {
@@ -63,14 +64,17 @@ const Clients = () => {
 
     if (hasSearchFilter) {
       filteredUsers = filteredUsers.filter((user) =>
-        user.name.toLowerCase().includes(filterValue.toLowerCase()),
+        user.name.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
-    if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
-      filteredUsers = filteredUsers.filter((user) =>
-        Array.from(statusFilter).includes(user.status),
-      );
-    }
+    // if (
+    //   statusFilter !== "all" &&
+    //   Array.from(statusFilter).length !== statusOptions.length
+    // ) {
+    //   filteredUsers = filteredUsers.filter((user) =>
+    //     Array.from(statusFilter).includes(user.status)
+    //   );
+    // }
 
     return filteredUsers;
   }, [users, filterValue, statusFilter]);
@@ -99,7 +103,7 @@ const Clients = () => {
       case "name":
         return (
           <User
-            avatarProps={{radius: "full", size: "sm", src: user.avatar}}
+            avatarProps={{ radius: "full", size: "sm", src: user.avatar }}
             classNames={{
               description: "text-default-500",
             }}
@@ -113,23 +117,15 @@ const Clients = () => {
         return (
           <div className="flex flex-col">
             <p className="text-bold text-small capitalize">{cellValue}</p>
-            <p className="text-bold text-tiny capitalize text-default-500">{user.team}</p>
+            {/* <p className="text-bold text-tiny capitalize text-default-500">
+              {user.team}
+            </p> */}
           </div>
         );
-      case "status":
-        return (
-          <Chip
-            className="capitalize border-none gap-1 text-default-600"
-            color={statusColorMap[user.status]}
-            size="sm"
-            variant="dot"
-          >
-            {cellValue}
-          </Chip>
-        );
+
       case "actions":
         return (
-            <div className="relative flex items-center gap-2">
+          <div className="relative flex items-center gap-2">
             <Tooltip content="Details">
               <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
                 <IoEyeOutline />
@@ -156,7 +152,6 @@ const Clients = () => {
     setRowsPerPage(Number(e.target.value));
     setPage(1);
   }, []);
-
 
   const onSearchChange = React.useCallback((value) => {
     if (value) {
@@ -186,7 +181,7 @@ const Clients = () => {
             onValueChange={onSearchChange}
           />
           <div className="flex gap-3">
-            <Dropdown>
+            {/* <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
                 <Button
                   endContent={<FaChevronDown className="text-small" />}
@@ -210,7 +205,7 @@ const Clients = () => {
                   </DropdownItem>
                 ))}
               </DropdownMenu>
-            </Dropdown>
+            </Dropdown> */}
             <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
                 <Button
@@ -236,29 +231,10 @@ const Clients = () => {
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <Button
-              className="bg-foreground text-background"
-              endContent={<GoPlus />}
-              size="sm"
-            >
-              Add New
-            </Button>
+            
+            <AddUserModal type={type} method="add" />
           </div>
         </div>
-        {/* <div className="flex justify-between items-center">
-          <span className="text-default-400 text-small">Total {users.length} users</span>
-          <label className="flex items-center text-default-400 text-small">
-            Rows per page:
-            <select
-              className="bg-transparent outline-none text-default-400 text-small"
-              onChange={onRowsPerPageChange}
-            >
-              <option value="5">5</option>
-              <option value="10">10</option>
-              <option value="15">15</option>
-            </select>
-          </label>
-        </div> */}
       </div>
     );
   }, [
@@ -311,13 +287,12 @@ const Clients = () => {
         "group-data-[last=true]:last:before:rounded-none",
       ],
     }),
-    [],
+    []
   );
 
   return (
     <Table
       isCompact
-    //   removeWrapper
       aria-label="Example table with custom cells, pagination and sorting"
       bottomContent={bottomContent}
       bottomContentPlacement="outside"
@@ -328,7 +303,6 @@ const Clients = () => {
       }}
       classNames={classNames}
       selectedKeys={selectedKeys}
-      //selectionMode="multiple"
       sortDescriptor={sortDescriptor}
       topContent={topContent}
       topContentPlacement="outside"
@@ -350,12 +324,14 @@ const Clients = () => {
       <TableBody emptyContent={"No users found"} items={sortedItems}>
         {(item) => (
           <TableRow key={item.id}>
-            {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+            {(columnKey) => (
+              <TableCell>{renderCell(item, columnKey)}</TableCell>
+            )}
           </TableRow>
         )}
       </TableBody>
     </Table>
   );
-}
+};
 
-export default Clients
+export default Clients;
