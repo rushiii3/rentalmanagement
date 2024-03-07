@@ -29,7 +29,6 @@ io.on('connection', (socket) => {
     // If recipientUsername is not provided, it means it's a group message
     if (!recipientUsername) {
       // Emit the message to all connected clients (group chat)
-      console.log(msg);
       io.emit('group-message', {
         sender: msg.username,
         message: msg.message,

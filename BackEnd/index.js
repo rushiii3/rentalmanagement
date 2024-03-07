@@ -16,9 +16,11 @@ const Report = require("./Routes/Report");
 const ChatRoutes = require('./Routes/ChatRoutes');
 const LeaseRoutes = require('./Routes/LeaseRoute');
 const MaintenaceRoute = require("./Routes/MaintenanceRoute");
+const RentRoute = require("./Routes/RentRoute");
+const TransactionRoute = require("./Routes/TransactionRoute");
 const port = process.env.PORT || 4000;
 const MongoURL = process.env.MONGO_URL;
-const production = false;
+const production = true;
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -35,7 +37,7 @@ app.use(
     credentials: true,
   })
 );
-app.use("/t", (req, res) => {
+app.use("/fake", (req, res) => {
   res.status(200);
   throw new Error("fake error");
   // res.send("Heyyy");
@@ -65,6 +67,9 @@ app.use("/api/v2/report", Report);
 app.use("/api/v2/chat", ChatRoutes);
 app.use("/api/v2/lease", LeaseRoutes);
 app.use("/api/v2/maintenance", MaintenaceRoute);
+app.use("/api/v2/rent", RentRoute);
+app.use("/api/v2/transaction", TransactionRoute);
+
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   res

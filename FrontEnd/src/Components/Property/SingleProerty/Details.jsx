@@ -15,7 +15,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import { PropertyBookingServer } from "../../../server";
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 const Details = ({
   Data,
   combinedMedia,
@@ -27,7 +27,7 @@ const Details = ({
   id,
   isAddressSet,
 }) => {
-  const chat = useSelector((state) => state.chat);
+  // const chat = useSelector((state) => state.chat);
   const dispatch = useDispatch();
   const [toggler, setToggler] = useState(false);
   const navigate = useNavigate();

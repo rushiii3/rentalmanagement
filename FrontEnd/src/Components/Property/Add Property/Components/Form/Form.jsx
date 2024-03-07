@@ -247,11 +247,6 @@ const Form = ({ step, next, prev, goto }) => {
                 variants={btnVariants}
                 whileHover="hover"
                 whileTap="tap"
-                // onClick={
-                //   methods?.formState?.errors?.description?.message
-                //     ? null // If there's an error, prevent the click action
-                //     : next // If there's no error, execute the 'next' function
-                // }
                 onClick={handleClick}
               >
                 {step === 3 ? "Confirm" : "Next Step"}

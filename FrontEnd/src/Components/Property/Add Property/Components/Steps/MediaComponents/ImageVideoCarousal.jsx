@@ -2,11 +2,16 @@ import React from "react";
 import { IoImages } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
 import { Link } from "react-router-dom";
-const ImageVideoCarousal = ({ImageVideoData,deleteImage,setModalViewer,setModelOpen}) => {
-  const handleView = (type,url) => {
-    setModalViewer({type:type,url:url});
+const ImageVideoCarousal = ({
+  ImageVideoData,
+  deleteImage,
+  setModalViewer,
+  setModelOpen,
+}) => {
+  const handleView = (type, url) => {
+    setModalViewer({ type: type, url: url });
     setModelOpen(true);
-  }
+  };
   return (
     <div className="flex flex-row overflow-x-scroll gap-x-10 no-scrollbar mt-5 max-w-2xl">
       {ImageVideoData && ImageVideoData.length !== 0 ? (
@@ -38,8 +43,11 @@ const ImageVideoCarousal = ({ImageVideoData,deleteImage,setModalViewer,setModelO
               <section className="flex flex-col rounded-md text-xs break-words w-full h-full z-20 absolute top-0 py-2 px-3">
                 <div className="flex">
                   <span className="p-1 hover:bg-gray-300 rounded-lg hover:text-black">
-                    <button type="button" onClick={()=>(handleView(value.type,value.url))}>
-                    <IoImages size={20} />
+                    <button
+                      type="button"
+                      onClick={() => handleView(value.type, value.url)}
+                    >
+                      <IoImages size={20} />
                     </button>
                   </span>
 

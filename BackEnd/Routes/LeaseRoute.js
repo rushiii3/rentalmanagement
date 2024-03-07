@@ -5,7 +5,8 @@ const {
   Update_lease,
   delete_terminate,
   get_tenant_leases,
-  tenant_in_agreement
+  tenant_in_agreement,
+  get_tenant_lease
 } = require("../Controller/LeaseController");
 const multer = require("multer");
 
@@ -35,4 +36,5 @@ router.post(
 router.put('/delete-terminate',delete_terminate);
 router.get("/tenant-lease/:id",get_tenant_leases);
 router.get("/tenant-inagreement/:id",tenant_in_agreement);
+router.get("/leased-property/:id",get_tenant_lease);
 module.exports = router;

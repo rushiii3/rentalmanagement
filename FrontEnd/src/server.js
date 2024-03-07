@@ -1,4 +1,4 @@
-const production = false;
+const production = true;
 export const userServer = !production ? ('http://localhost:4000/api/v2/user') : ("https://rentalmanagement-cvrc.vercel.app/api/v2/user") ;
 export const propertServer = !production ? ('http://localhost:4000/api/v2/property') : ("https://rentalmanagement-cvrc.vercel.app/api/v2/property");
 export const PhysicalVisitServer = !production ? ('http://localhost:4000/api/v2/physical-visit') : ("https://rentalmanagement-cvrc.vercel.app/api/v2/physical-visit");
@@ -8,3 +8,7 @@ export const ReportServer = !production ? ('http://localhost:4000/api/v2/report'
 export const ChatServer = !production ? ('http://localhost:4000/api/v2/chat') : ("https://rentalmanagement-cvrc.vercel.app/api/v2/chat");
 export const LeaseServer = !production ? ('http://localhost:4000/api/v2/lease') : ("https://rentalmanagement-cvrc.vercel.app/api/v2/lease");
 export const MaintenaceServer = !production ? ('http://localhost:4000/api/v2/maintenance') : ("https://rentalmanagement-cvrc.vercel.app/api/v2/maintenance");
+export const RentServer = !production ? ('http://localhost:4000/api/v2/rent') : ("https://rentalmanagement-cvrc.vercel.app/api/v2/rent");
+export const ReviewServer = !production ? ('http://localhost:4000/api/v2/review') : ("https://rentalmanagement-cvrc.vercel.app/api/v2/review");
+export const TransactionServer = !production ? ('http://localhost:4000/api/v2/transaction') : ("https://rentalmanagement-cvrc.vercel.app/api/v2/transaction");
+export const AdminServer = !production ? ('http://localhost:4000/api/v2/admin') : ("https://rentalmanagement-cvrc.vercel.app/api/v2/admin");

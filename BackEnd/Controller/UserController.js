@@ -12,7 +12,7 @@ cloudinary.config({
   api_secret: "blcMAs-77T_1t1VGnRIlLia_RqM",
   secure: true,
 });
- const Admin = require('../Models/Admin');
+const Admin = require("../Models/Admin");
 const hello = (req, res, next) => {
   res.status(200).json({ msg: true });
 };
@@ -134,6 +134,7 @@ const activation = asyncHandler(async (req, res, next) => {
         state: "N/A",
         pincode: 0,
       },
+      creditPoint: 0,
     });
 
     if (!user) {
@@ -165,7 +166,10 @@ const login = asyncHandler(async (req, res, next) => {
     if (!isPasswordValid) {
       errorThrow("Please provide the correct information", 401);
     }
-    const UserToken = jwt.sign(JSON.stringify(userlogin), process.env.JWT_SECRET);
+    const UserToken = jwt.sign(
+      JSON.stringify(userlogin),
+      process.env.JWT_SECRET
+    );
 
     const token = UserToken;
     const options = {
@@ -196,13 +200,16 @@ const getUser = asyncHandler(async (req, res, next) => {
       address,
       phoneNumber,
       _id,
-      isCurrentlyEmployee
-    } = await UserModel.findById(req.user).select(
-      "email role firstname middlename lastname avatar address phoneNumber _id"
-    ) ||  await Admin.findById(req.user).select(
-      "email role firstname middlename lastname avatar address phoneNumber _id isCurrentlyEmployee"
-    );
-    
+      isCurrentlyEmployee,
+      creditPoint,
+    } =
+      (await UserModel.findById(req.user).select(
+        "email role firstname middlename lastname avatar address phoneNumber _id creditPoint"
+      )) ||
+      (await Admin.findById(req.user).select(
+        "email role firstname middlename lastname avatar address phoneNumber _id isCurrentlyEmployee"
+      ));
+
     const imgurl = avatar.url;
     const user = {
       email,
@@ -214,7 +221,8 @@ const getUser = asyncHandler(async (req, res, next) => {
       imgurl,
       phoneNumber,
       _id,
-      isCurrentlyEmployee
+      isCurrentlyEmployee,
+      creditPoint,
     };
     res.status(200).json({ success: true, user: user });
   } catch (error) {
@@ -323,31 +331,31 @@ const UserProfileImageUpdate = asyncHandler(async (req, res, next) => {
     const image_id = result.public_id;
     const image_link = result.secure_url;
 
-    const updatedUser = await UserModel.findByIdAndUpdate(
-      userlogin._id,
-      {
-        $set: {
-          avatar: {
-            public_id: image_id,
-            url: image_link,
+    const updatedUser =
+      (await UserModel.findByIdAndUpdate(
+        userlogin._id,
+        {
+          $set: {
+            avatar: {
+              public_id: image_id,
+              url: image_link,
+            },
           },
         },
-      },
-      { new: true }
-    ) || await Admin.findByIdAndUpdate(
-      userlogin._id,
-      {
-        $set: {
-          avatar: {
-            public_id: image_id,
-            url: image_link,
+        { new: true }
+      )) ||
+      (await Admin.findByIdAndUpdate(
+        userlogin._id,
+        {
+          $set: {
+            avatar: {
+              public_id: image_id,
+              url: image_link,
+            },
           },
         },
-      },
-      { new: true }
-    );
-
-
+        { new: true }
+      ));
 
     if (!updatedUser) {
       errorThrow("Failed to update user profile", 500);
@@ -361,11 +369,13 @@ const UserProfileImageUpdate = asyncHandler(async (req, res, next) => {
 const get_user = asyncHandler(async (req, res, next) => {
   const { email } = req.body;
   try {
-    const user = await UserModel.findOne({ email }).select(
-      "email firstname middlename lastname  address phoneNumber"
-    ) || await Admin.findOne({ email }).select(
-      "email firstname middlename lastname  address phoneNumber"
-    );
+    const user =
+      (await UserModel.findOne({ email }).select(
+        "email firstname middlename lastname  address phoneNumber"
+      )) ||
+      (await Admin.findOne({ email }).select(
+        "email firstname middlename lastname  address phoneNumber"
+      ));
     res.status(200).json({ success: true, user: user });
   } catch (error) {
     next(error);
@@ -398,15 +408,17 @@ const update_user_info = asyncHandler(async (req, res, next) => {
       // Add any other fields you want to update
     };
 
-    const updatedUser = await UserModel.findOneAndUpdate(
-      { _id: id },
-      { $set: updatedData },
-      { new: true } // Return the updated document
-    ) || await Admin.findOneAndUpdate(
-      { _id: id },
-      { $set: updatedData },
-      { new: true } // Return the updated document
-    );
+    const updatedUser =
+      (await UserModel.findOneAndUpdate(
+        { _id: id },
+        { $set: updatedData },
+        { new: true } // Return the updated document
+      )) ||
+      (await Admin.findOneAndUpdate(
+        { _id: id },
+        { $set: updatedData },
+        { new: true } // Return the updated document
+      ));
     if (!updatedUser) {
       errorThrow("Failed to update user profile", 500);
     }
@@ -421,23 +433,23 @@ const update_user_password = asyncHandler(async (req, res, next) => {
     const user = await UserModel.findById(id).select("+password");
     const admin = await Admin.findById(id).select("+password");
     const userlogin = user || admin;
-    if(!userlogin){
+    if (!userlogin) {
       errorThrow("User doesn't exist!", 404);
     }
     const isOldPasswordValid = await userlogin.comparePassword(oldpassword);
     if (!isOldPasswordValid) {
       errorThrow("Your old password doesn't match", 401);
     }
-    userlogin.password = password; 
+    userlogin.password = password;
     await userlogin.save();
     res.status(200).json({ success: true });
   } catch (error) {
     next(error);
   }
 });
-const logout = asyncHandler(async(req,res,next) => {
+const logout = asyncHandler(async (req, res, next) => {
   try {
-    const {token} = req.cookies;
+    const { token } = req.cookies;
     res.cookie("token", null, {
       expires: new Date(Date.now()),
       httpOnly: true,
@@ -451,7 +463,102 @@ const logout = asyncHandler(async(req,res,next) => {
   } catch (error) {
     next(error);
   }
+});
+
+const get_all_user_details = asyncHandler(async (req, res, next) => {
+  try {
+    const { type } = req.params;
+    console.log(type);
+    if (type === "user") {
+      const users = await UserModel.find({}).select("email role firstname middlename lastname avatar address phoneNumber _id creditPoint ");
+      res.status(200).json({ success: true, users });
+      return; // Return to exit the handler
+    } 
+    if (type === "admin") {
+      const users = await Admin.find({}).select(
+        "email role firstname middlename lastname avatar address phoneNumber _id isCurrentlyEmployee joiningDate"
+      );
+      res.status(200).json({ success: true, users });
+      return; // Return to exit the handler
+    }
+    errorThrow("Error", 500); // Make sure this is a function that throws an error
+  } catch (error) {
+    next(error);
+  }
+});
+
+const add_users = asyncHandler(async(req,res,next)=>{
+  try {
+    const {email,firstname,middlename,lastname,phoneno,role,password,streetname,state,city,pincode,profile} = req.body;
+    const userExists = await UserModel.findOne({ email });
+    if (userExists) {
+      errorThrow("User email already exists!", 400);
+    }
+  
+    const options = {
+      use_filename: true,
+      unique_filename: true,
+      overwrite: true,
+    };
+    const image = profile;
+  
+    const result = await cloudinary.uploader.upload(image).catch((error) => {
+      errorThrow(error.message, 500);
+    });
+  
+    if (!result) {
+      errorThrow("Failed to upload the image", 500);
+    }
+  
+    const image_id = result.public_id;
+    const image_link = result.secure_url;
+
+    const user = await UserModel.create({
+      firstname,
+      middlename,
+      lastname,
+      email,
+      phoneNumber: phoneno,
+      role,
+      password,
+      avatar: {
+        public_id: image_id,
+        url: image_link,
+      },
+      address: {
+        streetname: streetname,
+        city: city,
+        state: state,
+        pincode: pincode,
+      },
+      creditPoint: 0,
+    });
+    if (!user) {
+      errorThrow("Internal error while creating user", 500);
+    }
+
+     res.status(201).json({ success:true, message: "User Added Successfully" });
+  } catch (error) {
+    next(error);
+  }
 })
+const deleteuser = asyncHandler(async(req,res,next)=>{
+  try {
+    const {id} = req.params;
+    const user = await UserModel.findById(id);
+    if(!user){
+      errorThrow("No user found", 404);
+    }
+    const delete_user = await UserModel.findByIdAndDelete(id);
+    if (!delete_user) {
+      errorThrow("Failed to delete user", 500);
+    }
+    res.status(201).json({ success: true});
+  } catch (error) {
+    next(error)
+  }
+})
+
 module.exports = {
   hello,
   register,
@@ -465,5 +572,8 @@ module.exports = {
   get_user,
   update_user_info,
   update_user_password,
-  logout
+  logout,
+  get_all_user_details,
+  add_users,
+  deleteuser
 };

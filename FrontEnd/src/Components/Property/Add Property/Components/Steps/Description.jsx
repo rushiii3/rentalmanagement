@@ -96,9 +96,10 @@ export default function Description() {
             >
               <option selected="">Select property category</option>
               {typesOfHouses.map((value, key) => (
-              <option value={value} key={key}>{value}</option>
-            ))}
-             
+                <option value={value} key={key}>
+                  {value}
+                </option>
+              ))}
             </select>
 
             <p class="mt-2 text-sm text-red-600 dark:text-red-500">

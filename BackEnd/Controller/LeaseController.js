@@ -2,7 +2,7 @@ const errorThrow = require("../Middleware/ErrorHandler");
 const asyncHandler = require("express-async-handler");
 const LeaseModel = require("../Models/LeaseAgreement");
 const PropertyBooking = require("../Models/PropertyModel");
-const MaintenaceModel = require('../Models/MaintenanceModel');
+const MaintenaceModel = require("../Models/MaintenanceModel");
 var mongoose = require("mongoose");
 const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
@@ -102,14 +102,18 @@ const delete_terminate = asyncHandler(async (req, res, next) => {
     next(error);
   }
 });
-const get_tenant_leases = asyncHandler(async(req,res,next)=>{
+const get_tenant_leases = asyncHandler(async (req, res, next) => {
   try {
-    const {id} = req.params;
+    const { id } = req.params;
     console.log(id);
-    const lease = await LeaseModel.find({user_id:id},{aadhar_number:0}).populate({
+    const lease = await LeaseModel.find(
+      { user_id: id },
+      { aadhar_number: 0 }
+    ).populate({
       path: "property_id",
       model: "Property",
-      select: "_id property_no_of_bhk property_type building_name property_locality building_number property_streetname property_city property_state property_pincode images",
+      select:
+        "_id property_no_of_bhk property_type building_name property_locality building_number property_streetname property_city property_state property_pincode images",
       populate: {
         path: "landlord_id",
         model: "User",
@@ -134,23 +138,87 @@ const get_tenant_leases = asyncHandler(async(req,res,next)=>{
       }
       return leases;
     });
-    res.status(200).json({ success: true ,finallease });
-  } catch (error) {
-    
-  }
-})
-const tenant_in_agreement = asyncHandler(async(req,res,next)=>{
-try {
-  const {id} = req.params;
-  const InAgreementDetails = await LeaseModel.find({user_id:id,lease_status:"InAgreement"}).populate({
-    path: "property_id",
-    model: "Property",
-    select: "_id property_no_of_bhk property_type building_name property_locality building_number property_streetname property_city property_state property_pincode "}).limit(1);
-    const Maintenances = await MaintenaceModel.find({user_id:id}).populate({
+    res.status(200).json({ success: true, finallease });
+  } catch (error) {}
+});
+const tenant_in_agreement = asyncHandler(async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const InAgreementDetails = await LeaseModel.find({
+      user_id: id,
+      lease_status: "InAgreement",
+    })
+      .populate({
+        path: "property_id",
+        model: "Property",
+        select:
+          "_id property_no_of_bhk property_type building_name property_locality building_number property_streetname property_city property_state property_pincode images",
+      })
+      .limit(1);
+    const Maintenances = await MaintenaceModel.find({ user_id: id }).populate({
       path: "property_id",
       model: "Property",
-      select: "_id property_no_of_bhk property_type building_name property_locality building_number property_streetname property_city property_state property_pincode images"});
-      const InAgreement = InAgreementDetails.map((visit) => {
+      select:
+        "_id property_no_of_bhk property_type building_name property_locality building_number property_streetname property_city property_state property_pincode images",
+    });
+    const InAgreement = InAgreementDetails.map((visit) => {
+      if (
+        visit.property_id &&
+        visit.property_id.images &&
+        visit.property_id.images.length > 0
+      ) {
+        const { images, ...propertyWithoutImages } =
+          visit.property_id.toObject(); // Destructure 'images' from 'property_id'
+        return {
+          ...visit.toObject(), // Convert Mongoose object to plain JavaScript object
+          property_id: {
+            ...propertyWithoutImages, // Exclude 'images' from 'property_id'
+            image: visit.property_id.images[0].url, // Retain only the URL of the first image
+          },
+        };
+      }
+      return visit;
+    });
+    const finalMaintenances = Maintenances.map((visit) => {
+      if (
+        visit.property_id &&
+        visit.property_id.images &&
+        visit.property_id.images.length > 0
+      ) {
+        const { images, ...propertyWithoutImages } =
+          visit.property_id.toObject(); // Destructure 'images' from 'property_id'
+        return {
+          ...visit.toObject(), // Convert Mongoose object to plain JavaScript object
+          property_id: {
+            ...propertyWithoutImages, // Exclude 'images' from 'property_id'
+            image: visit.property_id.images[0].url, // Retain only the URL of the first image
+          },
+        };
+      }
+      return visit;
+    });
+    res.status(200).json({ success: true, InAgreement, finalMaintenances });
+  } catch (error) {
+    next(error);
+  }
+});
+const get_tenant_lease = asyncHandler(async(req,res,next)=>{
+  try {
+    const {id} = req.params;
+    const  InAgreementDetails = await LeaseModel.find({
+      user_id: id,
+      $or: [
+          { lease_status: "InAgreement" },
+          { lease_status: "Ended" }
+      ]
+  }).populate({
+        path: "property_id",
+        model: "Property",
+        select:
+          "_id property_no_of_bhk property_type building_name property_locality building_number property_streetname property_city property_state property_pincode images",
+      })
+
+      const AgreementDetails = InAgreementDetails.map((visit) => {
         if (
           visit.property_id &&
           visit.property_id.images &&
@@ -168,33 +236,16 @@ try {
         }
         return visit;
       });
-      const finalMaintenances = Maintenances.map((visit) => {
-        if (
-          visit.property_id &&
-          visit.property_id.images &&
-          visit.property_id.images.length > 0
-        ) {
-          const { images, ...propertyWithoutImages } =
-            visit.property_id.toObject(); // Destructure 'images' from 'property_id'
-          return {
-            ...visit.toObject(), // Convert Mongoose object to plain JavaScript object
-            property_id: {
-              ...propertyWithoutImages, // Exclude 'images' from 'property_id'
-              image: visit.property_id.images[0].url, // Retain only the URL of the first image
-            },
-          };
-        }
-        return visit;
-      });
-  res.status(200).json({ success: true,InAgreement,finalMaintenances });
-} catch (error) {
-  
-}
+    res.status(200).json({ success: true,AgreementDetails});
+  } catch (error) {
+    next(error);
+  }
 })
 module.exports = {
   get_lease_gata,
   Update_lease,
   delete_terminate,
   get_tenant_leases,
-  tenant_in_agreement
+  tenant_in_agreement,
+  get_tenant_lease
 };

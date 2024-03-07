@@ -102,7 +102,8 @@ const updateStatus = asyncHandler(async (req, res, next) => {
     }
     if (type === "Accepted") {
       const { user_id, property_id } = await BookingModel.findById(id);
-      const {property_security_deposit,property_rent_price} = await PropertyModel.findById(property_id);
+      const { property_security_deposit, property_rent_price } =
+        await PropertyModel.findById(property_id);
       const newLeaseAgreement = await LeaseAgreement.create({
         user_id: user_id,
         property_id: property_id,
@@ -112,9 +113,12 @@ const updateStatus = asyncHandler(async (req, res, next) => {
         security_deposit: property_security_deposit,
         aadhar_number: null,
         agreement_doc: null,
-        lease_status:"Pending"
+        lease_status: "Pending",
       });
-      const UpdatePropertyRent = await PropertyModel.findByIdAndUpdate(property_id,{property_rented:true});
+      const UpdatePropertyRent = await PropertyModel.findByIdAndUpdate(
+        property_id,
+        { property_rented: true }
+      );
       if (newLeaseAgreement && UpdatePropertyRent) {
         res.status(200).json({ success: true });
       } else {
@@ -122,7 +126,7 @@ const updateStatus = asyncHandler(async (req, res, next) => {
       }
     } else {
       res.status(200).json({ success: true });
-        }
+    }
   } catch (error) {
     // Handle other errors, e.g., database connection issues
     next(error);

@@ -96,8 +96,9 @@ const ReportForm = ({ setReportData, ReportData, types, setFilterData, setSearch
         onOpenChange={onOpenChange}
         isDismissable={false}
         placement="center"
-        className={mode}
         backdrop="blur"
+        className={mode}
+        
       >
         <ModalContent>
           {(onClose) => (
