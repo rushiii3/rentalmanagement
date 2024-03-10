@@ -6,6 +6,9 @@ const PhysicalVisitModel = require("../Models/PhysicalVisit");
 const VideoConferenceModel = require("../Models/VideoConferenceModel");
 const BookingModel = require("../Models/PropertyBooking");
 const errorThrow = require("../Middleware/ErrorHandler");
+
+/* The `AddVisit` function is an asynchronous handler that handles the process of adding a physical
+visit booking. Here's a breakdown of what the function does: */
 const AddVisit = asyncHandler(async (req, res, next) => {
   try {
     const { visitTime, visitDate, id, userid } = req.body;
@@ -66,6 +69,8 @@ const AddVisit = asyncHandler(async (req, res, next) => {
   }
 });
 
+/* The above code is a JavaScript function that handles a request to get physical visits, video
+conferences, and bookings for a specific user. Here is a breakdown of what the code does: */
 const getUserPhysicalVisitFortenant = asyncHandler(async (req, res, next) => {
   try {
     const { id } = req.params; // Assuming userId is the user's ID
@@ -176,45 +181,57 @@ const getUserPhysicalVisitFortenant = asyncHandler(async (req, res, next) => {
   }
 });
 
+/* The `get_user_bookings_properties` function is an asynchronous handler that retrieves booking
+information for multiple properties based on the provided property IDs. Here's a breakdown of what
+the function does: */
 const get_user_bookings_properties = asyncHandler(async (req, res, next) => {
   try {
     const ids = req.body;
-    const property_data = await Promise.all(ids.map(async (data) => {
-      const Bookings = await PhysicalVisitModel.find({
-        property_id: data,
-      }).populate({
-        path: "user_id",
-        model:"User",
-        select: "-_id firstname lastname avatar",
-      });
-      return { bookings: Bookings };
-    }));
+    const property_data = await Promise.all(
+      ids.map(async (data) => {
+        const Bookings = await PhysicalVisitModel.find({
+          property_id: data,
+        }).populate({
+          path: "user_id",
+          model: "User",
+          select: "-_id firstname lastname avatar",
+        });
+        return { bookings: Bookings };
+      })
+    );
     res.status(200).json({ success: true, property_data });
   } catch (error) {
     next(error);
   }
 });
 
-const updateStatus = asyncHandler(async(req,res,next)=>{
+/* The `updateStatus` function is an asynchronous handler that updates the status of a physical visit
+booking based on the provided ID and type. Here's a breakdown of what the function does: */
+const updateStatus = asyncHandler(async (req, res, next) => {
   try {
     const { id, type } = req.body;
-    const update_status = await PhysicalVisitModel.findByIdAndUpdate(id, { pv_status: type });
-  
+    const update_status = await PhysicalVisitModel.findByIdAndUpdate(id, {
+      pv_status: type,
+    });
+
     if (!update_status) {
       // If update_status is null, the document with the specified ID was not found
-      return errorThrow("Failed to update property status! Booking not found.", 404);
+      return errorThrow(
+        "Failed to update property status! Booking not found.",
+        404
+      );
     }
-  
+
     res.status(200).json({ success: true });
   } catch (error) {
     // Handle other errors, e.g., database connection issues
     next(error);
   }
-})
+});
 
 module.exports = {
   AddVisit,
   getUserPhysicalVisitFortenant,
   get_user_bookings_properties,
-  updateStatus
+  updateStatus,
 };

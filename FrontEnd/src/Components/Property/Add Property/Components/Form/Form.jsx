@@ -13,10 +13,10 @@ import { propertServer } from "../../../../../server";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 const Form = ({ step, next, prev, goto }) => {
-  const {user } = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user);
   const currentYear = new Date().getFullYear();
   const [ImageVideoData, setImageVideoData] = useState([]);
-  const preferredTenants = ['Family', 'Working professionals'];
+  const preferredTenants = ["Family", "Working professionals"];
 
   const schema = yup.object().shape({
     description: yup
@@ -29,26 +29,34 @@ const Form = ({ step, next, prev, goto }) => {
       .notOneOf(["Select property category"], "Please select category!"),
     status: yup
       .boolean()
+      .transform((value) => (value === true || value === false ? value : null))
+      .nullable()
       .required("Please select status!")
-      .notOneOf(["Select property status"], "Please select status!"),
+      .notOneOf([null], "Please select status!"),
     price: yup
       .number()
-      .typeError("Please enter a valid number for property price")
+      .typeError("Please enter property price")
       .required("Please enter property price")
       .positive("Price size must be a positive number")
       .integer("Price size must be an integer")
       .min(1000, "Price should be greater than 1000")
-      .max(1000000, "Price should be greater than 1000000"),
+      .max(1000000, "Price should not be greater than 1000000"),
     deposit: yup
       .number()
-      .typeError("Please enter a valid number for deposit")
+      .typeError("Please enter property price")
       .required("Please enter deposit amount")
       .positive("Deposit price size must be a positive number")
       .integer("Deposit price must be an integer")
       .min(1000, "Deposit should be greater than 1000")
       .max(10000000, "Price should be greater than 10000000"),
-    buildingName: yup.string().required("Building name is required"),
-    buildingNumber: yup.string().required("Building number is required"),
+    buildingName: yup
+      .string()
+      .required("Building name is required")
+      .max(20, "Building name must not exceed 20 characters"),
+    buildingNumber: yup
+      .string()
+      .required("Building number is required")
+      .max(20, "Building number must not exceed 20 characters"),
     streetAddress: yup
       .string()
       .required("Street address is required")
@@ -57,7 +65,7 @@ const Form = ({ step, next, prev, goto }) => {
       .string()
       .required("Locality is required")
       .matches(/^[A-Za-z\s]+$/, "Only alphabetic characters are allowed")
-      .max(50, "Locality must not exceed 50 characters"),
+      .max(20, "Locality must not exceed 20 characters"),
     city: yup
       .string()
       .required("City is required")
@@ -74,26 +82,29 @@ const Form = ({ step, next, prev, goto }) => {
     latitude: yup.number().required("Latitude is required"),
     longitude: yup.string().required("Longitude is required"),
     prefferedTenant: yup
-    .array()
-    .of(
-      yup.string().oneOf(preferredTenants).required('At least one tenant preference is required')
-    )
-    .min(1, 'At least one tenant preference is required')
-    .required('Tenant preference is required'),
+      .array()
+      .of(
+        yup
+          .string()
+          .oneOf(preferredTenants)
+          .required("At least one tenant preference is required")
+      )
+      .min(1, "At least one tenant preference is required")
+      .required("Tenant preference is required"),
     propertyType: yup
       .string()
       .required("Property Type is requried")
       .notOneOf(["Select property type"], "Please select property type!"),
     numberOfBHKRK: yup
       .number()
-      .typeError("Enter a valid number")
+      .typeError("Number of BHK/RK is required")
       .required("Number of BHK/RK is required")
       .min(1, "Number of BHK/RK should be at least 1")
       .max(5, "Number of BHK/RK should not exceed 5")
       .positive("Number of BHK/RK must be a positive number"),
     numberOfBathrooms: yup
       .number()
-      .typeError("Enter a valid number")
+      .typeError("Number of Bathrooms is required")
       .required("Number of Bathrooms is required")
       .min(1, "Number of Bathrooms should be at least 1")
       .max(5, "Number of Bathrooms should not exceed 5")
@@ -104,17 +115,19 @@ const Form = ({ step, next, prev, goto }) => {
       .notOneOf(["Select furnishing"], "Please select property furnishing!"),
     parking: yup
       .boolean()
-      .required("Parking is required")
+      .transform((value) => (value === true || value === false ? value : null))
+      .nullable()
+      .required("Please select parking!")
       .notOneOf(["Select parking"], "Please select parking!"),
     yearBuilt: yup
-    .number()
-    .required('Year built is required')
-    .typeError('Enter a valid number')
-    .min(1900, 'Year should be a 4-digit number')
-    .max(currentYear, `Year should not be greater than ${currentYear}`),
+      .number()
+      .required("Year built is required")
+      .typeError("Year built is required")
+      .min(1900, "Year should be a 4-digit number")
+      .max(currentYear, `Year should not be greater than ${currentYear}`),
     propertySize: yup
       .number()
-      .typeError("Enter a valid size")
+      .typeError("Property size is required")
       .required("Property size is required")
       .positive("Property size must be a positive number")
       .integer("Property size must be an integer")
@@ -124,13 +137,13 @@ const Form = ({ step, next, prev, goto }) => {
       .number()
       .required("Image is required")
       .positive("")
-      .min(1, "Minimum 5 images should be uploaded")
+      .min(5, "Minimum 5 images should be uploaded")
       .max(15, "Images should not exceed 15"),
     video: yup
       .number()
       .required("Video is required")
       .positive("")
-      .min(1, "Minimum 2 video should be uploaded")
+      .min(2, "Minimum 2 video should be uploaded")
       .max(5, "Video should not exceed 5"),
   });
   const methods = useForm({
@@ -138,22 +151,24 @@ const Form = ({ step, next, prev, goto }) => {
     resolver: yupResolver(schema),
     mode: "all",
   });
-  const onSubmit = async(data) => {
+  const onSubmit = async (data) => {
     try {
-      const Data = {...data,ImageVideoData,id:user?.user?._id};
-    console.log(Data);
-    const responseData = await axios.post(`${propertServer}/add-property`,Data);
-    console.log(responseData);
-    if(responseData?.data?.success){
-      methods.reset();
-      next();
-    }else{
-      toast.error("Something went wrong!");
-    }
+      const Data = { ...data, ImageVideoData, id: user?.user?._id };
+      console.log(Data);
+      const responseData = await axios.post(
+        `${propertServer}/add-property`,
+        Data
+      );
+      console.log(responseData);
+      if (responseData?.data?.success) {
+        methods.reset();
+        next();
+      } else {
+        toast.error("Something went wrong!");
+      }
     } catch (error) {
       toast.error("Something went wrong!");
     }
-    
   };
   const handleClick = async () => {
     if (step === 0) {
@@ -219,7 +234,12 @@ const Form = ({ step, next, prev, goto }) => {
           {step === 0 && <Description />}
           {step === 1 && <Location />}
           {step === 2 && <Details />}
-          {step === 3 && <Media ImageVideoData={ImageVideoData} setImageVideoData={setImageVideoData}/>}
+          {step === 3 && (
+            <Media
+              ImageVideoData={ImageVideoData}
+              setImageVideoData={setImageVideoData}
+            />
+          )}
           <m.div
             className="flex gap-5 justify-end transform -translate-y-10 lg:transform-none "
             initial={{ opacity: 0 }}
@@ -243,7 +263,7 @@ const Form = ({ step, next, prev, goto }) => {
             {step !== 4 && (
               <m.button
                 className="py-2.5 px-6 rounded-lg text-sm font-medium text-white bg-teal-600"
-                type={step===3?"submit":"button"}
+                type={step === 3 ? "submit" : "button"}
                 variants={btnVariants}
                 whileHover="hover"
                 whileTap="tap"

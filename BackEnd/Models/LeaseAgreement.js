@@ -9,8 +9,8 @@ const leaseAgreementSchema = new mongoose.Schema({
     aadhar_number: { type: String },
     agreement_doc: { type: String },
     lease_status : {type:String},
-    user_id: { type: String, required: true },
-    property_id: { type: String, required: true }
+    user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    property_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Property', required: true },
 });
 
 // Define model

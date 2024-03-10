@@ -20,7 +20,7 @@ const RentRoute = require("./Routes/RentRoute");
 const TransactionRoute = require("./Routes/TransactionRoute");
 const port = process.env.PORT || 4000;
 const MongoURL = process.env.MONGO_URL;
-const production = true;
+const production = false;
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

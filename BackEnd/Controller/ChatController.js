@@ -2,6 +2,10 @@ const asyncHandler = require("express-async-handler");
 const User = require("../Models/UserModel");
 const Chat = require("../Models/ChatModel");
 
+/* The `sendChat` function is an asynchronous handler that handles sending a chat message. Here's a
+breakdown of what it does: */
+/* The `sendChat` function is an asynchronous handler that handles sending a chat message. Here's a
+breakdown of what it does: */
 const sendChat = asyncHandler(async (req, res, next) => {
   try {
     const { sender, reciver, message, sendtime } = req.body;
@@ -26,10 +30,11 @@ const sendChat = asyncHandler(async (req, res, next) => {
   }
 });
 
+/* The `getChat` function is an asynchronous handler that retrieves users involved in a chat based on
+the sender's ID provided in the URL parameters. Here's a breakdown of what it does: */
 const getChat = asyncHandler(async (req, res, next) => {
   try {
     const { id } = req.params; // Assuming the sender's ID is provided in the URL params
-
 
     // Retrieve distinct sender IDs
     const distinctSenderIds = await Chat.find({ sender: id }).distinct(
@@ -52,6 +57,9 @@ const getChat = asyncHandler(async (req, res, next) => {
   }
 });
 
+/* The `getchatting` function is an asynchronous handler that retrieves the chat history between two
+users based on the sender and receiver IDs provided in the request body. Here's a breakdown of what
+it does: */
 const getchatting = asyncHandler(async (req, res, next) => {
   try {
     const { sender_id, reviver_id } = req.body;

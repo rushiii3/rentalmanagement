@@ -25,9 +25,9 @@ const AddModalMaintenace = ({ LeaseAgrrement,userid,MaintenaceData,setMaintenace
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const { mode } = useSelector((state) => state.mode);
-  console.log(MaintenaceData);
   const schema = yup.object().shape({
-    emergency: yup.boolean().required('Emergency field is required'),
+    emergency: yup.boolean().typeError("Emergency field is required")
+    .required('Emergency field is required'),
     description: yup
       .string()
       .required("Please enter a description")
@@ -50,7 +50,6 @@ const AddModalMaintenace = ({ LeaseAgrrement,userid,MaintenaceData,setMaintenace
       try {
         const data1 = { ...data, user_id: userid,property_id:LeaseAgrrement?.property_id?._id};
         const response = await axios.post(`${MaintenaceServer}/add-maintenance`, data1);
-        console.log(response);
         if (response.data.success) {
           console.log(data1);
           const insertData = [
@@ -118,14 +117,9 @@ const AddModalMaintenace = ({ LeaseAgrrement,userid,MaintenaceData,setMaintenace
                 {LeaseAgrrement ? (
                   <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="w-full flex flex-col space-y-4">
-                        <div>
-                          <p>
-
-                          </p>
-                        </div>
+                        
                       <div>
                         <Select
-                          isRequired
                           label="Emergency"
                           placeholder="Is it emergency?"
                           className="max-w-full items-center"
@@ -147,7 +141,7 @@ const AddModalMaintenace = ({ LeaseAgrrement,userid,MaintenaceData,setMaintenace
                       </div>
                       <div>
                         <Textarea
-                          isRequired
+                          
                           label="Description"
                           labelPlacement="outside"
                           placeholder="Enter your description"

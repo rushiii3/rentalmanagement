@@ -6,9 +6,12 @@ var mongoose = require("mongoose");
 const UserModel = require("../Models/UserModel"); // Import your User model
 const Credit = require("../Models/CreditTransaction");
 const RentModel = require("../Models/RentModel");
+/* The `GetRentData` function is an asynchronous function that handles fetching rent data for a
+specific user. Here's a breakdown of what the function does: */
 const GetRentData = asyncHandler(async (req, res, next) => {
   try {
     const { id } = req.params;
+    console.log(id);
     const InAgreementDetails = await LeaseModel.find({
       user_id: id,
       lease_status: "InAgreement",
@@ -46,6 +49,8 @@ const GetRentData = asyncHandler(async (req, res, next) => {
   }
 });
 
+/* The `add_rent` function is responsible for adding rent transactions in the system. Here's a
+breakdown of what the function does: */
 const add_rent = asyncHandler(async (req, res, next) => {
   try {
     const { amounts, months, user_id, property_id } = req.body;
@@ -121,9 +126,12 @@ const add_rent = asyncHandler(async (req, res, next) => {
   }
 });
 
+/* The `get_rents_for_property` function is an asynchronous function that handles fetching lease and
+rent data for a specific property. Here's a breakdown of what the function does: */
 const get_rents_for_property = asyncHandler(async (req, res, next) => {
   try {
     const { id } = req.params;
+    console.log(id);
     const lease = await LeaseModel.find({
       property_id: id,
       lease_status: "InAgreement",
@@ -135,6 +143,8 @@ const get_rents_for_property = asyncHandler(async (req, res, next) => {
   }
 });
 
+/* The `add_rent_landlord` function is responsible for adding rent transactions initiated by the
+landlord in the system. Here's a breakdown of what the function does: */
 const add_rent_landlord = asyncHandler(async (req, res, next) => {
   try {
     const { amounts, months, user_id, property_id } = req.body;
@@ -168,5 +178,5 @@ module.exports = {
   GetRentData,
   add_rent,
   get_rents_for_property,
-  add_rent_landlord
+  add_rent_landlord,
 };

@@ -227,7 +227,7 @@ const Details = () => {
               }  
 `}
             >
-              <option selected="">Select parking</option>
+              <option selected value={null} hidden>Select parking</option>
               <option value={true}>Available</option>
               <option value={false}>Unavailable</option>
             </select>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Clients from "./Components/Clients";
 import {
   Chart as ChartJS,
@@ -12,6 +12,8 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import Stats from "./Components/Stats";
+import axios from "axios";
+import { AdminServer } from "../../server";
 
 ChartJS.register(
   CategoryScale,
@@ -23,35 +25,33 @@ ChartJS.register(
   Legend
 );
 const AdminHome = () => {
-  const generateLabels = () => {
-    const labels = [];
-    for (let i = 1; i <= 15; i++) {
-      labels.push(`2024-01-${i.toString().padStart(2, "0")}`); // Format: YYYY-MM-DD
+  const [Dates, setDates] = useState([]);
+  const [Transactions, setTransactions] = useState([]);
+  const [Credit, setCredit] = useState([]);
+  useEffect(() => {
+    const get_chart_data = async() =>{
+      const {data} = await axios.get(`${AdminServer}/graph_data`);
+      if (data.success) {
+        setDates(data.Dates);
+        setTransactions(data.transactionCounts);
+        setCredit(data.creditCounts);
+      }
+      console.log(data);
     }
-    return labels;
-  };
-
-  // Function to generate random data points
-  const generateRandomData = () => {
-    const data = [];
-    for (let i = 0; i < 15; i++) {
-      data.push(Math.floor(Math.random() * 10000)); // Generate random number between 0 and 100
-    }
-    return data;
-  };
-
+    get_chart_data()
+  }, [])
   const data = {
-    labels: generateLabels(), // Generate labels for each day of January
+    labels: Dates, // Generate labels for each day of January
     datasets: [
       {
         label: "Transactions",
-        data: generateRandomData(), // Generate random data points for January
+        data: Transactions, // Generate random data points for January
         borderColor: "rgba(75, 192, 192, 1)",
         borderWidth: 1,
       },
       {
         label: "Credits Transaction",
-        data: generateRandomData(), // Generate random data points for January
+        data: Credit, // Generate random data points for January
         borderColor: "rgba(255, 99, 132, 1)",
         borderWidth: 1,
       },

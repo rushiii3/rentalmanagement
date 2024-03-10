@@ -22,7 +22,8 @@ const Payment = ({ points, userEmail }) => {
   const [errorMessage, seterrorMessage] = useState("");
   const [Razorpay] = useRazorpay();
   const handlePay = async () => {
-    onOpenChange(isOpen);
+    
+    
     const options = {
       key: "rzp_test_cA6wZvVTsahL8l", // Enter the Key ID generated from the Dashboard
       amount: price * 100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
@@ -47,18 +48,14 @@ const Payment = ({ points, userEmail }) => {
 
     const rzp1 = new Razorpay(options);
 
-    // rzp1.on("payment.failed", function (response) {
-    //   console.log(response);
-    //   alert(response.error.code);
-    //   alert(response.error.description);
-    //   alert(response.error.source);
-    //   alert(response.error.step);
-    //   alert(response.error.reason);
-    //   alert(response.error.metadata.order_id);
-    //   alert(response.error.metadata.payment_id);
-    // });
+
     if (price > 1000 && price<=100000) {
       rzp1.open();
+      onOpenChange(isOpen);
+    }
+    if (price===0) {
+      setError(true);
+      seterrorMessage("Amount should be greater than ₹1000");
     }
   };
 
@@ -89,6 +86,10 @@ const Payment = ({ points, userEmail }) => {
   const handlePriceInput = (e) => {
     const inputValue = parseInt(e.target.value);
     setprice(inputValue);
+    if (inputValue === 0) {
+      setError(true);
+      seterrorMessage("Amount should be greater than ₹1000");
+    }
     if (inputValue < 1000) {
       setError(true);
       seterrorMessage("Amount should be greater than ₹1000");

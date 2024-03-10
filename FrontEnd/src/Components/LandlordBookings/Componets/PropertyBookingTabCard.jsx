@@ -159,7 +159,9 @@ const PropertyBookingTabCard = ({
       });
     }
   };
-
+  console.log(convertToUTC(currentDate));
+  console.log(booking_date);
+console.log(convertToUTC(currentDate) >= booking_date);
   return (
     <div class="bg-white rounded-xl border shadow-md overflow-hidden ">
       <div class="bg-white w-full flex  p-2 rounded-xl shadow border  flex-col md:flex-row">
@@ -215,7 +217,7 @@ const PropertyBookingTabCard = ({
                   </Button>
                 </>
               ) : selectedTab !== "property_booking" &&
-                convertToUTC(currentDate) > booking_date &&
+                convertToUTC(currentDate) >= booking_date &&
                 status === "Accepted" ? (
                 <>
                   <div className="flex flex-col w-full">

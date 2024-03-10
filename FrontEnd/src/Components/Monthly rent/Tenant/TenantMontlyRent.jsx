@@ -48,6 +48,7 @@ const TenantMontlyRent = () => {
           );
           if (data.success) {
             setLeaseData(data.InAgreement[0]);
+            console.log(data);
             const startDate = new Date(data.InAgreement[0].lease_start_date);
             const endDate = new Date(data.InAgreement[0].lease_end_date);
             const monthPairs = getMonthPairs(startDate, endDate);

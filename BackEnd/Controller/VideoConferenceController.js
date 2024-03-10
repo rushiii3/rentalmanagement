@@ -3,7 +3,7 @@ const UserModel = require("../Models/UserModel"); // Import your User model
 const PropertyModel = require("../Models/UserModel"); // Import your Property model
 const VideoConference = require("../Models/VideoConferenceModel");
 const errorThrow = require("../Middleware/ErrorHandler");
-var mongoose = require('mongoose');
+var mongoose = require("mongoose");
 
 const AddVisit = asyncHandler(async (req, res, next) => {
   try {
@@ -68,62 +68,70 @@ const AddVisit = asyncHandler(async (req, res, next) => {
 const get_user_bookings_properties = asyncHandler(async (req, res, next) => {
   try {
     const ids = req.body;
-    const property_data = await Promise.all(ids.map(async (data) => {
-      const Bookings = await VideoConference.find({
-        property_id: data,
-      }).populate({
-        path: "user_id",
-        model:"User",
-        select: "-_id firstname lastname avatar",
-      });
-      return { bookings: Bookings };
-    }));
+    const property_data = await Promise.all(
+      ids.map(async (data) => {
+        const Bookings = await VideoConference.find({
+          property_id: data,
+        }).populate({
+          path: "user_id",
+          model: "User",
+          select: "-_id firstname lastname avatar",
+        });
+        return { bookings: Bookings };
+      })
+    );
     res.status(200).json({ success: true, property_data });
   } catch (error) {
     next(error);
   }
 });
-const updateStatus = asyncHandler(async(req,res,next)=>{
+const updateStatus = asyncHandler(async (req, res, next) => {
   try {
     const { id, type } = req.body;
-    const update_status = await VideoConference.findByIdAndUpdate(id, { vc_status: type });
+    const update_status = await VideoConference.findByIdAndUpdate(id, {
+      vc_status: type,
+    });
     if (!update_status) {
       // If update_status is null, the document with the specified ID was not found
-      return errorThrow("Failed to update property status! Booking not found.", 404);
+      return errorThrow(
+        "Failed to update property status! Booking not found.",
+        404
+      );
     }
     res.status(200).json({ success: true });
   } catch (error) {
     // Handle other errors, e.g., database connection issues
     next(error);
   }
-})
-const GetVideoConferenceData = asyncHandler(async(req,res,next)=>{
+});
+const GetVideoConferenceData = asyncHandler(async (req, res, next) => {
   try {
-    const {id} = req.params;
+    const { id } = req.params;
     console.log("hehe");
-    
-    if(!mongoose.Types.ObjectId.isValid(id)){
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
       errorThrow("Invalid Meeting ID", 404);
     }
-    const verify = await VideoConference.findById(id).populate({
-      path: "property_id",
-      select: "_id", // Select necessary fields
-      populate: {
-        path: "landlord_id",
-        model: "User",
-        select: "_id firstname lastname",
-      },
-    })
-    .exec();
-    
+    const verify = await VideoConference.findById(id)
+      .populate({
+        path: "property_id",
+        select: "_id", // Select necessary fields
+        populate: {
+          path: "landlord_id",
+          model: "User",
+          select: "_id firstname lastname",
+        },
+      })
+      .exec();
+
     res.status(200).json({ success: true, verify });
   } catch (error) {
     next(error);
   }
-})
+});
 module.exports = {
   AddVisit,
   get_user_bookings_properties,
   updateStatus,
-  GetVideoConferenceData
+  GetVideoConferenceData,
 };

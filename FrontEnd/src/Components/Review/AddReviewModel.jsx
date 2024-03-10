@@ -38,8 +38,7 @@ function getRating(rating) {
   }
 }
 const AddReviewModel = ({ RentedPropertyData, setReviewData, ReviewData }) => {
-  const filteredData = RentedPropertyData.filter(item => item?.property_id?._id === "65ba59aedfc5d47c0d998e5e");
-  console.log("Filtered",filteredData);
+
   const { user } = useSelector((state) => state.user);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [rating, setRating] = useState(0);
@@ -53,9 +52,10 @@ const AddReviewModel = ({ RentedPropertyData, setReviewData, ReviewData }) => {
       .required("Rating is required"),
     review: yup
       .string()
+      .required("Review is required")
       .min(10, "Review must be at least 10 characters")
-      .max(500, "Review must be at most 300 characters")
-      .required("Review is required"),
+      .max(500, "Review must be at most 300 characters"),
+      
   });
 
   const {
@@ -188,7 +188,7 @@ const AddReviewModel = ({ RentedPropertyData, setReviewData, ReviewData }) => {
                     <p class="mt-3 block subpixel-antialiased text-foreground-600 pointer-events-none will-change-auto  !duration-200 !ease-out transition-[transform,color,left,opacity] motion-reduce:transition-none group-data-[filled=true]:text-foreground group-data-[filled=true]:pointer-events-auto pb-0 group-data-[filled=true]:left-0  text-small group-data-[filled=true]:-translate-y-[calc(100%_+_theme(fontSize.small)/2_+_20px)] pe-2 max-w-full text-ellipsis overflow-hidden">
                       {getRating(hoveredRating ? hoveredRating : rating)}
                     </p>
-                    <p>{errors.rating?.message}</p>
+                    <p className="text-tiny text-danger">{errors.rating?.message}</p>
                   </div>
                   <div>
                     <Textarea
@@ -197,8 +197,9 @@ const AddReviewModel = ({ RentedPropertyData, setReviewData, ReviewData }) => {
                       placeholder="Enter your review"
                       className="max-w-full"
                       {...register("review")}
+                      isInvalid={errors.review?.message ? true : false}
+                      errorMessage={errors.review?.message}
                     />
-                    <p>{errors.review?.message}</p>
                   </div>
                   <div className="flex flex-row space-x-4 py-5 ml-auto">
                     <Button color="danger" variant="light" onPress={onClose}>

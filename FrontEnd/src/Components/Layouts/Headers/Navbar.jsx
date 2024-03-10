@@ -84,27 +84,22 @@ const Navbar1 = () => {
           </NavbarItem>
           <NavbarItem >
             <Link href="#" aria-current="page">
-              Customers
+              Chat
             </Link>
           </NavbarItem>
-          <NavbarItem>
-            <Link color="foreground" href="#">
-              Integrations
-            </Link>
-          </NavbarItem>
-          <NavbarItem>
-            <Link color="foreground" href="#">
-              Features
-            </Link>
-          </NavbarItem>
-          <NavbarItem isActive>
+          <NavbarItem >
             <Link href="#" aria-current="page">
-              Customers
+              Report
             </Link>
           </NavbarItem>
-          <NavbarItem>
-            <Link color="foreground" href="#">
-              Integrations
+          <NavbarItem >
+            <Link href="#" aria-current="page">
+              Maintenance
+            </Link>
+          </NavbarItem>
+          <NavbarItem >
+            <Link href="#" aria-current="page">
+              Rent
             </Link>
           </NavbarItem>
         </NavbarContent>
