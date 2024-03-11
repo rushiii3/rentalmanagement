@@ -8,7 +8,7 @@ const serverLink = "https://rentalmanagement-omega.vercel.app";
 const localhostLink = "http://localhost:3000";
 const io = socketIO(server, {
   cors: {
-    origin:  serverLink
+    origin:  "https://rentalmanagement-omega.vercel.app/"
   }
 });
 
