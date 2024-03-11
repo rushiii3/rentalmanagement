@@ -7,7 +7,7 @@ const getCurrentTime = () => {
     const minutes = now.getMinutes().toString().padStart(2, '0'); // Get minutes and pad with leading zero if needed
     return `${hours}:${minutes}`;
   };
-const socket = io("http://localhost:3500");
+const socket = io("https://socketio-rental.onrender.com");
 const TenantGroup = () => {
   const { user } = useSelector((state) => state.user);
   const [message, setMessage] = useState("");
