@@ -111,7 +111,6 @@ const ReportForm = ({ setReportData, ReportData, types, setFilterData, setSearch
                   <div className="w-full flex flex-col space-y-4">
                     <div>
                       <Select
-                        isRequired
                         label="Filter"
                         placeholder="Select your cateogry"
                         className="max-w-full items-center"
@@ -136,7 +135,6 @@ const ReportForm = ({ setReportData, ReportData, types, setFilterData, setSearch
                     </div>
                     <div className="w-full">
                       <Input
-                        isRequired
                         type="text"
                         labelPlacement="outside"
                         label="Title"
@@ -153,7 +151,6 @@ const ReportForm = ({ setReportData, ReportData, types, setFilterData, setSearch
                     </div>
                     <div>
                       <Textarea
-                        isRequired
                         label="Description"
                         labelPlacement="outside"
                         placeholder="Enter your description"

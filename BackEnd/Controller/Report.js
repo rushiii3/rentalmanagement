@@ -4,6 +4,8 @@ const User = require("../Models/UserModel");
 const Admin = require("../Models/Admin");
 const Report = require("../Models/Report");
 const errorThrow = require("../Middleware/ErrorHandler");
+/* This `add` function is an asynchronous handler that handles the addition of a new report to the
+database. Here's a breakdown of what it does: */
 const add = asyncHandler(async (req, res, next) => {
   try {
     const { title, description, filter, user_id } = req.body;
@@ -28,45 +30,60 @@ const add = asyncHandler(async (req, res, next) => {
     next(error);
   }
 });
+/* The `get_data` function is an asynchronous handler that retrieves reports from the database based on
+the `user_id` provided in the request parameters. Here's a breakdown of what it does: */
 const get_data = asyncHandler(async (req, res, next) => {
   try {
-    const {id} = req.params;
-    const report = await Report.find({user_id:id},{user_id:0,admin_email:0,_id:0});
-      res.status(201).json({ success: true,report});
+    const { id } = req.params;
+    const report = await Report.find(
+      { user_id: id },
+      { user_id: 0, admin_email: 0, _id: 0 }
+    );
+    res.status(201).json({ success: true, report });
   } catch (error) {
     next(error);
   }
 });
 
-const get_report_data_admin = asyncHandler(async(req,res,next)=>{
+/* The `get_report_data_admin` function is an asynchronous handler that retrieves reports from the
+database based on the `admin_email` and `report_type` provided in the request parameters. Here's a
+breakdown of what it does: */
+const get_report_data_admin = asyncHandler(async (req, res, next) => {
   try {
-    const {id,type} = req.params;
+    const { id, type } = req.params;
     console.log(type);
-    const reports = await Report.find({admin_email:id,report_type:type},{admin_email:0}).populate({
+    const reports = await Report.find(
+      { admin_email: id, report_type: type },
+      { admin_email: 0 }
+    ).populate({
       path: "user_id",
       model: "User",
       select: "-_id firstname lastname avatar email",
     });
-    res.status(201).json({ success: true,reports});
+    res.status(201).json({ success: true, reports });
   } catch (error) {
-    next(error)
+    next(error);
   }
-})
-const update_status_user = asyncHandler(async(req,res,next)=>{
+});
+/* The `update_status_user` function is an asynchronous handler that updates the status of a report in
+the database. Here's a breakdown of what it does: */
+const update_status_user = asyncHandler(async (req, res, next) => {
   try {
-    const {id,status} = req.body;
-    const ReportStatus = await Report.findByIdAndUpdate(id,{report_status:status});
+    const { id, status } = req.body;
+    const ReportStatus = await Report.findByIdAndUpdate(id, {
+      report_status: status,
+    });
     if (ReportStatus) {
-      res.status(201).json({ success: true});
+      res.status(201).json({ success: true });
     }
     errorThrow(500, "Failed to update status");
   } catch (error) {
-    next(error)
+    next(error);
   }
-})
+});
 module.exports = {
   add,
   get_data,
   get_report_data_admin,
-  update_status_user
+  update_status_user,
 };

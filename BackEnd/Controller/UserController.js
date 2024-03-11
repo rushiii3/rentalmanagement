@@ -16,6 +16,8 @@ const Admin = require("../Models/Admin");
 const hello = (req, res, next) => {
   res.status(200).json({ msg: true });
 };
+/* The above code is a JavaScript function for registering a user. Here is a breakdown of what the code
+is doing: */
 const register = asyncHandler(async (req, res) => {
   const {
     email,
@@ -81,11 +83,23 @@ const register = asyncHandler(async (req, res) => {
     next(error);
   }
 });
+/**
+ * The function `createActivationToken` generates a JWT token for user activation with a 5-minute
+ * expiration.
+ * @param user - The `user` parameter in the `createActivationToken` function is the user object that
+ * contains the information needed to generate the activation token. This information typically
+ * includes the user's unique identifier, email address, and any other relevant data required for
+ * activation.
+ * @returns A JWT token is being returned with the user information signed using the activation secret
+ * from the environment variables, with an expiration time of 5 minutes.
+ */
 const createActivationToken = (user) => {
   return jwt.sign(user, `${process.env.ACTIVATION_SECRET}`, {
     expiresIn: "5m",
   });
 };
+/* The above code is an asynchronous function named `activation` that handles the activation process
+for a user account. Here is a breakdown of what the code is doing: */
 const activation = asyncHandler(async (req, res, next) => {
   try {
     const { activation_token } = req.body;
@@ -150,6 +164,8 @@ const activation = asyncHandler(async (req, res, next) => {
   }
 });
 
+/* The above code is a JavaScript function for handling user login. Here is a breakdown of what the
+code is doing: */
 const login = asyncHandler(async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -188,6 +204,8 @@ const login = asyncHandler(async (req, res, next) => {
   }
 });
 
+/* The above code is a JavaScript function that retrieves user information based on the user ID
+provided in the request. It uses async/await syntax to handle asynchronous operations. */
 const getUser = asyncHandler(async (req, res, next) => {
   try {
     const {
@@ -229,6 +247,8 @@ const getUser = asyncHandler(async (req, res, next) => {
     next(error);
   }
 });
+/* The above code is a JavaScript function for handling a forgot password request. Here is a breakdown
+of what the code is doing: */
 const forgotpassword = asyncHandler(async (req, res, next) => {
   try {
     const { email } = req.body;
@@ -258,6 +278,8 @@ const forgotpassword = asyncHandler(async (req, res, next) => {
     next(error);
   }
 });
+/* The above code is a JavaScript function named `verifyotp` that is using async/await syntax to handle
+asynchronous operations. It takes in a request, response, and next function as parameters. */
 const verifyotp = asyncHandler(async (req, res, next) => {
   try {
     const { otp, email } = req.body;
@@ -283,6 +305,8 @@ const verifyotp = asyncHandler(async (req, res, next) => {
     next(error);
   }
 });
+/* The above code is a JavaScript function that handles changing a user's forgotten password. Here is a
+breakdown of what the code does: */
 const changeforgotpassword = asyncHandler(async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -305,6 +329,10 @@ const changeforgotpassword = asyncHandler(async (req, res, next) => {
     next(error);
   }
 });
+/* The above code is an asynchronous function in JavaScript that handles updating a user or admin
+profile image. It first retrieves the email and image data from the request body. Then it searches
+for the user and admin based on the email provided. If neither is found, it throws an error
+indicating that the user was not found. */
 const UserProfileImageUpdate = asyncHandler(async (req, res, next) => {
   try {
     const { email, image } = req.body;
@@ -470,10 +498,12 @@ const get_all_user_details = asyncHandler(async (req, res, next) => {
     const { type } = req.params;
     console.log(type);
     if (type === "user") {
-      const users = await UserModel.find({}).select("email role firstname middlename lastname avatar address phoneNumber _id creditPoint ");
+      const users = await UserModel.find({}).select(
+        "email role firstname middlename lastname avatar address phoneNumber _id creditPoint "
+      );
       res.status(200).json({ success: true, users });
       return; // Return to exit the handler
-    } 
+    }
     if (type === "admin") {
       const users = await Admin.find({}).select(
         "email role firstname middlename lastname avatar address phoneNumber _id isCurrentlyEmployee joiningDate"
@@ -487,29 +517,42 @@ const get_all_user_details = asyncHandler(async (req, res, next) => {
   }
 });
 
-const add_users = asyncHandler(async(req,res,next)=>{
+const add_users = asyncHandler(async (req, res, next) => {
   try {
-    const {email,firstname,middlename,lastname,phoneno,role,password,streetname,state,city,pincode,profile} = req.body;
+    const {
+      email,
+      firstname,
+      middlename,
+      lastname,
+      phoneno,
+      role,
+      password,
+      streetname,
+      state,
+      city,
+      pincode,
+      profile,
+    } = req.body;
     const userExists = await UserModel.findOne({ email });
     if (userExists) {
       errorThrow("User email already exists!", 400);
     }
-  
+
     const options = {
       use_filename: true,
       unique_filename: true,
       overwrite: true,
     };
     const image = profile;
-  
+
     const result = await cloudinary.uploader.upload(image).catch((error) => {
       errorThrow(error.message, 500);
     });
-  
+
     if (!result) {
       errorThrow("Failed to upload the image", 500);
     }
-  
+
     const image_id = result.public_id;
     const image_link = result.secure_url;
 
@@ -537,27 +580,27 @@ const add_users = asyncHandler(async(req,res,next)=>{
       errorThrow("Internal error while creating user", 500);
     }
 
-     res.status(201).json({ success:true, message: "User Added Successfully" });
+    res.status(201).json({ success: true, message: "User Added Successfully" });
   } catch (error) {
     next(error);
   }
-})
-const deleteuser = asyncHandler(async(req,res,next)=>{
+});
+const deleteuser = asyncHandler(async (req, res, next) => {
   try {
-    const {id} = req.params;
+    const { id } = req.params;
     const user = await UserModel.findById(id);
-    if(!user){
+    if (!user) {
       errorThrow("No user found", 404);
     }
     const delete_user = await UserModel.findByIdAndDelete(id);
     if (!delete_user) {
       errorThrow("Failed to delete user", 500);
     }
-    res.status(201).json({ success: true});
+    res.status(201).json({ success: true });
   } catch (error) {
-    next(error)
+    next(error);
   }
-})
+});
 
 module.exports = {
   hello,
@@ -575,5 +618,5 @@ module.exports = {
   logout,
   get_all_user_details,
   add_users,
-  deleteuser
+  deleteuser,
 };

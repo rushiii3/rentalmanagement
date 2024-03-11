@@ -3,7 +3,9 @@ const UserModel = require("../Models/UserModel"); // Import your User model
 const Transaction = require("../Models/TransactonModel");
 const errorThrow = require("../Middleware/ErrorHandler");
 
-const add_transaction = asyncHandler(async(req, res, next) => {
+/* The `add_transaction` function is an asynchronous handler that handles the process of adding a new
+transaction to the database. Here is a breakdown of what the function does: */
+const add_transaction = asyncHandler(async (req, res, next) => {
   try {
     const { pay_id, amount, userEmail } = req.body;
 
@@ -17,7 +19,7 @@ const add_transaction = asyncHandler(async(req, res, next) => {
     const newTransactionData = new Transaction({
       amount: amount,
       pay_id: pay_id,
-      user_id: user._id
+      user_id: user._id,
     });
 
     // Save the new transaction
@@ -26,11 +28,11 @@ const add_transaction = asyncHandler(async(req, res, next) => {
       errorThrow("Failed to add transaction data", 500);
     }
     const sum = user.creditPoint + amount;
-    const udpdate_user_credits = await UserModel.findByIdAndUpdate(user._id,{
-        creditPoint : sum,
-    })
-    if(!udpdate_user_credits){
-        errorThrow("Failed to add transaction data", 500);
+    const udpdate_user_credits = await UserModel.findByIdAndUpdate(user._id, {
+      creditPoint: sum,
+    });
+    if (!udpdate_user_credits) {
+      errorThrow("Failed to add transaction data", 500);
     }
     res.status(201).json({ success: true });
   } catch (error) {
@@ -39,5 +41,5 @@ const add_transaction = asyncHandler(async(req, res, next) => {
 });
 
 module.exports = {
-  add_transaction
+  add_transaction,
 };

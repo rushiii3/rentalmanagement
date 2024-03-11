@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "@nextui-org/react";
+import {Link} from 'react-router-dom'
 import { motion } from "framer-motion";
 const Jumptron = () => {
 
@@ -13,22 +13,22 @@ const Jumptron = () => {
   };
   return (
     <div className="h-screen bg-white relative">
-      <link
+      {/* <link
         rel="preload"
-        href="https://i.ibb.co/jvfy7Q2/Screenshot-2023-11-18-at-2-12-59-PM.webp"
+        href="https://static.vecteezy.com/system/resources/previews/021/019/996/mp4/lease-rental-and-selling-home-dealership-manager-smile-handshake-to-the-new-homeowner-rent-house-sales-loan-credit-financial-insurance-seller-dealer-installment-free-video.mp4"
         as="image"
-      />
-      {/* <video
+      /> */}
+      <video
         className="w-full h-full max-w-full object-cover  object-center"
         playsInline
         loop
         muted
       >
         <source src="https://static.vecteezy.com/system/resources/previews/021/019/996/mp4/lease-rental-and-selling-home-dealership-manager-smile-handshake-to-the-new-homeowner-rent-house-sales-loan-credit-financial-insurance-seller-dealer-installment-free-video.mp4" />
-      </video> */}
-      <img src="https://i.ibb.co/jvfy7Q2/Screenshot-2023-11-18-at-2-12-59-PM.webp" className="w-full h-full max-w-full object-cover  object-center" alt="" />
+      </video>
+      {/* <img src="https://i.ibb.co/jvfy7Q2/Screenshot-2023-11-18-at-2-12-59-PM.webp" className="w-full h-full max-w-full object-cover  object-center" alt="" /> */}
 
-      <motion.div className="py-8 px-4 mx-auto max-w-screen text-center lg:py-16 absolute top-36"
+      <motion.div className="py-8 px-4 mx-auto max-w-screen text-center lg:py-16 absolute top-60"
                 initial="hidden"
                 viewport={{ once: true }}
                 whileInView="visible"
@@ -44,10 +44,10 @@ const Jumptron = () => {
           </p>
           <div className="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-4">
             <Link
-              href="https://github.com/nextui-org/nextui"
+              to='/register'
               className="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-[#662E9B] hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900"
             >
-              Get started
+              Register
               <svg
                 className="w-3.5 h-3.5 ml-2"
                 aria-hidden="true"
@@ -66,10 +66,10 @@ const Jumptron = () => {
             </Link>
 
             <Link
-              href="https://github.com/nextui-org/nextui"
+              to="/login"
               className="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-gray-900 rounded-lg border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
             >
-              Learn more
+              Login
             </Link>
           </div>
           

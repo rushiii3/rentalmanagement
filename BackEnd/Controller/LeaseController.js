@@ -13,6 +13,8 @@ cloudinary.config({
   api_secret: "blcMAs-77T_1t1VGnRIlLia_RqM",
   secure: true,
 });
+/* The `get_lease_gata` function is an asynchronous handler that retrieves lease data based on a
+property ID. Here's a breakdown of what it does: */
 const get_lease_gata = asyncHandler(async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -24,12 +26,13 @@ const get_lease_gata = asyncHandler(async (req, res, next) => {
       model: "User",
       select: "-_id firstname lastname avatar",
     });
-    console.log(id);
     res.status(200).json({ msg: true, LeaseData });
   } catch (error) {
     next(error);
   }
 });
+/* The `Update_lease` function is responsible for updating lease information based on the data provided
+in the request body. Here's a breakdown of what it does: */
 const Update_lease = asyncHandler(async (req, res, next) => {
   try {
     const data = req.body;
@@ -68,6 +71,8 @@ const Update_lease = asyncHandler(async (req, res, next) => {
     next(error);
   }
 });
+/* The `delete_terminate` function is responsible for handling the termination or deletion of a lease
+agreement based on the action provided in the request body. Here's a breakdown of what it does: */
 const delete_terminate = asyncHandler(async (req, res, next) => {
   try {
     const { action, action_id } = req.body;
@@ -102,6 +107,8 @@ const delete_terminate = asyncHandler(async (req, res, next) => {
     next(error);
   }
 });
+/* The `get_tenant_leases` function is responsible for fetching lease data for a specific tenant based
+on the tenant's ID. Here's a breakdown of what it does: */
 const get_tenant_leases = asyncHandler(async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -141,6 +148,8 @@ const get_tenant_leases = asyncHandler(async (req, res, next) => {
     res.status(200).json({ success: true, finallease });
   } catch (error) {}
 });
+/* The `tenant_in_agreement` function is responsible for fetching data related to a tenant who is
+currently in an agreement. Here's a breakdown of what it does: */
 const tenant_in_agreement = asyncHandler(async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -202,50 +211,49 @@ const tenant_in_agreement = asyncHandler(async (req, res, next) => {
     next(error);
   }
 });
-const get_tenant_lease = asyncHandler(async(req,res,next)=>{
+/* The `get_tenant_lease` function is responsible for fetching lease data for a specific tenant based
+on the tenant's ID. Here's a breakdown of what it does: */
+const get_tenant_lease = asyncHandler(async (req, res, next) => {
   try {
-    const {id} = req.params;
-    const  InAgreementDetails = await LeaseModel.find({
+    const { id } = req.params;
+    const InAgreementDetails = await LeaseModel.find({
       user_id: id,
-      $or: [
-          { lease_status: "InAgreement" },
-          { lease_status: "Ended" }
-      ]
-  }).populate({
-        path: "property_id",
-        model: "Property",
-        select:
-          "_id property_no_of_bhk property_type building_name property_locality building_number property_streetname property_city property_state property_pincode images",
-      })
+      $or: [{ lease_status: "InAgreement" }, { lease_status: "Ended" }],
+    }).populate({
+      path: "property_id",
+      model: "Property",
+      select:
+        "_id property_no_of_bhk property_type building_name property_locality building_number property_streetname property_city property_state property_pincode images",
+    });
 
-      const AgreementDetails = InAgreementDetails.map((visit) => {
-        if (
-          visit.property_id &&
-          visit.property_id.images &&
-          visit.property_id.images.length > 0
-        ) {
-          const { images, ...propertyWithoutImages } =
-            visit.property_id.toObject(); // Destructure 'images' from 'property_id'
-          return {
-            ...visit.toObject(), // Convert Mongoose object to plain JavaScript object
-            property_id: {
-              ...propertyWithoutImages, // Exclude 'images' from 'property_id'
-              image: visit.property_id.images[0].url, // Retain only the URL of the first image
-            },
-          };
-        }
-        return visit;
-      });
-    res.status(200).json({ success: true,AgreementDetails});
+    const AgreementDetails = InAgreementDetails.map((visit) => {
+      if (
+        visit.property_id &&
+        visit.property_id.images &&
+        visit.property_id.images.length > 0
+      ) {
+        const { images, ...propertyWithoutImages } =
+          visit.property_id.toObject(); // Destructure 'images' from 'property_id'
+        return {
+          ...visit.toObject(), // Convert Mongoose object to plain JavaScript object
+          property_id: {
+            ...propertyWithoutImages, // Exclude 'images' from 'property_id'
+            image: visit.property_id.images[0].url, // Retain only the URL of the first image
+          },
+        };
+      }
+      return visit;
+    });
+    res.status(200).json({ success: true, AgreementDetails });
   } catch (error) {
     next(error);
   }
-})
+});
 module.exports = {
   get_lease_gata,
   Update_lease,
   delete_terminate,
   get_tenant_leases,
   tenant_in_agreement,
-  get_tenant_lease
+  get_tenant_lease,
 };

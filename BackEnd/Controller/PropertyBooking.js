@@ -4,6 +4,8 @@ const PropertyModel = require("../Models/PropertyModel");
 const BookingModel = require("../Models/PropertyBooking");
 const errorThrow = require("../Middleware/ErrorHandler");
 const LeaseAgreement = require("../Models/LeaseAgreement");
+/* The `AddBooking` function is responsible for adding a new booking for a property. Here's a breakdown
+of what the function does: */
 const AddBooking = asyncHandler(async (req, res, next) => {
   try {
     const data = req.body;
@@ -65,6 +67,8 @@ const AddBooking = asyncHandler(async (req, res, next) => {
     }
   }
 });
+/* The `get_user_bookings_properties` function is responsible for fetching booking data for multiple
+properties based on the provided property IDs. Here's a breakdown of what the function does: */
 const get_user_bookings_properties = asyncHandler(async (req, res, next) => {
   try {
     const ids = req.body;
@@ -86,6 +90,8 @@ const get_user_bookings_properties = asyncHandler(async (req, res, next) => {
   }
 });
 
+/* The `updateStatus` function is responsible for updating the status of a booking. Here's a breakdown
+of what the function does: */
 const updateStatus = asyncHandler(async (req, res, next) => {
   try {
     const { id, type } = req.body;

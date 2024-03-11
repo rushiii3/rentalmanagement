@@ -27,8 +27,6 @@ const AddLeasModal = ({ value, setLeaseData, LeaseData }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [StartDate, setStartDate] = useState("");
   const [EndDate, setEndDate] = useState("");
-  console.log(value?._id);
-  console.log(LeaseData);
   const schema = yup.object().shape({
     duration: yup
       .number()
@@ -64,14 +62,13 @@ const AddLeasModal = ({ value, setLeaseData, LeaseData }) => {
     leaseAgreement: yup
       .mixed()
       .required("A file is required")
-      .transform((value) => (Number.isNaN(value) ? null : value))
-      .nullable()
+      .test("fileRequired", "PDF File is required", (value) => {
+        return value && value[0]?.type !== undefined;
+      })
       .test("fileFormat", "PDF only", (value) => {
-        console.log(value[0]?.type);
         return value && ["application/pdf"].includes(value[0]?.type);
       })
       .test("fileSize", "PDF size should be less than 10MB", (value) => {
-        console.log(value[0]?.size);
         return value && value[0]?.size <= 10485760;
       }),
 
@@ -183,9 +180,7 @@ const AddLeasModal = ({ value, setLeaseData, LeaseData }) => {
         className="w-full"
         onPress={onOpen}
       >
-        {value?.lease_status==="Pending"
-          ? "Update"
-          : "View"}
+        {value?.lease_status === "Pending" ? "Update" : "View"}
       </Button>
       <Modal
         isOpen={isOpen}
@@ -198,13 +193,11 @@ const AddLeasModal = ({ value, setLeaseData, LeaseData }) => {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-              {value?.lease_status==="Pending"
-          ? "Update "
-          : "View "}
-          Agreement
+                {value?.lease_status === "Pending" ? "Update " : "View "}
+                Agreement
               </ModalHeader>
               <ModalBody>
-                {value?.lease_status==="Pending"? (
+                {value?.lease_status === "Pending" ? (
                   <form
                     onSubmit={handleSubmit(onSubmit)}
                     encType="multipart/form-data"
@@ -406,6 +399,7 @@ const AddLeasModal = ({ value, setLeaseData, LeaseData }) => {
                         <input
                           {...register("leaseAgreement")}
                           type="file"
+                          accept="application/pdf"
                           class=" p-1 w-full text-slate-500 text-sm rounded-full leading-6 file:bg-violet-200 file:text-violet-700 file:font-semibold file:border-none file:px-4 file:py-1 file:mr-6 file:rounded-full hover:file:bg-violet-100 border border-gray-300"
                         />
                         <p class="mt-2 text-sm text-red-600 dark:text-red-500">

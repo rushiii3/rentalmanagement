@@ -9,7 +9,8 @@ const NavbarShow = ({ children }) => {
       Location.pathname === "/Login" ||
       Location.pathname === "/login" ||
       Location.pathname === "/register" ||
-      Location.pathname === "/Register"
+      Location.pathname === "/Register" ||
+      Location.pathname === "/"
     ) {
       setShow(false);
     } else if (
@@ -32,7 +33,8 @@ const NavbarShow = ({ children }) => {
       Location.pathname === "/landlord-maintenance" ||
       Location.pathname === "/tenant-monthly-rent" ||
       Location.pathname === "/landlord-monthly-rent" ||
-      Location.pathname === "/tenant-review"
+      Location.pathname === "/tenant-review" ||
+      Location.pathname === "/property"
     ) {
       setShow(true);
     } else if (

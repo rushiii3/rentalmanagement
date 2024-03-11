@@ -30,6 +30,7 @@ import {
   TenantReviewPage,
   UpdatePropertyPage,
   LandlordMontlyRent,
+  LandlorddProperties,
 } from "./Routes";
 import NavbarShow from "./Components/Layouts/Headers/NavBarShow";
 import { Toaster } from "react-hot-toast";
@@ -64,8 +65,14 @@ function App() {
             <Route path="*" element={<PageNotFound />} />
             <Route path="/register" element={<SignUpPage />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/chat" element={<ChatPage />} />
-            <Route path="/chat2" element={<ChatLayout2 />} />
+            <Route
+              path="/chat"
+              element={
+                <Protected>
+                  <ChatPage />
+                </Protected>
+              }
+            />
             <Route
               path="/activate/:activation_token"
               element={<Activation />}
@@ -73,7 +80,14 @@ function App() {
 
             <Route path="/forgot-password" element={<ForgotPage />} />
             <Route path="/properties" element={<PropertyPage />} />
-            <Route path="/profile-update" element={<ProfileUpdatePage />} />
+            <Route
+              path="/profile-update"
+              element={
+                <Protected>
+                  <ProfileUpdatePage />
+                </Protected>
+              }
+            />
             <Route
               path="/properties/:id"
               element={<SinglePropertyViewPage />}
@@ -128,35 +142,83 @@ function App() {
                 </ProtectedAdmin>
               }
             />
-            <Route path="/group-chat" element={<TenantGroupChatPage />} />
-            <Route path="/landlord-lease" element={<LandlordLeasePage />} />
+            <Route
+              path="/group-chat"
+              element={
+                <ProtectedTenant>
+                  <TenantGroupChatPage />
+                </ProtectedTenant>
+              }
+            />
+            <Route
+              path="/landlord-lease"
+              element={
+                <ProtectedLandlord>
+                  <LandlordLeasePage />
+                </ProtectedLandlord>
+              }
+            />
             <Route path="/tenant-lease" element={<TenantLeasePage />} />
             <Route
               path="/tenant-maintenance"
-              element={<MaintenaceTenantPage />}
+              element={
+                <ProtectedTenant>
+                  <MaintenaceTenantPage />
+                </ProtectedTenant>
+              }
             />
             <Route
               path="/landlord-maintenance"
-              element={<LandlordMaintenancePage />}
+              element={
+                <ProtectedLandlord>
+                  <LandlordMaintenancePage />
+                </ProtectedLandlord>
+              }
             />
             <Route
               path="/tenant-monthly-rent"
-              element={<TenantMonthlyRentPage />}
+              element={
+                <ProtectedTenant>
+                  <TenantMonthlyRentPage />
+                </ProtectedTenant>
+              }
             />
             <Route
               path="/landlord-monthly-rent"
-              element={<LandlordMontlyRent />}
+              element={
+                <ProtectedLandlord>
+                  <LandlordMontlyRent />
+                </ProtectedLandlord>
+              }
             />
 
-            <Route path="/tenant-review" element={<TenantReviewPage />} />
+            <Route
+              path="/tenant-review"
+              element={
+                <ProtectedTenant>
+                  <TenantReviewPage />
+                </ProtectedTenant>
+              }
+            />
 
             <Route
               path="/update-property/:id"
-              element={<UpdatePropertyPage />}
+              element={
+                <ProtectedLandlord>
+                  <UpdatePropertyPage />
+                </ProtectedLandlord>
+              }
+            />
+            <Route
+              path="/property"
+              element={
+                <ProtectedLandlord>
+                  <LandlorddProperties />
+                </ProtectedLandlord>
+              }
             />
           </Routes>
         </BrowserRouter>
-        <DarkMode />
       </div>
     </main>
   );

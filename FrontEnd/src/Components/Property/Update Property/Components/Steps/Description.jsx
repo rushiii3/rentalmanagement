@@ -141,7 +141,7 @@ export default function Description() {
               }  
 `}
             >
-              <option selected="">Select property status</option>
+              <option selected hidden value={null}>Select property status</option>
               <option value={true}>Active</option>
               <option value={false}>Inactive</option>
             </select>

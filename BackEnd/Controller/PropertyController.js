@@ -21,8 +21,7 @@ const AddProperty = asyncHandler(async (req, res, next) => {
       (item) => item.type === "video"
     ).map((item) => ({ url: item.url, publicKey: item.publicKey }));
     // Create a new property document
-    const newProperty = new Property(
-      {
+    const newProperty = new Property({
       building_name: data.buildingName,
       building_number: data.buildingNumber,
       property_streetname: data.streetAddress,
@@ -51,8 +50,7 @@ const AddProperty = asyncHandler(async (req, res, next) => {
       images: imagesWithKeys,
       videos: videosWithKeys,
       preferred_tenants: data.prefferedTenant,
-    }
-    );
+    });
     // Save the new property document
     const savedProperty = await newProperty.save();
     console.log(savedProperty);
@@ -70,6 +68,34 @@ const AddProperty = asyncHandler(async (req, res, next) => {
   }
 });
 
+/**
+ * The function `get_properties` retrieves properties based on various filters and sorting criteria,
+ * transforming the data before sending it as a response.
+ * @param req - req: The request object containing query parameters like page, limit, type, sort,
+ * price, Furnishing, state, city, landmark, bedrooms, bathrooms.
+ * @param res - The `res` parameter in the `get_properties` function is the response object that will
+ * be used to send the response back to the client making the request. In this case, the response will
+ * be in JSON format and will contain the transformed properties data based on the filters and sorting
+ * criteria provided in the
+ * @param next - In the provided code snippet, the `next` parameter in the `get_properties` function is
+ * a callback function that is used to pass any errors that occur during the execution of the
+ * asynchronous operation to the Express error handling middleware.
+ */
+/**
+ * The function `get_properties` retrieves properties based on various filters and sorting criteria,
+ * then transforms the data before sending it as a response.
+ * @param req - req is the request object that contains information sent by the client to the server.
+ * It includes data such as query parameters, body content, headers, and more. In this specific
+ * function `get_properties`, the req object is used to extract query parameters like page, limit,
+ * type, sort, price,
+ * @param res - The `res` parameter in the `get_properties` function is the response object that will
+ * be used to send the response back to the client making the request. In this case, the response will
+ * be in JSON format and will contain the transformed properties based on the filters and sorting
+ * criteria applied to the Property
+ * @param next - In the provided code snippet, the `next` parameter is a function that is used to pass
+ * control to the next middleware function in the stack. It is typically used in Express.js middleware
+ * functions to pass any errors to the error-handling middleware.
+ */
 const get_properties = async (req, res, next) => {
   const page = parseInt(req.query.page) || 1; // Current page number
   const limit = parseInt(req.query.limit) || 10; // Number of items per page
@@ -166,6 +192,9 @@ const get_properties = async (req, res, next) => {
     next(error);
   }
 };
+/* The above code is a JavaScript function that handles a request to fetch properties based on the
+state and city provided in the query parameters. It uses an asynchronous handler to await the result
+of querying the database for properties that match the state and city criteria. */
 const properties_landmark = asyncHandler(async (req, res, next) => {
   const state = req.query.state;
   const city = req.query.city;
@@ -189,6 +218,8 @@ const properties_landmark = asyncHandler(async (req, res, next) => {
     next(error);
   }
 });
+/* The above code is a JavaScript function that retrieves details of a single property based on the
+provided ID. It uses async/await syntax to handle asynchronous operations. */
 const getSinglePropertyDetail = asyncHandler(async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -210,6 +241,11 @@ const getSinglePropertyDetail = asyncHandler(async (req, res, next) => {
     next(error);
   }
 });
+/* The above code is a JavaScript function that is used to get properties belonging to a specific
+landlord. It is an asynchronous function that handles the request, retrieves the landlord's ID based
+on the email provided in the request parameters, and then finds properties associated with that
+landlord ID in the database. If the landlord ID is not found, it throws an error with a status code
+of 404. Finally, it returns a JSON response with the properties found for that landlord. */
 const get_landlord_properties = asyncHandler(async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -223,6 +259,15 @@ const get_landlord_properties = asyncHandler(async (req, res, next) => {
     next(error);
   }
 });
+/* The above code is a JavaScript function that is using async/await syntax to handle asynchronous
+operations. It is a function called `get_properties_info` that takes in `req`, `res`, and `next` as
+parameters. Inside the function, it first extracts the `id` parameter from the request parameters.
+It then checks if the `id` is a valid MongoDB ObjectId using `mongoose.Types.ObjectId.isValid(id)`.
+If the `id` is not valid, it throws an error with a message "Invalid Property Id" and status code
+404. */
+/* The above code is a JavaScript function that is using async/await syntax to handle asynchronous
+operations. It is a controller function for getting information about a property based on the
+provided ID. Here is a breakdown of what the code is doing: */
 const get_properties_info = asyncHandler(async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -235,26 +280,28 @@ const get_properties_info = asyncHandler(async (req, res, next) => {
     next(error);
   }
 });
-const delete_image = asyncHandler(async(req,res,next)=>{
+/* The above code is a JavaScript function that is designed to delete an image from a cloud storage
+service, likely Cloudinary. Here is a breakdown of what the code is doing: */
+const delete_image = asyncHandler(async (req, res, next) => {
   try {
-    const {token}  = req.body;
-    const {result} = await cloudinary.uploader
-      .destroy(token);
-      if(result==="not found"){
-        errorThrow("No image ID not found", 404);
-      }else{
-        res.status(200).json({ success: true });
-      }
+    const { token } = req.body;
+    const { result } = await cloudinary.uploader.destroy(token);
+    if (result === "not found") {
+      errorThrow("No image ID not found", 404);
+    } else {
+      res.status(200).json({ success: true });
+    }
     console.log(result);
-
   } catch (error) {
     next(error);
   }
-})
-const update_property = asyncHandler(async(req,res,next)=>{
+});
+/* The above code is a JavaScript function that handles updating a property in a database. It takes in
+a request object (`req`), response object (`res`), and a `next` function as parameters. */
+const update_property = asyncHandler(async (req, res, next) => {
   try {
     const data = req.body;
-    if(!data){
+    if (!data) {
       errorThrow("No data found to update", 404);
     }
     const imagesWithKeys = data?.ImageVideoData.filter(
@@ -263,43 +310,42 @@ const update_property = asyncHandler(async(req,res,next)=>{
     const videosWithKeys = data?.ImageVideoData.filter(
       (item) => item.type === "video"
     ).map((item) => ({ url: item.url, publicKey: item.publicKey }));
-    const update_property = await Property.findByIdAndUpdate(data.id,
-      {
-        building_name: data.buildingName,
-        building_number: data.buildingNumber,
-        property_streetname: data.streetAddress,
-        property_city: data.city,
-        property_state: data.state,
-        property_locality: data.locality,
-        property_pincode: data.pincode,
-        property_size: data.propertySize,
-        property_bathrooms: data.numberOfBathrooms,
-        property_year_built: data.yearBuilt,
-        property_type_of_house: data.category,
-        property_type: data.propertyType,
-        property_no_of_bhk: data.numberOfBHKRK,
-        property_furnishing: data.furnishing,
-        property_parking: data.parking,
-        property_description: data.description,
-        property_rent_price: data.price,
-        property_availability: data.status,
-        property_security_deposit: data.deposit,
-        property_coordinates: {
-          latitude: data.latitude,
-          longitude: data.longitude,
-        },
-        images: imagesWithKeys,
-        videos: videosWithKeys,
-        preferred_tenants: data.prefferedTenant,
-      })
-      if(!update_property){
-        errorThrow("Failed to update property", 404);
-      }
+    const update_property = await Property.findByIdAndUpdate(data.id, {
+      building_name: data.buildingName,
+      building_number: data.buildingNumber,
+      property_streetname: data.streetAddress,
+      property_city: data.city,
+      property_state: data.state,
+      property_locality: data.locality,
+      property_pincode: data.pincode,
+      property_size: data.propertySize,
+      property_bathrooms: data.numberOfBathrooms,
+      property_year_built: data.yearBuilt,
+      property_type_of_house: data.category,
+      property_type: data.propertyType,
+      property_no_of_bhk: data.numberOfBHKRK,
+      property_furnishing: data.furnishing,
+      property_parking: data.parking,
+      property_description: data.description,
+      property_rent_price: data.price,
+      property_availability: data.status,
+      property_security_deposit: data.deposit,
+      property_coordinates: {
+        latitude: data.latitude,
+        longitude: data.longitude,
+      },
+      images: imagesWithKeys,
+      videos: videosWithKeys,
+      preferred_tenants: data.prefferedTenant,
+    });
+    if (!update_property) {
+      errorThrow("Failed to update property", 404);
+    }
     res.status(200).json({ success: true });
   } catch (error) {
     next(error);
   }
-})
+});
 module.exports = {
   AddProperty,
   get_properties,
@@ -308,5 +354,5 @@ module.exports = {
   get_landlord_properties,
   get_properties_info,
   delete_image,
-  update_property
+  update_property,
 };

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Navbar,
   NavbarBrand,
@@ -24,30 +24,54 @@ import { userServer } from "../../../server";
 import toast from "react-hot-toast";
 import store from "../../../Redux/store";
 import { LoadUser } from "../../../Redux/action/user";
+import { useDispatch } from "react-redux";
 const Navbar1 = () => {
-  const {isAuthenticated, user } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const { mode } = useSelector((state) => state.mode);
+  const [Mode, setMode] = useState(useState(mode !== null));
+  const handleMode = () => {
+    if (Mode) {
+      dispatch({ type: "EnableDarkMode" });
+      console.log("dispatched");
+    } else {
+      dispatch({ type: "EnableLightMode" });
+    }
+    setMode(!Mode);
+  };
+  const { isAuthenticated, user } = useSelector((state) => state.user);
+  const role = user?.user.role;
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const navigate = useNavigate();
   const menuItems = [
-    "Profile",
-    "Dashboard",
-    "Activity",
-    "Analytics",
-    "System",
-    "Deployments",
-    "My Settings",
-    "Team Settings",
-    "Help & Feedback",
-    "Log Out",
+    {"name":"Properties ","location":"/properties","key":"tenant-property","user":"t"},
+    {"name":"Properties ","location":"/property","key":"property-landlord","user":"l"},
+    {"name":"Chat ","location":"/chat","key":"chat","user":"b"},
+    {"name":"Report Issue ","location":"/report","key":"report","user":"b"},
+    {"name":"Group Chat ","location":"/group-chat","key":"group-chat","user":"t"},
+    {"name":"Issues","location":"/admin-reports","key":"admin-issues","user":"a"},
+    {"name":"Dashboard","location":"/dashboard","key":"admin-dashboard","user":"a"},
   ];
+  const DropDrowList = [
+    {"name":"Bookings ","location":"/bookings","key":"tenant-booking","user":"t"},
+    {"name":"Bookings ","location":"/property-bookings","key":"landlord-booking","user":"l"},
+    {"name":"Lease Agreement","location":"/landlord-lease","key":"landlord-lease","user":"l"},
+    {"name":"Lease Agreement","location":"/tenant-lease","key":"tenant-lease","user":"t"},
+    {"name":"Maintenance Request","location":"/landlord-maintenance","key":"landlord-maintenance","user":"l"},
+    {"name":"Maintenance Request","location":"/tenant-maintenance","key":"tenant-maintenance","user":"t"},
+    {"name":"Review","location":"/tenant-review","key":"tenant-review","user":"t"},
+  ]
+
+  console.log(DropDrowList);
   const closeMenu = () => {
     setIsMenuOpen(false); // Function to close the Navbar menu
   };
-  const Logout = async() => {
+  const Logout = async () => {
     try {
-      const serverResponse = await axios.get(`${userServer}/logout`,{withCredentials:true});
+      const serverResponse = await axios.get(`${userServer}/logout`, {
+        withCredentials: true,
+      });
       console.log(serverResponse);
-      if(serverResponse.data.success){
+      if (serverResponse.data.success) {
         toast.success("Log out successful!");
         store.dispatch(LoadUser());
         navigate("/login");
@@ -55,11 +79,16 @@ const Navbar1 = () => {
     } catch (error) {
       toast.error(error.message);
     }
-  }
+  };
   return (
     <>
-      <Navbar isMenuOpen={isMenuOpen}
-      onMenuOpenChange={setIsMenuOpen} maxWidth="full" className="sm:px-5" isBordered={true}>
+      <Navbar
+        isMenuOpen={isMenuOpen}
+        onMenuOpenChange={setIsMenuOpen}
+        maxWidth="full"
+        className="sm:px-5"
+        isBordered={true}
+      >
         <NavbarContent>
           <NavbarMenuToggle
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
@@ -77,36 +106,29 @@ const Navbar1 = () => {
         </NavbarContent>
 
         <NavbarContent className="hidden md:flex gap-4" justify="center">
-          <NavbarItem>
-            <Link color="foreground" to="/properties">
-              Properties
-            </Link>
-          </NavbarItem>
-          <NavbarItem >
-            <Link href="#" aria-current="page">
-              Customers
-            </Link>
-          </NavbarItem>
-          <NavbarItem>
-            <Link color="foreground" href="#">
-              Integrations
-            </Link>
-          </NavbarItem>
-          <NavbarItem>
-            <Link color="foreground" href="#">
-              Features
-            </Link>
-          </NavbarItem>
-          <NavbarItem isActive>
-            <Link href="#" aria-current="page">
-              Customers
-            </Link>
-          </NavbarItem>
-          <NavbarItem>
-            <Link color="foreground" href="#">
-              Integrations
-            </Link>
-          </NavbarItem>
+        {menuItems.map((item, index) => {
+        // Check if role is defined before comparing
+        if (role && item.user.toLowerCase() === role.toLowerCase()) {
+          return (
+            <NavbarItem key={item.key}>
+              <Link color="foreground" to={item.location}>
+                {item.name}
+              </Link>
+            </NavbarItem>
+          );
+        } else {
+          if (role && item.user.toLowerCase() === "b") {
+            return (
+              <NavbarItem key={item.key}>
+                <Link color="foreground" to={item.location}>
+                  {item.name}
+                </Link>
+              </NavbarItem>
+            );
+          }
+        }
+      })}
+          
         </NavbarContent>
 
         <NavbarContent justify="end">
@@ -129,7 +151,7 @@ const Navbar1 = () => {
             </>
           ) : (
             <>
-              <Dropdown placement="bottom-start">
+              <Dropdown placement="bottom-start" className={mode}>
                 <DropdownTrigger>
                   <User
                     as="button"
@@ -149,16 +171,34 @@ const Navbar1 = () => {
                       <p className="font-bold">{user?.user?.email}</p>
                     </Link>
                   </DropdownItem>
-                  <DropdownItem key="settings" onClick={() =>{navigate('/profile-update')} }>My Profile</DropdownItem>
-                  <DropdownItem key="team_setbookingsings" onClick={() =>{navigate('/bookings')} }>Bookings</DropdownItem>
-                  <DropdownItem key="analytics">Analytics</DropdownItem>
-                  <DropdownItem key="system">System</DropdownItem>
-                  <DropdownItem key="configurations">
-                    Configurations
+                  <DropdownItem key="darkmode" onClick={handleMode}>
+                    {Mode ? "Dark Mode" : "Light Mode"}
                   </DropdownItem>
-                  <DropdownItem key="help_and_feedback">
-                    Help & Feedback
+                  <DropdownItem
+                    key="settings"
+                    onClick={() => {
+                      navigate("/profile-update");
+                    }}
+                  >
+                    My Profile
                   </DropdownItem>
+                  {DropDrowList.map((value, key) => {
+        if (value.user.toLowerCase() === role.toLowerCase()) {
+          return (
+            <DropdownItem
+              key={value.key}
+              onClick={() => {
+                navigate(value.location);
+              }}
+            >
+              {value.name}
+            </DropdownItem>
+          );
+        } else {
+          return null; // Return null for items not matching the role
+        }
+      })}
+                  
                   <DropdownItem key="logout" color="danger" onClick={Logout}>
                     Log Out
                   </DropdownItem>
