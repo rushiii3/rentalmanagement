@@ -36,7 +36,6 @@ const TenantMaintenace = () => {
       </h5>
       <div className="flex justify-end ">
       <AddModalMaintenace LeaseAgrrement={LeaseAgrrement} userid={userid} MaintenaceData={MaintenaceData} setMaintenaceData={setMaintenaceData}/>
-
       </div>
       <div className="flex flex-col space-y-3 mt-4">
        {

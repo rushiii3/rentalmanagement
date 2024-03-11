@@ -57,7 +57,7 @@ const LandlordMaintenace = () => {
   return (
     <div className="lg:mx-16 mt-5 mx-3 min-h-screen">
     <h5 class="mb-5 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-      Your Aggrements
+      Your Mainteance Request
     </h5>
     <Tabs
       color="secondary"
