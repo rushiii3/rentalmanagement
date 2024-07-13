@@ -10,7 +10,8 @@ const NavbarShow = ({ children }) => {
       Location.pathname === "/login" ||
       Location.pathname === "/register" ||
       Location.pathname === "/Register" ||
-      Location.pathname === "/"
+      Location.pathname === "/" ||
+      Location.pathname.includes("/video-conference/")
     ) {
       setShow(false);
     } else if (
@@ -38,8 +39,7 @@ const NavbarShow = ({ children }) => {
     ) {
       setShow(true);
     } else if (
-      Location.pathname.includes("/properties/") ||
-      Location.pathname.includes("/video-conference/")
+      Location.pathname.includes("/properties/") 
     ) {
       setShow(true);
     } else {
