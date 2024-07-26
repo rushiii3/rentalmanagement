@@ -8,9 +8,9 @@ const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
 
 cloudinary.config({
-  cloud_name: "dmuhioahv",
-  api_key: "166273865775784",
-  api_secret: "blcMAs-77T_1t1VGnRIlLia_RqM",
+  cloud_name: process.env.CLOUDNARY_CLOUD_NAME,
+  api_key: process.env.CLOUDNARY_API_KEY,
+  api_secret: process.env.CLOUDNARY_API_SECRET,
   secure: true,
 });
 /* The `get_lease_gata` function is an asynchronous handler that retrieves lease data based on a
