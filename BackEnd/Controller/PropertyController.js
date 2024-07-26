@@ -6,9 +6,9 @@ const User = require("../Models/UserModel");
 const errorThrow = require("../Middleware/ErrorHandler");
 const cloudinary = require("cloudinary").v2;
 cloudinary.config({
-  cloud_name: "dmuhioahv",
-  api_key: "166273865775784",
-  api_secret: "blcMAs-77T_1t1VGnRIlLia_RqM",
+  cloud_name: process.env.CLOUDNARY_CLOUD_NAME,
+  api_key: process.env.CLOUDNARY_API_KEY,
+  api_secret: process.env.CLOUDNARY_API_SECRET,
   secure: true,
 });
 const AddProperty = asyncHandler(async (req, res, next) => {
