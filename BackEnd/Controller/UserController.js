@@ -7,9 +7,9 @@ const errorThrow = require("../Middleware/ErrorHandler");
 const sendOTP = require("../utlis/sendOTP");
 const bcrypt = require("bcryptjs");
 cloudinary.config({
-  cloud_name: "dmuhioahv",
-  api_key: "166273865775784",
-  api_secret: "blcMAs-77T_1t1VGnRIlLia_RqM",
+  cloud_name: process.env.CLOUDNARY_CLOUD_NAME,
+  api_key: process.env.CLOUDNARY_API_KEY,
+  api_secret: process.env.CLOUDNARY_API_SECRET,
   secure: true,
 });
 const Admin = require("../Models/Admin");
